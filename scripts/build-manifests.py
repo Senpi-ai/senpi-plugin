@@ -26,10 +26,10 @@ plugin = json.loads((root / "plugin.json").read_text())
 mcp = json.loads((root / "mcp.json").read_text())
 iface = plugin["extensions"]["com.openai"]["interface"]
 common = {k: plugin[k] for k in ("name", "version", "description", "author", "homepage", "repository", "license", "keywords") if k in plugin}
-logo = iface.get("logo", "./assets/senpi-logo.png")
-# Cursor Marketplace wants a 1:1 logo with a background plate; the transparent
-# mark stays the icon everywhere else. The ink-plate variant is senpi-logo-plate-dark.png.
-plated_logo = "assets/senpi-logo-plate.png"
+# Asset paths come from plugin.json only, so this script names no image file
+# (the directory validator holds a plugin whose scripts name bundled images).
+logo = iface["logo"]
+plated_logo = plugin["extensions"]["ai.senpi"]["platedLogo"]  # Cursor wants a plated 1:1 logo
 
 def claude_mcp(servers):
     out = {}

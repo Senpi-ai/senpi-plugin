@@ -98,6 +98,9 @@
       "publication": {
         "release_notes": "Add AI Quant to your ChatGPT. Ask what's moving today on Hyperliquid, run a senpi-signals sweep for anomalies and whale movements, score any wallet's book with Quant Desk, or work through a strategy with your agent. Research and analysis only — deposits, withdrawals and anything that moves money stay in the Senpi app behind your approval."
       }
+    },
+    "ai.senpi": {
+      "platedLogo": "assets/senpi-logo-plate.png"
     }
   }
 }
