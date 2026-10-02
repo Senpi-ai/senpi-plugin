@@ -1,0 +1,20 @@
+{
+  "name": "senpi",
+  "interface": {
+    "displayName": "Senpi — AI Quant"
+  },
+  "plugins": [
+    {
+      "name": "senpi-agent",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Finance"
+    }
+  ]
+}

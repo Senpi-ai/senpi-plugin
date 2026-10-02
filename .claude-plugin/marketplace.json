@@ -1,0 +1,31 @@
+{
+  "name": "senpi",
+  "description": "Turn your AI assistant into your AI quant engineer for Hyperliquid. Ask your own Senpi agent what's moving, run a signals sweep, read smart-money positioning, research traders, score any wallet with the Quant Desk, and work through a strategy — with every trade or fund movement held for your approval.",
+  "owner": {
+    "name": "Senpi",
+    "url": "https://senpi.ai"
+  },
+  "plugins": [
+    {
+      "name": "senpi-agent",
+      "source": "./",
+      "displayName": "Senpi — AI Quant",
+      "description": "Hyperliquid signals & research",
+      "version": "0.3.0",
+      "author": {
+        "name": "Senpi"
+      },
+      "homepage": "https://senpi.ai/connectors",
+      "license": "Apache-2.0",
+      "category": "finance",
+      "keywords": [
+        "senpi",
+        "senpi-ai",
+        "senpi agent",
+        "senpi quant desk",
+        "senpi signals",
+        "ai quant"
+      ]
+    }
+  ]
+}

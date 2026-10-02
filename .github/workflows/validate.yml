@@ -1,0 +1,10 @@
+name: validate
+on: [push, pull_request]
+jobs:
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/build-manifests.py --check
+      - run: for f in plugin.json mcp.json .mcp.json .claude-plugin/plugin.json .claude-plugin/marketplace.json .codex-plugin/plugin.json .cursor-plugin/plugin.json .grok-plugin/plugin.json .agents/plugins/marketplace.json; do python3 -m json.tool "$f" >/dev/null || exit 1; done
+      - run: '! find . -name .DS_Store -o -name Thumbs.db | grep .'

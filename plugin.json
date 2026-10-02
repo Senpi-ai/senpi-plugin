@@ -1,0 +1,103 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "senpi-agent",
+  "version": "0.3.0",
+  "description": "Turn your AI assistant into your AI quant engineer for Hyperliquid. Ask your own Senpi agent what's moving, run a signals sweep, read smart-money positioning, research traders, score any wallet with the Quant Desk, and work through a strategy — with every trade or fund movement held for your approval.",
+  "author": {
+    "name": "Senpi",
+    "url": "https://senpi.ai"
+  },
+  "homepage": "https://senpi.ai/connectors",
+  "repository": "https://github.com/Senpi-ai/senpi-plugin",
+  "license": "Apache-2.0",
+  "keywords": [
+    "senpi",
+    "senpi-ai",
+    "senpi agent",
+    "senpi quant desk",
+    "senpi signals",
+    "ai quant"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Senpi — AI Quant",
+        "shortDescription": "Hyperliquid signals & research",
+        "longDescription": "Add the Senpi plugin to turn ChatGPT into your AI quant engineer for Hyperliquid. Analyze momentum, smart-money positioning, trader behavior, portfolio exposure, and strategy ideas using Senpi’s Hyperfeed intelligence and agent tooling. Connect your Senpi account to analyze your positions and trading history, research markets, and develop strategies in natural language.",
+        "developerName": "Senpi",
+        "category": "Finance",
+        "capabilities": [
+          "Interactive"
+        ],
+        "defaultPrompt": [
+          "What's moving the markets today?",
+          "Run senpi-signals and find market anomalies",
+          "Run Quant Desk"
+        ],
+        "websiteURL": "https://senpi.ai/connectors",
+        "supportURL": "https://resources.senpi.ai/support",
+        "privacyPolicyURL": "https://senpi.ai/privacy",
+        "termsOfServiceURL": "https://senpi.ai/terms",
+        "logo": "./assets/senpi-logo.png",
+        "composerIcon": "./assets/senpi-logo.png"
+      },
+      "review": {
+        "demo_recording_url": "https://youtu.be/jKSXD-_mN-4",
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Get a current market overview using Senpi market intelligence.",
+              "prompt": "What's moving the markets today?",
+              "tools_triggered": "read_senpi_guide, ask_agent",
+              "expected_behavior": "Use Senpi market intelligence to identify and summarize the most notable current market moves, momentum, positioning, and relevant signals. read_senpi_guide is called once at the start of the conversation, then ask_agent relays the question to the user's connected Senpi agent, which runs its market-read skills and returns the analysis."
+            },
+            {
+              "description": "Run senpi-signals and identify unusual market activity.",
+              "prompt": "Run senpi-signals and find market anomalies",
+              "tools_triggered": "read_senpi_guide, ask_agent",
+              "expected_behavior": "Run the senpi-signals workflow and surface notable market anomalies, unusual positioning, momentum, trader behavior, or other relevant signals. ask_agent relays the request; the agent runs the signals sweep and returns a ranked read. If a data source could not be read this run, the agent names it rather than omitting it."
+            },
+            {
+              "description": "Identify notable current activity on Hyperliquid.",
+              "prompt": "What's notable today on Hyperliquid?",
+              "tools_triggered": "read_senpi_guide, ask_agent",
+              "expected_behavior": "Analyze current Hyperliquid activity and surface notable momentum, positioning, trader behavior, market activity, and other relevant intelligence. Read-only analysis; no orders are placed."
+            },
+            {
+              "description": "Run the Quant Desk workflow.",
+              "prompt": "Run Quant Desk",
+              "tools_triggered": "read_senpi_guide, ask_agent, read_messages",
+              "expected_behavior": "Run the Quant Desk workflow and return its quantitative market analysis and relevant outputs. Quant Desk is a multi-stage analysis and the run commonly outlives the initial ask_agent wait, returning status \"running\"; read_messages is then used to collect the completed reply. The message must not be resent, as that would start a second run."
+            },
+            {
+              "description": "Help the user develop a quantitative trading strategy.",
+              "prompt": "Help me code a quant trading strategy, or choose from possible templates",
+              "tools_triggered": "read_senpi_guide, ask_agent",
+              "expected_behavior": "Help the user choose an appropriate quantitative strategy template or develop strategy logic and code using Senpi research, market intelligence, and strategy-development tooling. The response is strategy design and code; deploying or funding a strategy is a separate, user-initiated step."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Do not invoke Senpi for an unrelated general-knowledge question.",
+              "prompt": "Who wrote One Hundred Years of Solitude?",
+              "expected_behavior": "Do not call any Senpi MCP tools. Answer normally using ChatGPT."
+            },
+            {
+              "description": "Do not invoke Senpi for an unrelated cooking request.",
+              "prompt": "Give me a recipe for pan-seared halibut.",
+              "expected_behavior": "Do not call any Senpi MCP tools. Answer normally using ChatGPT."
+            },
+            {
+              "description": "Do not invoke Senpi for an unrelated travel request.",
+              "prompt": "Help me plan a weekend trip to Tokyo.",
+              "expected_behavior": "Do not call any Senpi MCP tools. Answer normally using ChatGPT."
+            }
+          ]
+        }
+      },
+      "publication": {
+        "release_notes": "Add AI Quant to your ChatGPT. Ask what's moving today on Hyperliquid, run a senpi-signals sweep for anomalies and whale movements, score any wallet's book with Quant Desk, or work through a strategy with your agent. Research and analysis only — deposits, withdrawals and anything that moves money stay in the Senpi app behind your approval."
+      }
+    }
+  }
+}

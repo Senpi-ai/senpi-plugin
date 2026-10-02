@@ -1,0 +1,42 @@
+{
+  "name": "senpi-agent",
+  "version": "0.3.0",
+  "description": "Turn your AI assistant into your AI quant engineer for Hyperliquid. Ask your own Senpi agent what's moving, run a signals sweep, read smart-money positioning, research traders, score any wallet with the Quant Desk, and work through a strategy — with every trade or fund movement held for your approval.",
+  "author": {
+    "name": "Senpi",
+    "url": "https://senpi.ai"
+  },
+  "homepage": "https://senpi.ai/connectors",
+  "repository": "https://github.com/Senpi-ai/senpi-plugin",
+  "license": "Apache-2.0",
+  "keywords": [
+    "senpi",
+    "senpi-ai",
+    "senpi agent",
+    "senpi quant desk",
+    "senpi signals",
+    "ai quant"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Senpi — AI Quant",
+    "shortDescription": "Hyperliquid signals & research",
+    "longDescription": "Add the Senpi plugin to turn ChatGPT into your AI quant engineer for Hyperliquid. Analyze momentum, smart-money positioning, trader behavior, portfolio exposure, and strategy ideas using Senpi’s Hyperfeed intelligence and agent tooling. Connect your Senpi account to analyze your positions and trading history, research markets, and develop strategies in natural language.",
+    "developerName": "Senpi",
+    "category": "Finance",
+    "capabilities": [
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "What's moving the markets today?",
+      "Run senpi-signals and find market anomalies",
+      "Run Quant Desk"
+    ],
+    "websiteURL": "https://senpi.ai/connectors",
+    "supportURL": "https://resources.senpi.ai/support",
+    "privacyPolicyURL": "https://senpi.ai/privacy",
+    "termsOfServiceURL": "https://senpi.ai/terms",
+    "logo": "./assets/senpi-logo.png",
+    "composerIcon": "./assets/senpi-logo.png"
+  }
+}
