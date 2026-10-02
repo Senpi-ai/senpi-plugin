@@ -17,7 +17,7 @@
     "senpi signals",
     "ai quant"
   ],
-  "logo": "assets/senpi-logo.png",
+  "logo": "assets/senpi-logo-plate.png",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json"
 }

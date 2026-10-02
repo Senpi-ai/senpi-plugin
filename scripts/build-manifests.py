@@ -8,7 +8,7 @@ extensions["com.openai"]) and mcp.json. Generated so they never drift:
   .claude-plugin/marketplace.json   Claude Code marketplace (install as senpi-agent@senpi)
   .codex-plugin/plugin.json         Codex CLI / ChatGPT desktop (interface at top level)
   .agents/plugins/marketplace.json  Codex / ChatGPT marketplace index
-  .cursor-plugin/plugin.json        Cursor / Grok Bot marketplace (logo + MCP path)
+  .cursor-plugin/plugin.json        Cursor / Grok Bot marketplace (plated logo + MCP path)
   .grok-plugin/plugin.json          Grok Build — xAI plugin marketplace
   .mcp.json                         Claude Code, Cursor, Grok Build, Codex (mcpServers only)
 
@@ -27,6 +27,9 @@ mcp = json.loads((root / "mcp.json").read_text())
 iface = plugin["extensions"]["com.openai"]["interface"]
 common = {k: plugin[k] for k in ("name", "version", "description", "author", "homepage", "repository", "license", "keywords") if k in plugin}
 logo = iface.get("logo", "./assets/senpi-logo.png")
+# Cursor Marketplace wants a 1:1 logo with a background plate; the transparent
+# mark stays the icon everywhere else. The ink-plate variant is senpi-logo-plate-dark.png.
+plated_logo = "assets/senpi-logo-plate.png"
 
 def claude_mcp(servers):
     out = {}
@@ -78,7 +81,7 @@ outputs = {
             "category": iface["category"],
         }],
     },
-    root / ".cursor-plugin" / "plugin.json": {**common, "logo": logo.lstrip("./"), "skills": "./skills/", "mcpServers": "./.mcp.json"},
+    root / ".cursor-plugin" / "plugin.json": {**common, "logo": plated_logo, "skills": "./skills/", "mcpServers": "./.mcp.json"},
     root / ".grok-plugin" / "plugin.json": {**common, "skills": "./skills/", "mcpServers": "./.mcp.json"},
     root / ".mcp.json": {"mcpServers": claude_mcp(mcp["mcpServers"])},
 }
