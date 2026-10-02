@@ -46,7 +46,9 @@ outputs = {
         **common,
         "displayName": iface["displayName"],
         "icon": logo,
-        "documentationUrl": plugin["homepage"],
+        # The homepage sits behind a Cloudflare challenge that automated checks may not pass;
+        # the README is the public documentation the directory can fetch.
+        "documentationUrl": "https://github.com/Senpi-ai/senpi-plugin#readme",
         "supportUrl": iface["supportURL"],
         "privacyPolicyUrl": iface["privacyPolicyURL"],
         "termsOfServiceUrl": iface["termsOfServiceURL"],
