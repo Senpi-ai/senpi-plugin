@@ -1,6 +1,6 @@
 # Senpi — AI Quant
 
-Senpi is an AI quant engineer for Hyperliquid. This plugin connects your AI assistant — Claude, ChatGPT, Codex, Cursor, Grok Bot or Grok Build — to **your own Senpi agent**, so you can ask it what's moving, run a signals sweep, score any wallet with the Quant Desk, research traders, and work through a strategy, from the app you already use.
+Senpi is an AI quant engineer for Hyperliquid. This plugin connects your AI assistant — Claude, ChatGPT, Codex, Cursor, Grok Bot, Grok Build or Hermes Agent — to **your own Senpi agent**, so you can ask it what's moving, run a signals sweep, score any wallet with the Quant Desk, research traders, and work through a strategy, from the app you already use.
 
 The agent runs on your Senpi account. This plugin only delivers your messages to it and returns its replies.
 
@@ -73,6 +73,19 @@ Grok Bot installs connectors from the [Cursor Marketplace](https://cursor.com/ma
 - **grok.com:** Connectors → **New Connector** → **Custom** → paste `https://agents.senpi.ai/mcp` and complete sign-in.
 - **Grok Build:** install **senpi-agent** from the [xAI plugin marketplace](https://github.com/xai-org/plugin-marketplace) once the catalog entry is live.
 
+### Hermes Agent
+
+```bash
+hermes plugins install senpi
+hermes plugins enable senpi-agent
+```
+
+Until the catalog entry is live, install from this repository instead: `hermes plugins install Senpi-ai/senpi-plugin --no-enable`, then `hermes plugins enable senpi-agent`. Your first message to the agent opens the Senpi sign-in in your browser; approve it, then run `/reload-mcp` or start a new session so the tools load. Ask the agent to call `read_senpi_guide` first.
+
+The trade gate is Senpi's, server-side: every position or strategy action pauses for your allow-once through `resolve_approval`, and an unanswered approval is denied. Hermes does not add a prompt of its own before `ask_agent`; if you want one, declare the server yourself in `~/.hermes/config.yaml` with `trust: untrusted` (a server in `config.yaml` overrides the plugin's).
+
+Server only, without the skill: `hermes mcp install senpi` once the MCP catalog entry is live, or add `https://agents.senpi.ai/mcp` under `mcp_servers` in `~/.hermes/config.yaml` with OAuth.
+
 ### Anything else that speaks MCP
 
 Server URL `https://agents.senpi.ai/mcp`, Streamable HTTP transport, OAuth 2.0 (the MCP authorization spec, with discovery documents at `/.well-known/oauth-protected-resource/mcp`).
@@ -81,7 +94,7 @@ Server URL `https://agents.senpi.ai/mcp`, Streamable HTTP transport, OAuth 2.0 (
 
 | Path | For |
 |---|---|
-| `plugin.json`, `mcp.json` | Source of truth — the [Agent Plugins](https://agent-plugins.org) standard; ChatGPT metadata under `extensions["com.openai"]` |
+| `plugin.json`, `mcp.json` | Source of truth — the [Agent Plugins](https://agent-plugins.org) standard, which is also what Hermes Agent installs as a portable package; ChatGPT metadata under `extensions["com.openai"]` |
 | `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin + marketplace (generated) |
 | `.codex-plugin/plugin.json`, `.agents/plugins/marketplace.json` | Codex CLI and ChatGPT desktop (generated) |
 | `.cursor-plugin/plugin.json` | Cursor / Grok Bot marketplace listing (generated) |
