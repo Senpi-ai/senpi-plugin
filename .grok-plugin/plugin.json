@@ -1,7 +1,7 @@
 {
   "name": "senpi-agent",
-  "version": "0.3.0",
-  "description": "Turn your AI assistant into your AI quant engineer for Hyperliquid. Ask your own Senpi agent what's moving, run a signals sweep, read smart-money positioning, research traders, score any wallet with the Quant Desk, and work through a strategy — with every trade or fund movement held for your approval.",
+  "version": "0.4.0",
+  "description": "Turn your AI assistant into your AI quant engineer for perpetual futures markets. Ask your own Senpi agent what's moving, run a signals sweep, read smart-money positioning, research traders, score any wallet with the Quant Desk, and work through a strategy — research first; where a host allows actions, every trade or fund movement the agent proposes waits for your approval.",
   "author": {
     "name": "Senpi",
     "url": "https://senpi.ai"

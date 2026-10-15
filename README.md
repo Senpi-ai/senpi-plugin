@@ -52,6 +52,8 @@ Add the plugin from **Customize → Plugins**, or add the connector directly wit
 
 Senpi is listed as **Senpi — AI Quant**. Or, in Developer Mode: Plugins → **+** → **Create MCP app**, server URL `https://agents.senpi.ai/mcp`, authentication OAuth.
 
+On ChatGPT and Codex the plugin is **research-only**: each workflow is its own tool (Market Pulse, signals, smart-money positioning, trader research, Quant Desk, portfolio and trade review, strategy recommendations), and nothing can place a trade, deploy a strategy or move funds; those are done in the Senpi app.
+
 ### Codex CLI
 
 ```bash
