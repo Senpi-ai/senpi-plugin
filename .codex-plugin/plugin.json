@@ -1,7 +1,7 @@
 {
   "name": "senpi-agent",
   "version": "0.4.0",
-  "description": "Turn your AI assistant into your AI quant engineer for perpetual futures markets. Ask your own Senpi agent what's moving, run a signals sweep, read smart-money positioning, research traders, score any wallet with the Quant Desk, and work through a strategy — research first; where a host allows actions, every trade or fund movement the agent proposes waits for your approval.",
+  "description": "Turn your AI assistant into your AI quant engineer for perpetual futures markets. Ask your own Senpi agent what's moving, run a signals sweep, read smart-money positioning, research traders, score any wallet with the Quant Desk, review your own portfolio and trades, and work through a strategy. Research and analysis first; anything the agent proposes that would place a trade or move funds waits for your explicit approval, and deposits and withdrawals stay in the Senpi app.",
   "author": {
     "name": "Senpi",
     "url": "https://senpi.ai"
@@ -21,7 +21,7 @@
   "interface": {
     "displayName": "Senpi — AI Quant",
     "shortDescription": "Market signals & research",
-    "longDescription": "Senpi is your AI quant engineer for perpetual futures markets. Ask your own Senpi agent what's moving, scan for market anomalies, read smart-money positioning, research any trader, score a trading book with the Quant Desk, review your own portfolio and trades, and get strategy recommendations, all in natural language and backed by Senpi’s Hyperfeed market intelligence. Research and analysis only: nothing here places orders, deploys strategies or moves funds.",
+    "longDescription": "Senpi is your AI quant engineer for perpetual futures markets, research and analysis first. Ask your own Senpi agent what's moving, scan for market anomalies, read smart-money positioning, research any trader, score a trading book with the Quant Desk, review your own portfolio and trades, and get strategy recommendations, in natural language and backed by Senpi’s Hyperfeed market intelligence. Each of these is its own tool, and you can ask your agent anything else in plain language. Your agent acts only on your own Senpi account and only after you approve each action in the conversation; deposits and withdrawals happen in the Senpi app.",
     "developerName": "Senpi",
     "category": "Finance",
     "capabilities": [
