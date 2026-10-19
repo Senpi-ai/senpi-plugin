@@ -52,6 +52,8 @@ Add the plugin from **Customize → Plugins**, or add the connector directly wit
 
 Senpi is listed as **Senpi — AI Quant**. Or, in Developer Mode: Plugins → **+** → **Create MCP app**, server URL `https://agents.senpi.ai/mcp`, authentication OAuth.
 
+Every research workflow is also its own tool (Market Pulse, signals, smart-money positioning, trader research, Quant Desk, portfolio and trade review, strategy recommendations), beside `ask_agent` for anything else. Trades and changes need your approval, in the conversation or in your Senpi app settings; deposits and withdrawals stay in the Senpi app.
+
 ### Codex CLI
 
 ```bash
