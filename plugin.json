@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "senpi-agent",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Turn your AI assistant into your AI quant engineer for perpetual futures markets. Ask your own Senpi agent what's moving, run a signals sweep, read smart-money positioning, research traders, score any wallet with the Quant Desk, review your own portfolio and trades, and work through a strategy. Research and analysis first; trades and changes need your approval, in the conversation or in your Senpi app settings, and deposits and withdrawals stay in the Senpi app.",
   "author": {
     "name": "Senpi",
@@ -70,10 +70,10 @@
               "expected_behavior": "run_quant_desk (no trader argument) scores the user's own book. The run is multi-stage and commonly outlives the tool's wait, returning status \"running\" with a session_key; read_messages with that session_key then collects the finished analysis (strategy read, quant score, leaks and what fixing them is worth). The request must not be sent twice, as that would start a second run. Read-only."
             },
             {
-              "description": "Get strategy recommendations for a goal.",
+              "description": "Shape the user's own strategy for a goal.",
               "prompt": "Recommend a strategy for a choppy, range-bound market with low risk",
               "tools_triggered": "read_senpi_guide, recommend_strategy",
-              "expected_behavior": "recommend_strategy with the user's goal returns the top strategy picks from Senpi's template catalog with the reasons they fit the goal. Nothing is deployed or funded; deploying is a separate step the user takes themselves."
+              "expected_behavior": "recommend_strategy with the user's goal shapes the user's own strategy: it starts from the closest Senpi template as a base they make their own (or from scratch when nothing fits), and explains what it does and what they could change. Nothing is deployed or funded; deploying is a separate step the user takes themselves."
             }
           ],
           "negative": [
@@ -96,7 +96,7 @@
         }
       },
       "publication": {
-        "release_notes": "0.4.0 — Research first. Every research workflow is now its own read-only tool with explicit annotations: Market Pulse, signals sweep, smart-money positioning, trader research, Quant Desk, portfolio review, trade review and strategy recommendations. ask_agent stays for any other question to your own agent; trades and changes need your approval, in the conversation or in your Senpi app settings, and deposits and withdrawals stay in the Senpi app. Listing text no longer names other products."
+        "release_notes": "0.4.1 — Strategy recommendations now shape your own strategy: the closest template as a base you make yours, or one built from scratch. 0.4.0 — Research first. Every research workflow is now its own read-only tool with explicit annotations: Market Pulse, signals sweep, smart-money positioning, trader research, Quant Desk, portfolio review, trade review and strategy recommendations. ask_agent stays for any other question to your own agent; trades and changes need your approval, in the conversation or in your Senpi app settings, and deposits and withdrawals stay in the Senpi app. Listing text no longer names other products."
       }
     },
     "ai.senpi": {
