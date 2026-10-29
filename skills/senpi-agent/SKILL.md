@@ -10,7 +10,7 @@ The Senpi connector gives you one conversation partner: the user's own Senpi age
 ## Procedure
 
 1. **Read the guide once per conversation.** Call `read_senpi_guide` before the first `ask_agent`. It is short and carries the rules that matter.
-2. **Ask the agent in plain language** with `ask_agent(message)`. Pass the returned `session_key` back to continue the same conversation. Name a workflow when the user wants one: *Market Pulse*, *Signals*, *Smart Money Radar*, *Trader Research*, *Quant Desk*, *Strategy Discovery*, *Strategy Authoring*, *Portfolio*, *Trade Coaching*.
+2. **Ask the agent in plain language** with `ask_agent(message)`. Pass the returned `session_key` back to continue the same conversation. Name a workflow when the user wants one: *Market Pulse*, *Signals*, *Smart Money Radar*, *Trader Research*, *Quant Desk*, *Strategy design*, *Portfolio*, *Trade Coaching*.
 3. **Handle the status honestly.**
    - `final` — the reply is the agent's answer.
    - `running` — the agent is still working. Long runs are normal (Quant Desk especially). Call `read_messages(session_key)` to collect the reply. **Never resend the message**: that starts a second run, and a second run can mean a second trade.
