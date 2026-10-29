@@ -1,6 +1,6 @@
 {
   "name": "senpi-agent",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Turn your AI assistant into your AI quant engineer for perpetual futures markets. Ask your own Senpi agent what's moving, run a signals sweep, read smart-money positioning, research traders, score any wallet with the Quant Desk, review your own portfolio and trades, and work through a strategy. Research and analysis first; trades and changes need your approval, in the conversation or in your Senpi app settings, and deposits and withdrawals stay in the Senpi app.",
   "author": {
     "name": "Senpi",

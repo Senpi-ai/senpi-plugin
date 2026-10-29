@@ -11,7 +11,7 @@ The agent runs on your Senpi account. This plugin only delivers your messages to
 - **Smart Money Radar** — where the proven cohort sits against the crowd
 - **Trader Research** — due diligence on any Hyperliquid wallet
 - **Quant Desk** — scores a book, finds the leaks, prices the fixes
-- **Strategy Discovery / Authoring** — pick from the template catalog, or build one
+- **Strategy design** — the user's own strategy, forked from the closest template or built from scratch
 - **Portfolio, Trade Coaching, Account** — your own book and plan
 
 Everything above works without depositing funds.
