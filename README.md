@@ -15,7 +15,9 @@ Every tool is read-only. Trading, funding and strategy deployment happen in your
 | **Trader Research** — rank Hyperliquid traders by window and metric, compare side by side | `find_top_traders`, `compare_traders` | No |
 | **Quant Desk** — score any wallet: 0-100 quant score, six dimensions, priced leaks, protection audit | `get_quant_scorecard` | Only for your own book |
 | **Strategy Discovery** — browse Senpi's strategy template catalog by goal and risk | `browse_strategies`, `get_strategy_details` | No |
+| **Plans & Pricing** — Senpi's live plan catalog: prices, credits, points multipliers | `get_plan_catalog` | No |
 | **Portfolio & Trade Review** — your own book, and your closed trades aggregated | `get_my_portfolio`, `review_my_trades` | Yes |
+| **Account Status** — your plan, remaining credits, points and rank, fee, referral earnings | `get_account_status` | Yes |
 
 The market and research tools work without a Senpi account. The two portfolio tools answer only for your own connected account; without sign-in they return a clear "sign in to Senpi" response instead of data.
 
@@ -101,7 +103,7 @@ Server URL `https://agents.senpi.ai/connector/mcp`, Streamable HTTP transport, O
 | `.cursor-plugin/plugin.json` | Cursor / Grok Bot marketplace listing (generated) |
 | `.grok-plugin/plugin.json` | Grok Build — xAI plugin marketplace (generated) |
 | `.mcp.json` | The MCP server, for Claude Code, Cursor, Grok Build and Codex (generated) |
-| `skills/` | One skill per workflow: market pulse, signals, smart money, trader research, quant desk, strategy discovery, portfolio, trade review, and "why did X move" |
+| `skills/` | One skill per workflow: market pulse, signals, smart money, trader research, quant desk, strategy discovery, portfolio, trade review, account status, and "why did X move" |
 | `assets/` | Logo for directory listings |
 
 Edit `plugin.json` or `mcp.json`, then run `python3 scripts/build-manifests.py`; CI fails if the generated copies are stale.
