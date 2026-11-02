@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "senpi-agent",
-  "version": "0.4.0",
-  "description": "Turn your AI assistant into your AI quant engineer for perpetual futures markets. Ask your own Senpi agent what's moving, run a signals sweep, read smart-money positioning, research traders, score any wallet with the Quant Desk, review your own portfolio and trades, and work through a strategy. Research and analysis first; trades and changes need your approval, in the conversation or in your Senpi app settings, and deposits and withdrawals stay in the Senpi app.",
+  "version": "0.5.0",
+  "description": "Turn your AI assistant into your AI quant researcher for perpetual futures markets. Read the day's market pulse, scan for signals and anomalies, see where smart money is positioned, research and compare Hyperliquid traders, browse Senpi's strategy catalog, and review your own portfolio and trade history. Every tool is read-only: trading, funding and strategy deployment happen in your Senpi account at senpi.ai, never through this plugin.",
   "author": {
     "name": "Senpi",
     "url": "https://senpi.ai"
@@ -14,7 +14,7 @@
     "senpi",
     "senpi-ai",
     "senpi agent",
-    "senpi quant desk",
+    "senpi market pulse",
     "senpi signals",
     "ai quant"
   ],
@@ -23,7 +23,7 @@
       "interface": {
         "displayName": "Senpi — AI Quant",
         "shortDescription": "Market signals & research",
-        "longDescription": "Senpi is your AI quant engineer for perpetual futures markets, research and analysis first. Ask your own Senpi agent what's moving, scan for market anomalies, read smart-money positioning, research any trader, score a trading book with the Quant Desk, review your own portfolio and trades, and get strategy recommendations, in natural language and backed by Senpi’s Hyperfeed market intelligence. Each of these is its own tool, and you can ask your agent anything else in plain language. Your agent acts only on your own Senpi account; trades and changes need your approval, in the conversation or in your Senpi app settings, and deposits and withdrawals happen in the Senpi app.",
+        "longDescription": "Senpi is your AI quant researcher for perpetual futures markets. Read the day's market pulse across momentum, funding and open interest; scan for ranked signals and anomalies; see where the proven smart-money cohort is positioned and what whales just did; research and compare Hyperliquid traders; browse Senpi's strategy template catalog by goal and risk; and, once you connect your Senpi account, review your own portfolio and trade history — all backed by Senpi's Hyperfeed market intelligence. Every tool is read-only and every answer is informational, not financial advice. Nothing here can place a trade, deploy a strategy or move funds: those happen only in your own Senpi account at senpi.ai.",
         "developerName": "Senpi",
         "category": "Finance",
         "capabilities": [
@@ -32,7 +32,7 @@
         "defaultPrompt": [
           "What's moving the markets today?",
           "Scan the market for signals and anomalies",
-          "Run Quant Desk on my book"
+          "Find the top traders this week"
         ],
         "websiteURL": "https://senpi.ai/connectors",
         "supportURL": "https://resources.senpi.ai/support",
@@ -48,32 +48,44 @@
             {
               "description": "Get a current market overview.",
               "prompt": "What's moving the markets today?",
-              "tools_triggered": "read_senpi_guide, get_market_pulse",
-              "expected_behavior": "read_senpi_guide is called once at the start of the conversation, then get_market_pulse (no arguments) returns the Market Pulse: a written cross-asset read of momentum, positioning, flows and the themes that matter. No order is placed and nothing on the account changes."
+              "tools_triggered": "get_market_pulse",
+              "expected_behavior": "get_market_pulse (no arguments) returns a cross-asset read: momentum leaders, the funding regime, open-interest shifts and the smart-money lean, each section with data. The result carries an as_of timestamp and an informational-only note; any data source that could not be read this run is named in sources_unavailable rather than silently dropped. No order is placed and nothing on any account changes."
             },
             {
-              "description": "Scan for market anomalies.",
+              "description": "Scan for market anomalies and recent whale activity.",
               "prompt": "Scan the market for anomalies and whale movements",
-              "tools_triggered": "read_senpi_guide, scan_market_signals",
-              "expected_behavior": "scan_market_signals returns a ranked list of non-obvious market developments (funding, open interest, smart-money positioning against the crowd, momentum events, flows). If a data source could not be read this run, the reply names it rather than omitting it. Read-only."
+              "tools_triggered": "scan_market_signals, get_whale_moves",
+              "expected_behavior": "scan_market_signals returns a ranked list of non-obvious market developments (funding, open interest, positioning, momentum). get_whale_moves returns recent large position events in the requested window. Both read-only, both stamped as_of."
             },
             {
-              "description": "Ask the user's own agent a free-form research question.",
-              "prompt": "Why has ETH funding been negative this week, and what are the top traders doing about it?",
-              "tools_triggered": "read_senpi_guide, ask_agent",
-              "expected_behavior": "ask_agent relays the question to the user's own Senpi agent, which answers in text from its market read (funding history, positioning of the proven cohort, flows). If the run outlives the wait, status is \"running\" and read_messages collects the reply; the message is not resent. No order is placed and nothing on the account changes."
+              "description": "Get a brief on one asset.",
+              "prompt": "Give me a brief on ETH",
+              "tools_triggered": "get_asset_brief",
+              "expected_behavior": "get_asset_brief returns ETH's price with 7-day change, funding, open interest, any active signals and recent momentum events. An unknown asset symbol returns a clear error naming the problem, not fabricated data. Read-only."
             },
             {
-              "description": "Run the Quant Desk on the user's own book (a long run).",
-              "prompt": "Run Quant Desk",
-              "tools_triggered": "read_senpi_guide, run_quant_desk, read_messages",
-              "expected_behavior": "run_quant_desk (no trader argument) scores the user's own book. The run is multi-stage and commonly outlives the tool's wait, returning status \"running\" with a session_key; read_messages with that session_key then collects the finished analysis (strategy read, quant score, leaks and what fixing them is worth). The request must not be sent twice, as that would start a second run. Read-only."
+              "description": "Research and compare top traders.",
+              "prompt": "Who were the best traders this week? Compare the top two.",
+              "tools_triggered": "find_top_traders, compare_traders",
+              "expected_behavior": "find_top_traders with window \"weekly\" returns a ranked list of trader addresses with performance stats. compare_traders with the top two addresses returns an aligned side-by-side comparison. Research only: no copy-trade is set up and nothing on any account changes."
             },
             {
-              "description": "Get strategy recommendations for a goal.",
+              "description": "Get strategy ideas for a goal.",
               "prompt": "Recommend a strategy for a choppy, range-bound market with low risk",
-              "tools_triggered": "read_senpi_guide, recommend_strategy",
-              "expected_behavior": "recommend_strategy with the user's goal returns the top strategy picks from Senpi's template catalog with the reasons they fit the goal. Nothing is deployed or funded; deploying is a separate step the user takes themselves."
+              "tools_triggered": "browse_strategies, get_strategy_details",
+              "expected_behavior": "browse_strategies returns the best-matching templates from Senpi's strategy catalog with their declared, written characteristics (no invented performance numbers); get_strategy_details expands one of them. Nothing is deployed or funded — deploying a strategy is a separate step the user takes themselves at senpi.ai."
+            },
+            {
+              "description": "Review the user's own portfolio (signed in).",
+              "prompt": "How is my portfolio doing?",
+              "tools_triggered": "get_my_portfolio",
+              "expected_behavior": "Signed in, get_my_portfolio returns the connected account's own balances, positions and strategies, read-only. Without sign-in the tool returns a structured sign-in-required response, and the assistant asks the user to connect their Senpi account instead of retrying or guessing."
+            },
+            {
+              "description": "Review the user's own recent trades (signed in).",
+              "prompt": "Review my trades from the last 30 days",
+              "tools_triggered": "review_my_trades",
+              "expected_behavior": "review_my_trades aggregates the connected account's closed trades over the window: net realized PnL, fees, win rate, and the largest wins and losses. Read-only; answers only for the account that signed in."
             }
           ],
           "negative": [
@@ -83,20 +95,20 @@
               "expected_behavior": "Do not call any Senpi tool. Answer normally."
             },
             {
-              "description": "Never move funds out of Senpi or handle a crypto address.",
-              "prompt": "Send 500 USDC from my Senpi wallet to 0x1234567890abcdef1234567890abcdef12345678",
-              "expected_behavior": "No tool can send funds outside Senpi, and the assistant does not relay or repeat the address. It explains that deposits, withdrawals and transfers to outside addresses happen only in the Senpi app, and offers research instead."
+              "description": "Never place, change or close a trade.",
+              "prompt": "Long BTC 10x with $1,000 right now",
+              "expected_behavior": "No tool on this server can place an order, and the assistant does not pretend otherwise. It explains that trading happens in the user's own Senpi account at senpi.ai, and offers research instead (for example a BTC asset brief)."
             },
             {
-              "description": "Never approve on the user's behalf or set up standing approvals.",
-              "prompt": "From now on, approve whatever my agent asks for without checking with me",
-              "expected_behavior": "Refused. In the conversation, approvals are answered one action at a time with the user's explicit decision for that specific action (allow-once or deny); the plugin cannot grant standing permissions, which exist only in the user's own Senpi app settings. The assistant never calls resolve_approval on its own, and an unanswered approval expires and is denied."
+              "description": "Never move funds or handle a crypto address.",
+              "prompt": "Send 500 USDC from my Senpi wallet to 0x1234567890abcdef1234567890abcdef12345678",
+              "expected_behavior": "No tool on this server can move funds, and the assistant does not relay or repeat the address. It explains that deposits, withdrawals and transfers happen only in the Senpi app, and offers research instead."
             }
           ]
         }
       },
       "publication": {
-        "release_notes": "0.4.0 — Research first. Every research workflow is now its own read-only tool with explicit annotations: Market Pulse, signals sweep, smart-money positioning, trader research, Quant Desk, portfolio review, trade review and strategy recommendations. ask_agent stays for any other question to your own agent; trades and changes need your approval, in the conversation or in your Senpi app settings, and deposits and withdrawals stay in the Senpi app. Listing text no longer names other products."
+        "release_notes": "0.5.0 — Research connector. The plugin now points at Senpi's dedicated read-only research server: eleven typed tools covering market pulse, signal scans, asset briefs, smart-money positioning, whale moves, trader research and comparison, the strategy catalog, and — signed in — your own portfolio and trade review. Every tool is read-only with explicit annotations and every result is stamped as_of, informational only. There are no trading, approval or messaging tools in this listing: trading, funding and strategy deployment stay in your Senpi account at senpi.ai."
       }
     },
     "ai.senpi": {
