@@ -2,7 +2,7 @@
   "mcpServers": {
     "senpi-agent": {
       "type": "http",
-      "url": "https://mcp.senpi.ai/mcp"
+      "url": "https://open-mcp.senpi.ai/mcp"
     }
   }
 }
