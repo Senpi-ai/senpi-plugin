@@ -6,7 +6,8 @@ description: >-
   P&L waterfall and leaks priced in dollars, the strategy read, market fit, smart-money comparison
   and where the edge is. Use for "run quant desk", "run AI quant", "score my trading", "rate my
   trading", "find leaks", "where am I leaking money", "analyze my wallet", "score this trader 0x…",
-  "is my book protected?". Calls quant_desk_overview, quant_desk_protection, quant_desk_leaks,
+  "is my book protected?", "compare these wallets with the desk", "which of these is the better
+  trader", "find me traders to analyze / run the desk on", "what fits me today". Calls quant_desk_overview, quant_desk_protection, quant_desk_leaks,
   quant_desk_section, quant_desk_deep, quant_desk_my_wallets, quant_desk_compare and quant_desk_find. Works on any address without
   sign-in; the user's own book needs Senpi sign-in. Read-only.
 ---
@@ -15,6 +16,10 @@ description: >-
 
 Every number comes from the desk's tools, computed server-side. Never recompute, estimate or
 re-derive a score, a P&L figure or a leak yourself — relay what the tools return.
+
+Quant Desk reads — a 0-100 score, leaks, protection, the desk's side-by-side, candidates to run the
+desk on, live matches — are this skill's; a plain ranked list of traders or a metrics-only comparison
+stays with `senpi-trader-research` (`find_top_traders`, `compare_traders`).
 
 ## Whose book
 
@@ -51,7 +56,8 @@ Stage it, don't dump it. Each stage after the first reads the cached analysis an
 4. **The rest, on request** — `quant_desk_section` with `strategy`, `context`, `performance`,
    `smart`, `market`, `edge` or `scout`.
 5. **Going deeper** — `quant_desk_deep` with a mode the user picks (`protect`, `smart`, `replay`,
-   `funding`, `regime`, `compare`, `rules`, `strategy`, `scout`).
+   `funding`, `regime`, `compare`, `rules`, `strategy`, `scout`). Mode `compare` is this one wallet's
+   last 30 days against the 60 before; for two or more wallets use `quant_desk_compare`.
    - **Two or more wallets** ("compare these", "which of these is the better trader") → `quant_desk_compare`: the side-by-side table and what separates them, in third person. Say each wallet's window. For one wallet against a benchmark, pick the benchmark from `quant_desk_find`.
    - **Live matches** ("what fits me today", "where do my patterns line up with the market") → `quant_desk_section` with `scout`, or `quant_desk_deep` with `scout`. Process only: a match is a setup that fits how this trader wins, never a call to buy a coin — relay that line as written.
 
