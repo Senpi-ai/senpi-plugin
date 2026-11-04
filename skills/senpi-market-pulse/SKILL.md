@@ -46,3 +46,9 @@ One tool call answers this: `get_market_pulse` (no arguments). It reads the whol
 - A mover caught their eye → `get_asset_brief` on it.
 - "Anything unusual?" → `scan_market_signals`.
 - "What are the big traders doing?" → `get_smart_money_positioning` or `get_whale_moves`.
+- The exact name of an instrument ("is gold listed?", "what's the ticker?") → `list_instruments`
+  (`query`, `dex`); a builder-dex asset is prefixed, like `xyz:GOLD`.
+- One coin's candles, order book, open interest and funding → `get_asset_market_data` (`asset`,
+  `intervals` such as `["1h", "1d"]`, `include_book`).
+- Funding extremes across the market, or one coin's hourly rates over 7 days → `get_funding`.
+- The 4h board itself, a trader's row and the positions behind their gain → `get_leaderboard`.

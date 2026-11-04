@@ -110,6 +110,30 @@
               "prompt": "Review my trades from the last 30 days",
               "tools_triggered": "review_my_trades",
               "expected_behavior": "review_my_trades aggregates the connected account's closed trades over the window: net realized PnL, fees, win rate, and the largest wins and losses. Read-only; answers only for the account that signed in."
+            },
+            {
+              "description": "Read a public wallet's closed trades.",
+              "prompt": "Show me the last 20 trades of 0x526bbc5f8358ca4d6c082ac919bf8175417501c2.",
+              "tools_triggered": "get_wallet_closed_trades",
+              "expected_behavior": "get_wallet_closed_trades with the address and last: 20 returns one page of closed trades, newest first, each with coin, side, entry and exit price, size, leverage, open and close time, realized PnL, fees and whether it was a liquidation, plus the page's totals and has_more / next_offset. The assistant presents the trades as returned, says the totals cover the rows shown, and offers the next page when has_more is true. Public data, read-only; no trade is copied or placed."
+            },
+            {
+              "description": "Read one asset's market data.",
+              "prompt": "Give me HYPE's 1h and daily candles and the order book.",
+              "tools_triggered": "get_asset_market_data",
+              "expected_behavior": "get_asset_market_data with asset HYPE, intervals [\"1h\", \"1d\"] and include_book true returns the live context (mark, previous close and daily move, hourly and annualized funding, open interest, day volume), candles per interval over each interval's own lookback, and the order book 20 levels a side. The assistant quotes figures as returned with their as_of and names any source listed in sources_unavailable. Read-only public data."
+            },
+            {
+              "description": "Find funding extremes.",
+              "prompt": "Which coins are paying the most funding right now?",
+              "tools_triggered": "get_funding",
+              "expected_behavior": "get_funding with no asset returns the market-wide funding extremes from the leaderboard service, each asset with its annualized rate and how long it has persisted, filtered by min_annualized_pct (default 20). The assistant lists them as returned, says which side pays (positive funding: longs pay shorts), and does not advise taking either side. Read-only public data."
+            },
+            {
+              "description": "Read the 4h leaderboard.",
+              "prompt": "Who is on top of the 4h board right now, and what is 0x526bbc5f8358ca4d6c082ac919bf8175417501c2 holding?",
+              "tools_triggered": "get_leaderboard",
+              "expected_behavior": "get_leaderboard with the trader address returns the board's status, the ranking (limit 20 by default) and the coin concentration, plus that trader's row and the positions behind its gain. When the board's status cannot be read the tool returns UNAVAILABLE and the assistant says the board is down rather than reporting an empty ranking. Public wallets, attributed by address; read-only."
             }
           ],
           "negative": [

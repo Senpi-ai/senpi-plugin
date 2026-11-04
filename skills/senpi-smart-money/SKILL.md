@@ -42,3 +42,5 @@ Two tools:
 
 - Depth on one trader → `compare_traders` or `find_top_traders` (senpi-trader-research).
 - Depth on one asset → `get_asset_brief`.
+- The 4h board's ranking and where its gains concentrate, or one trader's positions behind a
+  momentum event → `get_leaderboard` (`trader` for the wallet).

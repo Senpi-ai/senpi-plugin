@@ -62,6 +62,12 @@ Stage it, don't dump it. Each stage after the first reads the cached analysis an
 Each tool returns structured data and the section's own text: relay that text, keeping its numbers
 and labels exactly.
 
+## The data behind the desk
+
+- The trades the desk scored → `get_wallet_closed_trades` (same `address`; `last` or a `coin`).
+- The P&L and equity curve, flows and drawdown as series → `get_wallet_pnl_history` (same
+  `address` and `window_days`); the desk's drawdown figure comes from this series.
+
 ## Framing
 
 - Quote `analysis_as_of`; the desk describes the window analyzed, not a prediction. Informational
