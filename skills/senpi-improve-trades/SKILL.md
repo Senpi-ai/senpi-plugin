@@ -13,8 +13,10 @@ One tool: `review_my_trades` with `window_days` (default 7, max 365) or `last` (
 closed trades, for "my last 10 trades"). It reads the user's whole book — every Senpi strategy
 wallet (active, paused **and closed**: a closed strategy's trades are history, not a live
 verdict), every saved wallet, and the Senpi main wallet — and returns `wallets` (each with its
-`kind`, `label`, `status` and whether its history was read), `trades` (each with its wallet and
-strategy), trade count, net realized PnL, total fees, win rate, and the largest wins and losses.
+`kind`, `label`, `status`, whether its history was read and whether it was `truncated`), `trades`
+(each with its wallet and strategy), trade count, net realized PnL, total fees, win rate, and the
+largest wins and losses. A wallet in `truncated_wallets` had more closes than the 2,000 read:
+say its totals are short rather than complete.
 
 ## Presenting the review
 

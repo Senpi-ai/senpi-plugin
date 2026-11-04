@@ -21,7 +21,7 @@ One tool call answers this: `get_market_pulse` (no arguments). It reads the whol
   `mixed`, from how many groups moved more than ±0.5%), and the `funding_regime`.
 - `movers` — the biggest moves by size, each with `volume_usd`, `funding` sign and `oi_trend`.
 - `smart_money` — the 4h board layer: `status`, `concentration` (where the top traders' gains sit),
-  `top_traders`, and `momentum_events` (one per trader, `sent` ones first, with `top_positions`).
+  `top_traders`, and `momentum_events` (one per trader, newest first, with `top_positions`).
   `null` means the board could not be read this run; it is not "no activity".
 - `sources_unavailable` names any read that failed.
 
