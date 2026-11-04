@@ -11,11 +11,15 @@ description: >-
 
 Two tools:
 
-- `find_top_traders` — ranked traders over a `window` (daily/weekly/monthly/all_time), with
-  `sort_by` (roi, pnl, realized_pnl, win_rate, max_drawdown, gain_to_pain, trader_age) and `limit`
-  (max 20).
-- `compare_traders` — 2 to 5 addresses side by side: performance profile plus current open
-  positions.
+- `find_top_traders` — ranked traders over a `window` (daily/weekly/monthly, all_time; default
+  monthly), with `sort_by` (roi — the default — pnl, realized_pnl, win_rate, max_drawdown,
+  gain_to_pain, trader_age) and `limit` (default 20, max 1000). For "who's consistent?", read
+  more than one window and keep the wallets that rank in several.
+- `compare_traders` — 2 to 5 addresses side by side, each as a vet dossier: the ranking row over
+  the `window` (default **all_time**, the whole record) with its labels, `closed_trades` (the real
+  count from the trade history), `open_positions` (the current book) and `momentum_4h` (the
+  board's read). A read that failed is named in `sources_unavailable`; the rest of the dossier
+  stands.
 
 ## Judging a trader honestly
 
@@ -23,8 +27,9 @@ Two tools:
   different proposition — surface win rate, drawdown, and recency together.
 - For "is this wallet good?", compare_traders with just that address plus a benchmark trader from
   find_top_traders gives context a single profile lacks.
-- `found: false` for an address means no profile in the window — say the window, don't call the
-  trader bad.
+- `found: false` for an address means no profile in the window and no open book — say the
+  window, don't call the trader bad. When comparing records, say which window the numbers cover:
+  all-time and monthly rank the same wallets differently.
 
 ## Presenting the result
 

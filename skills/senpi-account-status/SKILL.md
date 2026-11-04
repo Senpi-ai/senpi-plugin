@@ -24,8 +24,9 @@ Two tools, routed by what the question is about:
 ## Presenting the data
 
 - Lead with what they asked; don't dump every section for a single question.
-- **Fee**: quote `fee.percent` exactly as returned — `0` means a paid plan pays no Senpi trading
-  fee (Hyperliquid's own exchange fees still apply). Never state a rate the data didn't return.
+- **Fee**: quote `fee.percent` (and `fee.bps` when present) exactly as returned — `0` means a
+  paid plan pays no Senpi trading fee (Hyperliquid's own exchange fees still apply). Never state
+  a rate the data didn't return.
 - **Credits**: report `remaining_usd` and `cycle_end` as returned. Do not compute "low credits"
   percentages or burn projections — the app's own meter and notifications are the source of truth
   for that judgment, and top-ups make simple ratios misleading. For the exact live figure, point

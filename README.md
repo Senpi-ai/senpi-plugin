@@ -10,7 +10,7 @@ Every tool is read-only. Trading, funding and strategy deployment happen in your
 |---|---|---|
 | **Market Pulse** — cross-asset read: momentum, funding regime, open-interest shifts, smart-money lean | `get_market_pulse` | No |
 | **Signals** — ranked, non-obvious market developments from Senpi's detectors | `scan_market_signals` | No |
-| **Asset Brief** — one asset: price, 7-day move, funding, open interest, active signals | `get_asset_brief` | No |
+| **Asset Brief** — one asset: price, daily move, funding, open interest, its signals card | `get_asset_brief` | No |
 | **Smart Money Radar** — the proven cohort's positioning and recent large moves | `get_smart_money_positioning`, `get_whale_moves` | No |
 | **Trader Research** — rank Hyperliquid traders by window and metric, compare side by side | `find_top_traders`, `compare_traders` | No |
 | **Quant Desk** — read any wallet like a quant: 0-100 quant score, six dimensions, protection audit, priced leaks, deep dives | `quant_desk_overview`, `quant_desk_protection`, `quant_desk_leaks`, `quant_desk_section`, `quant_desk_deep`, `quant_desk_my_wallets` | Only for your own book |

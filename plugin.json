@@ -61,7 +61,7 @@
               "description": "Get a brief on one asset.",
               "prompt": "Give me a brief on ETH",
               "tools_triggered": "get_asset_brief",
-              "expected_behavior": "get_asset_brief returns ETH's price with 7-day change, funding, open interest, any active signals and recent momentum events. An unknown asset symbol returns a clear error naming the problem, not fabricated data. Read-only."
+              "expected_behavior": "get_asset_brief returns ETH's price with its daily change, funding, open interest, any active signals and recent momentum events. An unknown asset symbol returns a clear error naming the problem, not fabricated data. Read-only."
             },
             {
               "description": "Research and compare top traders.",

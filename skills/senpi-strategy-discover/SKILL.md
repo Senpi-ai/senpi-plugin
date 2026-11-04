@@ -11,8 +11,12 @@ description: >-
 
 Two tools:
 
-- `browse_strategies` — the catalog ranked for the user's `goal` (plain words, max 300 chars),
-  with optional `risk` (conservative/moderate/aggressive) and `limit` (max 10).
+- `browse_strategies` — the catalog as cards, one per variant family (a card's `variants` lists
+  its siblings — offer those only through the parent), in neutral alphabetical order, or ranked
+  for the user's `goal` (plain words, max 300 chars); optional `risk`
+  (conservative/moderate/aggressive). `limit` defaults to 8 — raise it when the user asks to see
+  more or the whole catalog ("list everything" → `limit: 500`); `truncated: true` says more exist,
+  `families` and `total_in_catalog` say how many.
 - `get_strategy_details` — one entry in full by `strategy_id`: thesis, archetype, direction,
   leverage cap, minimum budget, declared risk level.
 

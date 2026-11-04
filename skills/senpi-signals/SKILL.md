@@ -10,7 +10,9 @@ description: >-
 # Signals
 
 One tool call: `scan_market_signals`. Optional `signal_type` (filter to one detector type) and
-`limit` (max 20). Signals come ranked by strength.
+`limit` — omit it: the sweep holds a dozen reads at most and the default returns all of them.
+The `trade` feed comes first in its own order (by trade score), then the `news` feed (by social
+score); each row says which `feed` it is from.
 
 ## Presenting the result
 
@@ -18,7 +20,7 @@ One tool call: `scan_market_signals`. Optional `signal_type` (filter to one dete
   the ranking in prose.
 - If the user asked about a specific kind (funding, OI, whales), pass `signal_type` when a matching
   type exists in the results; otherwise scan once and filter in your answer, saying so.
-- `truncated: true` means more signals exist than the limit; offer to fetch more.
+- `truncated: true` only happens when a `limit` was passed; call again without one.
 - Quote `as_of`. A signal is an observation, not a recommendation — never present one as a trade
   instruction.
 
