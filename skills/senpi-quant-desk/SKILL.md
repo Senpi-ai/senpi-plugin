@@ -23,10 +23,8 @@ stays with `senpi-trader-research` (`find_top_traders`, `compare_traders`).
 
 ## Whose book
 
-- **An address given** (`address: 0x…`) → that wallet; no sign-in needed.
-- **No address** → the signed-in user's own book (all their Senpi strategy wallets, read as one).
-  An `auth_required` result means they haven't connected Senpi in this app — point them to the
-  connector sign-in, then call again.
+- **An address given** (`address: 0x…`) → that wallet, from public data.
+- **No address** → the user's own book (all their Senpi strategy wallets, read as one).
 - "find me traders to analyse" / no address and no own book → `quant_desk_find`; ask the size band first (a $9k book and a $9M book teach different lessons), then the window — relay the candidates with their numbers, then run the desk on the one they pick.
 - "My wallets" / "which of my wallets" → `quant_desk_my_wallets` first; it lists them largest first.
 - Treat an address as the user's own when they say it is theirs; as research when they're reading

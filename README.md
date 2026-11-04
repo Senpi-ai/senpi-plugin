@@ -6,20 +6,20 @@ Every tool is read-only. Trading, funding and strategy deployment happen in your
 
 ## What it does
 
-| Workflow | Tools | Needs sign-in |
-|---|---|---|
-| **Market Pulse** — cross-asset read: momentum, funding regime, open-interest shifts, smart-money lean | `get_market_pulse` | No |
-| **Signals** — ranked, non-obvious market developments from Senpi's detectors | `scan_market_signals` | No |
-| **Asset Brief** — one asset: price, daily move, funding, open interest, its signals card | `get_asset_brief` | No |
-| **Smart Money Radar** — the proven cohort's positioning and recent large moves | `get_smart_money_positioning`, `get_whale_moves` | No |
-| **Trader Research** — rank Hyperliquid traders by window and metric, compare side by side | `find_top_traders`, `compare_traders` | No |
-| **Quant Desk** — read any wallet like a quant: 0-100 quant score, six dimensions, protection audit, priced leaks, deep dives | `quant_desk_overview`, `quant_desk_protection`, `quant_desk_leaks`, `quant_desk_section`, `quant_desk_deep`, `quant_desk_my_wallets`, `quant_desk_compare`, `quant_desk_find` | Only for your own book |
-| **Strategy Discovery** — browse Senpi's strategy template catalog by goal and risk | `browse_strategies`, `get_strategy_details` | No |
-| **Plans & Pricing** — Senpi's live plan catalog: prices, credits, points multipliers | `get_plan_catalog` | No |
-| **Portfolio & Trade Review** — your own book, and your closed trades aggregated | `get_my_portfolio`, `review_my_trades` | Yes |
-| **Account Status** — your plan, remaining credits, points and rank, fee, referral earnings | `get_account_status` | Yes |
+| Workflow | Tools |
+|---|---|
+| **Market Pulse** — cross-asset read: momentum, funding regime, open-interest shifts, smart-money lean | `get_market_pulse` |
+| **Signals** — ranked, non-obvious market developments from Senpi's detectors | `scan_market_signals` |
+| **Asset Brief** — one asset: price, daily move, funding, open interest, its signals card | `get_asset_brief` |
+| **Smart Money Radar** — the proven cohort's positioning and recent large moves | `get_smart_money_positioning`, `get_whale_moves` |
+| **Trader Research** — rank Hyperliquid traders by window and metric, compare side by side | `find_top_traders`, `compare_traders` |
+| **Quant Desk** — read any wallet like a quant: 0-100 quant score, six dimensions, protection audit, priced leaks, deep dives | `quant_desk_overview`, `quant_desk_protection`, `quant_desk_leaks`, `quant_desk_section`, `quant_desk_deep`, `quant_desk_my_wallets`, `quant_desk_compare`, `quant_desk_find` |
+| **Strategy Discovery** — browse Senpi's strategy template catalog by goal and risk | `browse_strategies`, `get_strategy_details` |
+| **Plans & Pricing** — Senpi's live plan catalog: prices, credits, points multipliers | `get_plan_catalog` |
+| **Portfolio & Trade Review** — your own book, and your closed trades aggregated | `get_my_portfolio`, `review_my_trades` |
+| **Account Status** — your plan, remaining credits, points and rank, fee, referral earnings | `get_account_status` |
 
-The market and research tools work without a Senpi account. The two portfolio tools answer only for your own connected account; without sign-in they return a clear "sign in to Senpi" response instead of data.
+Every tool runs through your connected Senpi account: the connector asks you to sign in to Senpi when you add it. The market, research and catalog tools read public data; the portfolio, trade-review and account tools read only your own account.
 
 ## Safeguards
 

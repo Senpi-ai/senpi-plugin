@@ -79,13 +79,13 @@
               "description": "Review the user's own portfolio (signed in).",
               "prompt": "How is my portfolio doing?",
               "tools_triggered": "get_my_portfolio",
-              "expected_behavior": "Signed in, get_my_portfolio returns the connected account's own balances, positions and strategies, read-only. Without sign-in the tool returns a structured sign-in-required response, and the assistant asks the user to connect their Senpi account instead of retrying or guessing."
+              "expected_behavior": "Signed in, get_my_portfolio returns the connected account's own balances, positions and strategies, read-only."
             },
             {
               "description": "Read the user's own book with the Quant Desk (signed in).",
               "prompt": "Run Quant Desk on my wallet",
               "tools_triggered": "quant_desk_overview, quant_desk_protection",
-              "expected_behavior": "The assistant says the analysis is starting (it can take up to a minute; it is computed server-side and cached for ten minutes), then quant_desk_overview returns the score: a 0-100 quant score with six explained dimensions, the trading archetype and verdict, flags and the top findings, and the assistant quotes analysis_as_of. It then offers or calls quant_desk_protection for the live book's protection audit, reading each position's status as written (PROTECTED, PARTIAL, UNPROTECTED or UNKNOWN) and never calling an UNKNOWN position unprotected. Findings stay descriptive: no trade, size, leverage or stop price is prescribed. Read-only: no order is placed and nothing on the account changes. Without sign-in the tool returns a structured sign-in-required response instead. If the overview times out it retries once after a pause, never firing concurrent calls."
+              "expected_behavior": "The assistant says the analysis is starting (it can take up to a minute; it is computed server-side and cached for ten minutes), then quant_desk_overview returns the score: a 0-100 quant score with six explained dimensions, the trading archetype and verdict, flags and the top findings, and the assistant quotes analysis_as_of. It then offers or calls quant_desk_protection for the live book's protection audit, reading each position's status as written (PROTECTED, PARTIAL, UNPROTECTED or UNKNOWN) and never calling an UNKNOWN position unprotected. Findings stay descriptive: no trade, size, leverage or stop price is prescribed. Read-only: no order is placed and nothing on the account changes. If the overview times out it retries once after a pause, never firing concurrent calls."
             },
             {
               "description": "Candidate wallets by size",
@@ -97,13 +97,13 @@
               "description": "Ask about Senpi's plans and pricing (no sign-in needed).",
               "prompt": "What does Senpi cost? What do I get on each plan?",
               "tools_triggered": "get_plan_catalog",
-              "expected_behavior": "get_plan_catalog returns the live plan catalog (the same feed the Senpi app's paywall renders): each plan's price, included AI credits, points multiplier, trading-fee display and trial length. The assistant quotes those numbers as returned, never from memory. Works anonymously; plans closed to new subscribers are not listed. Read-only."
+              "expected_behavior": "get_plan_catalog returns the live plan catalog (the same feed the Senpi app's paywall renders): each plan's price, included AI credits, points multiplier, trading-fee display and trial length. The assistant quotes those numbers as returned, never from memory. Plans closed to new subscribers are not listed. Read-only."
             },
             {
               "description": "Check the user's own Senpi standing (signed in).",
               "prompt": "What's my Senpi status — my plan, points and fees?",
               "tools_triggered": "get_account_status",
-              "expected_behavior": "Signed in, get_account_status returns the connected account's current plan with renewal date, remaining AI credits for the cycle, Senpi points with rank, the Senpi trading fee as the backend reports it, and unclaimed referral earnings. The assistant leads with what was asked and quotes the fee exactly as returned (0 means a paid plan pays no Senpi fee). Sources that could not be read are named, not reported as zero. Without sign-in the tool returns a structured sign-in-required response. Read-only; nothing on the account changes."
+              "expected_behavior": "Signed in, get_account_status returns the connected account's current plan with renewal date, remaining AI credits for the cycle, Senpi points with rank, the Senpi trading fee as the backend reports it, and unclaimed referral earnings. The assistant leads with what was asked and quotes the fee exactly as returned (0 means a paid plan pays no Senpi fee). Sources that could not be read are named, not reported as zero. Read-only; nothing on the account changes."
             },
             {
               "description": "Review the user's own recent trades (signed in).",

@@ -3,20 +3,14 @@ name: senpi-portfolio
 description: >-
   Show the signed-in user their own Senpi account with the Senpi connector. Use for "my portfolio",
   "my balance", "my positions", "my strategies", "how am I doing?". Calls get_my_portfolio.
-  Requires Senpi sign-in; anonymous calls return auth_required. Read-only — nothing here trades,
-  moves funds, or changes the account.
+  Reads only the connected user's own account. Read-only — nothing here trades, moves funds, or
+  changes the account.
 ---
 
 # Portfolio
 
 One tool: `get_my_portfolio` (no arguments). Returns the user's balances, open positions, and
 running strategies.
-
-## Auth
-
-- An `AUTH_REQUIRED` error means the user hasn't connected their Senpi account in this app. Tell
-  them to connect Senpi (the app's connector settings) and sign in — then call again. Don't retry
-  without that.
 
 ## Presenting the result
 

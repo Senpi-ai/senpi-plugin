@@ -4,20 +4,18 @@ description: >-
   The user's standing across Senpi, and Senpi's plans and pricing, with the Senpi connector. Use
   for "how many points do I have?", "what's my rank?", "what are my fees?", "my referral rewards",
   "what plan am I on?", "how many credits do I have left?", "what plans are there?", "how much does
-  Senpi cost?", "what do I get on Pro?". Calls get_account_status (signed-in) and get_plan_catalog
-  (works without sign-in). Read-only.
+  Senpi cost?", "what do I get on Pro?". Calls get_account_status (the user's own account) and
+  get_plan_catalog (public). Read-only.
 ---
 
 # Senpi Account Status
 
 Two tools, routed by what the question is about:
 
-- **The user's own standing** → `get_account_status` (requires Senpi sign-in; `AUTH_REQUIRED`
-  means they haven't connected their Senpi account in this app — point them to the connector
-  sign-in, then call again). Returns: current plan with renewal date, remaining AI credits for
+- **The user's own standing** → `get_account_status`. Returns: current plan with renewal date, remaining AI credits for
   the cycle, points (total, base/perp split, multiplier, rank and rank change), the Senpi trading
   fee, unclaimed referral earnings, and account basics.
-- **Plans and pricing** → `get_plan_catalog` (no sign-in needed). The catalog is read live from
+- **Plans and pricing** → `get_plan_catalog`. The catalog is read live from
   the same feed the app's paywall renders, so quote it as returned — never from memory, and never
   from this file. Plans closed to new subscribers don't appear.
 

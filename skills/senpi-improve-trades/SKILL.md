@@ -3,8 +3,8 @@ name: senpi-improve-trades
 description: >-
   Review the signed-in user's own closed Hyperliquid trades with the Senpi connector. Use for
   "review my trades", "how did I trade this month?", "where am I losing money?", "what should I
-  fix?", "my win rate?". Calls review_my_trades. Requires Senpi sign-in; anonymous calls return
-  auth_required. Read-only.
+  fix?", "my win rate?". Calls review_my_trades. Reads only the connected user's own account.
+  Read-only.
 ---
 
 # Trade Review
@@ -15,11 +15,6 @@ wallet (active, paused **and closed**: a closed strategy's trades are history, n
 verdict), every saved wallet, and the Senpi main wallet — and returns `wallets` (each with its
 `kind`, `label`, `status` and whether its history was read), `trades` (each with its wallet and
 strategy), trade count, net realized PnL, total fees, win rate, and the largest wins and losses.
-
-## Auth
-
-- `AUTH_REQUIRED` means the user hasn't connected their Senpi account in this app — point them to
-  the connector sign-in, then call again.
 
 ## Presenting the review
 
