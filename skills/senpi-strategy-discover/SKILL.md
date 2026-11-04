@@ -3,7 +3,7 @@ name: senpi-strategy-discover
 description: >-
   Help the user explore Senpi's public strategy catalog with the Senpi connector. Use for "what
   strategies does Senpi have?", "recommend a strategy for a choppy market", "something low-risk",
-  "what's in the catalog?", "details on Athena". Calls browse_strategies and get_strategy_details.
+  "what's in the catalog?", "details on Athena". Calls browse_strategy_catalog and get_catalog_strategy.
   Read-only catalog: nothing is deployed, funded, or started from here — that happens in senpi.ai.
 ---
 
@@ -11,13 +11,13 @@ description: >-
 
 Two tools:
 
-- `browse_strategies` — the catalog as cards, one per variant family (a card's `variants` lists
+- `browse_strategy_catalog` — the catalog as cards, one per variant family (a card's `variants` lists
   its siblings — offer those only through the parent), in neutral alphabetical order, or ranked
   for the user's `goal` (plain words, max 300 chars); optional `risk`
   (conservative/moderate/aggressive). `limit` defaults to 8 — raise it when the user asks to see
   more or the whole catalog ("list everything" → `limit: 500`); `truncated: true` says more exist,
   `families` and `total_in_catalog` say how many.
-- `get_strategy_details` — one entry in full by `strategy_id`: thesis, archetype, direction,
+- `get_catalog_strategy` — one entry in full by `strategy_id`: thesis, archetype, direction,
   leverage cap, minimum budget, declared risk level.
 
 ## What this data is — and isn't

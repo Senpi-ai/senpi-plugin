@@ -26,5 +26,5 @@ score); each row says which `feed` it is from.
 
 ## Follow-ups to offer
 
-- Depth on one signal's asset → `get_asset_brief`.
+- Depth on one signal's asset → `read_asset_signal`.
 - Who is driving it → `get_whale_moves` with that asset.

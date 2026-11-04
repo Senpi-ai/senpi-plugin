@@ -60,8 +60,8 @@
             {
               "description": "Get a brief on one asset.",
               "prompt": "Give me a brief on ETH",
-              "tools_triggered": "get_asset_brief",
-              "expected_behavior": "get_asset_brief returns ETH's price with its daily change, funding, open interest, any active signals and recent momentum events. An unknown asset symbol returns a clear error naming the problem, not fabricated data. Read-only."
+              "tools_triggered": "read_asset_signal",
+              "expected_behavior": "read_asset_signal returns ETH's price with its daily change, funding, open interest, any active signals and recent momentum events. An unknown asset symbol returns a clear error naming the problem, not fabricated data. Read-only."
             },
             {
               "description": "Research and compare top traders.",
@@ -72,8 +72,8 @@
             {
               "description": "Get strategy ideas for a goal.",
               "prompt": "Recommend a strategy for a choppy, range-bound market with low risk",
-              "tools_triggered": "browse_strategies, get_strategy_details",
-              "expected_behavior": "browse_strategies returns the best-matching templates from Senpi's strategy catalog with their declared, written characteristics (no invented performance numbers); get_strategy_details expands one of them. Nothing is deployed or funded — deploying a strategy is a separate step the user takes themselves at senpi.ai."
+              "tools_triggered": "browse_strategy_catalog, get_catalog_strategy",
+              "expected_behavior": "browse_strategy_catalog returns the best-matching templates from Senpi's strategy catalog with their declared, written characteristics (no invented performance numbers); get_catalog_strategy expands one of them. Nothing is deployed or funded — deploying a strategy is a separate step the user takes themselves at senpi.ai."
             },
             {
               "description": "Review the user's own portfolio (signed in).",
@@ -96,8 +96,8 @@
             {
               "description": "Ask about Senpi's plans and pricing (no sign-in needed).",
               "prompt": "What does Senpi cost? What do I get on each plan?",
-              "tools_triggered": "get_plan_catalog",
-              "expected_behavior": "get_plan_catalog returns the live plan catalog (the same feed the Senpi app's paywall renders): each plan's price, included AI credits, points multiplier, trading-fee display and trial length. The assistant quotes those numbers as returned, never from memory. Plans closed to new subscribers are not listed. Read-only."
+              "tools_triggered": "get_subscription_plan_catalog",
+              "expected_behavior": "get_subscription_plan_catalog returns the live plan catalog (the same feed the Senpi app's paywall renders): each plan's price, included AI credits, points multiplier, trading-fee display and trial length. The assistant quotes those numbers as returned, never from memory. Plans closed to new subscribers are not listed. Read-only."
             },
             {
               "description": "Check the user's own Senpi standing (signed in).",

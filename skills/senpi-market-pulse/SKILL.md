@@ -4,7 +4,7 @@ description: >-
   Read the Hyperliquid market as a whole with the Senpi connector. Use for "what's moving the
   markets today?", "how are markets?", "market overview", "what's the regime?", "anything happening
   in crypto perps?" — any cross-market question that names no single asset. Calls get_market_pulse.
-  For one asset, use get_asset_brief instead; for ranked anomalies, scan_market_signals
+  For one asset, use read_asset_signal instead; for ranked anomalies, scan_market_signals
   (senpi-signals).
 ---
 
@@ -43,7 +43,7 @@ One tool call answers this: `get_market_pulse` (no arguments). It reads the whol
 
 ## Follow-ups to offer
 
-- A mover caught their eye → `get_asset_brief` on it.
+- A mover caught their eye → `read_asset_signal` on it.
 - "Anything unusual?" → `scan_market_signals`.
 - "What are the big traders doing?" → `get_smart_money_positioning` or `get_whale_moves`.
 - The exact name of an instrument ("is gold listed?", "what's the ticker?") → `list_instruments`

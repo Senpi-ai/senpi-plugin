@@ -5,7 +5,7 @@ description: >-
   for "how many points do I have?", "what's my rank?", "what are my fees?", "my referral rewards",
   "what plan am I on?", "how many credits do I have left?", "what plans are there?", "how much does
   Senpi cost?", "what do I get on Pro?". Calls get_account_status (the user's own account) and
-  get_plan_catalog (public). Read-only.
+  get_subscription_plan_catalog (public). Read-only.
 ---
 
 # Senpi Account Status
@@ -15,7 +15,7 @@ Two tools, routed by what the question is about:
 - **The user's own standing** → `get_account_status`. Returns: current plan with renewal date, remaining AI credits for
   the cycle, points (total, base/perp split, multiplier, rank and rank change), the Senpi trading
   fee, unclaimed referral earnings, and account basics.
-- **Plans and pricing** → `get_plan_catalog`. The catalog is read live from
+- **Plans and pricing** → `get_subscription_plan_catalog`. The catalog is read live from
   the same feed the app's paywall renders, so quote it as returned — never from memory, and never
   from this file. Plans closed to new subscribers don't appear.
 

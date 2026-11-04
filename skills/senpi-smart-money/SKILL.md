@@ -19,7 +19,7 @@ Two tools:
   Optional `asset` adds `smart` and `crowd` reads on that one coin, with the members' positions.
   `cohorts` says how many wallets each sample holds and names them: this is a 150-wallet sample
   of the proven tier with every position counted, not the signals card's whole tier that
-  `get_asset_brief` reads, so the two tools' holder counts differ by design.
+  `read_asset_signal` reads, so the two tools' holder counts differ by design.
 - `get_whale_moves` — the 4h board's momentum events, one per trader (its newest that names
   `top_positions`), newest first, up to 8. Optional `asset`, `window_hours` (default 4, the
   board's own window; max 168).
@@ -41,6 +41,6 @@ Two tools:
 ## Follow-ups to offer
 
 - Depth on one trader → `compare_traders` or `find_top_traders` (senpi-trader-research).
-- Depth on one asset → `get_asset_brief`.
+- Depth on one asset → `read_asset_signal`.
 - The 4h board's ranking and where its gains concentrate, or one trader's positions behind a
   momentum event → `get_leaderboard` (`trader` for the wallet).
