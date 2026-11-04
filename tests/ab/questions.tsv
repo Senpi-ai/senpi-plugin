@@ -1,0 +1,14 @@
+id	auth	skill	question
+pulse	no	senpi-market-pulse	What's moving the markets today?
+signals	no	senpi-signals	Scan the market for anomalies and unusual signals right now.
+smart-eth	no	senpi-smart-money	What is smart money doing on ETH right now — are the top traders long or short?
+whales	no	senpi-smart-money	Any big whale moves on Hyperliquid in the last day?
+top-traders	no	senpi-trader-research	Find the top 5 Hyperliquid traders this month.
+compare	no	senpi-trader-research	Compare these two wallets side by side: 0x029cd954c38838b2731cb5618e5c950ed4766956 and 0x526bbc5f8358ca4d6c082ac919bf8175417501c2
+catalog	no	senpi-strategy-discover	What strategies does Senpi offer? Give me the full catalog.
+athena	no	senpi-strategy-discover	Tell me about the Athena strategy in detail.
+plans	no	senpi-account-status	What plans does Senpi offer and what does each cost?
+quant-desk	no	quant-desk	Run quant desk on 0xf21d494bb47339f399267c5519cbe11da0753b2d — score, verdict and the protection audit.
+portfolio	yes	senpi-portfolio	Show my portfolio: balance, positions and strategies.
+review	yes	senpi-improve-trades	Review my closed trades from the last 30 days — win rate and where I'm losing money.
+account	yes	senpi-account-status	What plan am I on, how many Senpi points do I have and what is my rank and fee?
