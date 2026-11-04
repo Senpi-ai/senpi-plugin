@@ -27,6 +27,9 @@ Two tools:
   and say so if the user asks for one.
 - The catalog has a version (`catalog_version`, `catalog_updated`); quote it when the user asks
   how current the list is.
+  The catalog is read live from senpi-skills and reread every 15 minutes: `catalog_as_of` is when
+  it was last confirmed current, and `catalog_stale: true` means the last refresh failed and this
+  is the last good copy — say so if the user is choosing on the latest entries.
 
 ## Presenting the result
 
