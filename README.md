@@ -13,7 +13,7 @@ Every tool is read-only. Trading, funding and strategy deployment happen in your
 | **Asset Brief** — one asset: price, daily move, funding, open interest, its signals card | `get_asset_brief` | No |
 | **Smart Money Radar** — the proven cohort's positioning and recent large moves | `get_smart_money_positioning`, `get_whale_moves` | No |
 | **Trader Research** — rank Hyperliquid traders by window and metric, compare side by side | `find_top_traders`, `compare_traders` | No |
-| **Quant Desk** — read any wallet like a quant: 0-100 quant score, six dimensions, protection audit, priced leaks, deep dives | `quant_desk_overview`, `quant_desk_protection`, `quant_desk_leaks`, `quant_desk_section`, `quant_desk_deep`, `quant_desk_my_wallets` | Only for your own book |
+| **Quant Desk** — read any wallet like a quant: 0-100 quant score, six dimensions, protection audit, priced leaks, deep dives | `quant_desk_overview`, `quant_desk_protection`, `quant_desk_leaks`, `quant_desk_section`, `quant_desk_deep`, `quant_desk_my_wallets`, `quant_desk_compare`, `quant_desk_find` | Only for your own book |
 | **Strategy Discovery** — browse Senpi's strategy template catalog by goal and risk | `browse_strategies`, `get_strategy_details` | No |
 | **Plans & Pricing** — Senpi's live plan catalog: prices, credits, points multipliers | `get_plan_catalog` | No |
 | **Portfolio & Trade Review** — your own book, and your closed trades aggregated | `get_my_portfolio`, `review_my_trades` | Yes |

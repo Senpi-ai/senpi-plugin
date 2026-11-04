@@ -88,6 +88,12 @@
               "expected_behavior": "The assistant says the analysis is starting (it can take up to a minute; it is computed server-side and cached for ten minutes), then quant_desk_overview returns the score: a 0-100 quant score with six explained dimensions, the trading archetype and verdict, flags and the top findings, and the assistant quotes analysis_as_of. It then offers or calls quant_desk_protection for the live book's protection audit, reading each position's status as written (PROTECTED, PARTIAL, UNPROTECTED or UNKNOWN) and never calling an UNKNOWN position unprotected. Findings stay descriptive: no trade, size, leverage or stop price is prescribed. Read-only: no order is placed and nothing on the account changes. Without sign-in the tool returns a structured sign-in-required response instead. If the overview times out it retries once after a pause, never firing concurrent calls."
             },
             {
+              "description": "Candidate wallets by size",
+              "prompt": "Find me some whale traders to analyze",
+              "tools_triggered": "quant_desk_find",
+              "expected_behavior": "quant_desk_find with band whales returns up to eight public wallets with account value, window PnL, ROI, volume and turnover; the assistant asks or states the window and offers to run the desk on one."
+            },
+            {
               "description": "Ask about Senpi's plans and pricing (no sign-in needed).",
               "prompt": "What does Senpi cost? What do I get on each plan?",
               "tools_triggered": "get_plan_catalog",
@@ -126,7 +132,7 @@
         }
       },
       "publication": {
-        "release_notes": "0.5.0 — Research connector. The plugin now points at Senpi's dedicated read-only research server: nineteen typed tools covering market pulse, signal scans, asset briefs, smart-money positioning, whale moves, trader research and comparison, the Quant Desk (score, protection audit, leaks, sections, deep dives and your wallets), the strategy catalog, Senpi's live plan catalog, and — signed in — your own portfolio, trade review and account status. Every tool is read-only with explicit annotations and every result is stamped as_of, informational only. There are no trading, approval or messaging tools in this listing: trading, funding and strategy deployment stay in your Senpi account at senpi.ai."
+        "release_notes": "0.5.0 — Research connector. The plugin now points at Senpi's dedicated read-only research server: twenty-one typed tools covering market pulse, signal scans, asset briefs, smart-money positioning, whale moves, trader research and comparison, the Quant Desk (score, protection audit, leaks, sections, deep dives and your wallets), the strategy catalog, Senpi's live plan catalog, and — signed in — your own portfolio, trade review and account status. Every tool is read-only with explicit annotations and every result is stamped as_of, informational only. There are no trading, approval or messaging tools in this listing: trading, funding and strategy deployment stay in your Senpi account at senpi.ai."
       }
     },
     "ai.senpi": {
