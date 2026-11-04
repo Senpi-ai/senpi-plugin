@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "senpi-agent",
   "version": "0.5.0",
-  "description": "Turn your AI assistant into your AI quant researcher for perpetual futures markets. Read the day's market pulse, scan for signals and anomalies, see where smart money is positioned, research and compare Hyperliquid traders, browse Senpi's strategy catalog, and review your own portfolio and trade history. Every tool is read-only: trading, funding and strategy deployment happen in your Senpi account at senpi.ai, never through this plugin.",
+  "description": "Turn your AI assistant into your AI quant researcher for perpetual futures markets. Read the day's market pulse, scan for signals and anomalies, see where smart money is positioned, research and compare Hyperliquid traders, score any wallet with the Quant Desk, browse Senpi's strategy catalog, and review your own portfolio and trade history. Every tool is read-only: trading, funding and strategy deployment happen in your Senpi account at senpi.ai, never through this plugin.",
   "author": {
     "name": "Senpi",
     "url": "https://senpi.ai"
@@ -23,7 +23,7 @@
       "interface": {
         "displayName": "Senpi — AI Quant",
         "shortDescription": "Market signals & research",
-        "longDescription": "Senpi is your AI quant researcher for perpetual futures markets. Read the day's market pulse across momentum, funding and open interest; scan for ranked signals and anomalies; see where the proven smart-money cohort is positioned and what whales just did; research and compare Hyperliquid traders; browse Senpi's strategy template catalog by goal and risk; and, once you connect your Senpi account, review your own portfolio and trade history — all backed by Senpi's Hyperfeed market intelligence. Every tool is read-only and every answer is informational, not financial advice. Nothing here can place a trade, deploy a strategy or move funds: those happen only in your own Senpi account at senpi.ai.",
+        "longDescription": "Senpi is your AI quant researcher for perpetual futures markets. Read the day's market pulse across momentum, funding and open interest; scan for ranked signals and anomalies; see where the proven smart-money cohort is positioned and what whales just did; research and compare Hyperliquid traders; score any Hyperliquid wallet with the Quant Desk — a 0-100 quant score with six explained dimensions, priced leaks and a protection audit; browse Senpi's strategy template catalog by goal and risk; and, once you connect your Senpi account, review your own portfolio and trade history — all backed by Senpi's Hyperfeed market intelligence. Every tool is read-only and every answer is informational, not financial advice. Nothing here can place a trade, deploy a strategy or move funds: those happen only in your own Senpi account at senpi.ai.",
         "developerName": "Senpi",
         "category": "Finance",
         "capabilities": [
@@ -32,7 +32,7 @@
         "defaultPrompt": [
           "What's moving the markets today?",
           "Scan the market for signals and anomalies",
-          "Where is smart money positioned right now?"
+          "Run Quant Desk on my wallet"
         ],
         "websiteURL": "https://senpi.ai/connectors",
         "supportURL": "https://resources.senpi.ai/support",
@@ -82,6 +82,12 @@
               "expected_behavior": "Signed in, get_my_portfolio returns the connected account's own balances, positions and strategies, read-only. Without sign-in the tool returns a structured sign-in-required response, and the assistant asks the user to connect their Senpi account instead of retrying or guessing."
             },
             {
+              "description": "Read the user's own book with the Quant Desk (signed in).",
+              "prompt": "Run Quant Desk on my wallet",
+              "tools_triggered": "quant_desk_overview, quant_desk_protection",
+              "expected_behavior": "The assistant says the analysis is starting (it can take up to a minute; it is computed server-side and cached for ten minutes), then quant_desk_overview returns the score: a 0-100 quant score with six explained dimensions, the trading archetype and verdict, flags and the top findings, and the assistant quotes analysis_as_of. It then offers or calls quant_desk_protection for the live book's protection audit, reading each position's status as written (PROTECTED, PARTIAL, UNPROTECTED or UNKNOWN) and never calling an UNKNOWN position unprotected. Findings stay descriptive: no trade, size, leverage or stop price is prescribed. Read-only: no order is placed and nothing on the account changes. Without sign-in the tool returns a structured sign-in-required response instead. If the overview times out it retries once after a pause, never firing concurrent calls."
+            },
+            {
               "description": "Ask about Senpi's plans and pricing (no sign-in needed).",
               "prompt": "What does Senpi cost? What do I get on each plan?",
               "tools_triggered": "get_plan_catalog",
@@ -120,7 +126,7 @@
         }
       },
       "publication": {
-        "release_notes": "0.5.0 — Research connector. The plugin now points at Senpi's dedicated read-only research server: thirteen typed tools covering market pulse, signal scans, asset briefs, smart-money positioning, whale moves, trader research and comparison, the strategy catalog, Senpi's live plan catalog, and — signed in — your own portfolio, trade review and account status. Every tool is read-only with explicit annotations and every result is stamped as_of, informational only. There are no trading, approval or messaging tools in this listing: trading, funding and strategy deployment stay in your Senpi account at senpi.ai."
+        "release_notes": "0.5.0 — Research connector. The plugin now points at Senpi's dedicated read-only research server: nineteen typed tools covering market pulse, signal scans, asset briefs, smart-money positioning, whale moves, trader research and comparison, the Quant Desk (score, protection audit, leaks, sections, deep dives and your wallets), the strategy catalog, Senpi's live plan catalog, and — signed in — your own portfolio, trade review and account status. Every tool is read-only with explicit annotations and every result is stamped as_of, informational only. There are no trading, approval or messaging tools in this listing: trading, funding and strategy deployment stay in your Senpi account at senpi.ai."
       }
     },
     "ai.senpi": {
