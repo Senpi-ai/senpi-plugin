@@ -66,8 +66,8 @@
             {
               "description": "Research and compare top traders.",
               "prompt": "Who were the best traders this week? Compare the top two.",
-              "tools_triggered": "find_top_traders, compare_traders",
-              "expected_behavior": "find_top_traders with window \"weekly\" returns a ranked list of trader addresses with performance stats. compare_traders with the top two addresses returns an aligned side-by-side comparison. Research only: no copy-trade is set up and nothing on any account changes."
+              "tools_triggered": "find_top_traders, get_wallet_profile",
+              "expected_behavior": "find_top_traders with window \"weekly\" returns a ranked list of trader addresses with performance stats. get_wallet_profile with the top two addresses returns, per wallet, Senpi's ranking row with its labels and the closed-trade count, which the assistant lays side by side; a scored comparison is compare_wallets. Research only: no copy-trade is set up and nothing on any account changes."
             },
             {
               "description": "Get strategy ideas for a goal.",
@@ -108,8 +108,8 @@
             {
               "description": "Review the user's own recent trades (signed in).",
               "prompt": "Review my trades from the last 30 days",
-              "tools_triggered": "review_my_trades",
-              "expected_behavior": "review_my_trades aggregates the connected account's closed trades over the window: net realized PnL, fees, win rate, and the largest wins and losses. Read-only; answers only for the account that signed in."
+              "tools_triggered": "get_wallet_closed_trades",
+              "expected_behavior": "get_wallet_closed_trades with no address and window_days 30 reviews the connected account's whole book: every strategy, saved and main wallet paged to the window start, with totals over every trade in the window (count, net realized PnL, fees, win rate, the largest wins and losses) and the first page of trades. The assistant leads with the net number after fees, then the shape, names any wallet in truncated_wallets or sources_unavailable as short or missing rather than $0, and prescribes nothing. Read-only; answers only for the account that signed in."
             },
             {
               "description": "Read a public wallet's closed trades.",

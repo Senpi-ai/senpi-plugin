@@ -22,7 +22,7 @@ data only; the words are yours, and this file says how to put them.
 
 Quant Desk reads — a 0-100 score, leaks, protection, the side-by-side, candidates to run the desk
 on, live matches — are this skill's; a plain ranked list of traders or a metrics-only comparison
-stays with `senpi-trader-research` (`find_top_traders`, `compare_traders`).
+stays with `senpi-trader-research` (`find_top_traders`, `get_wallet_profile`).
 
 ## Two tools
 

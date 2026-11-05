@@ -20,9 +20,6 @@ One tool call answers this: `get_market_pulse` (no arguments). It reads the whol
   (is the index calm while a sector breaks?), `day_classification` (`risk_on` / `risk_off` /
   `mixed`, from how many groups moved more than ±0.5%), and the `funding_regime`.
 - `movers` — the biggest moves by size, each with `volume_usd`, `funding` sign and `oi_trend`.
-- `smart_money` — the 4h board layer: `status`, `concentration` (where the top traders' gains sit),
-  `top_traders`, and `momentum_events` (one per trader, newest first, with `top_positions`).
-  `null` means the board could not be read this run; it is not "no activity".
 - `sources_unavailable` names any read that failed.
 
 ## Presenting the result
@@ -32,8 +29,9 @@ One tool call answers this: `get_market_pulse` (no arguments). It reads the whol
   conviction (volume, funding, OI trend).
 - Then the confirmation checklist as returned: gold, dollar, VIX, dispersion — quote the `read`
   labels; they are the engine's, not yours to recompute.
-- The 4h layer is where the money is *right now*; the groups are *today*. Keep them apart: a red
-  4h board on a green day is rotation inside the day, not a contradiction.
+- The groups are *today*. Where the money is *right now* is the 4h board, `get_leaderboard`: read
+  it when the user asks who is winning now, and keep the two apart — a red 4h board on a green
+  day is rotation inside the day, not a contradiction.
 - Quote figures as returned; the result's `as_of` says when the read was taken — say it when the
   user may act on the data.
 - If `sources_unavailable` is non-empty, say which section is missing rather than presenting a

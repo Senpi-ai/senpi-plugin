@@ -34,7 +34,7 @@ closed trades, P&L history). "Which of my wallets…" reads from that list.
 
 ## Follow-ups to offer
 
-- "How did I trade?" → `review_my_trades` (senpi-improve-trades).
+- "How did I trade?" → `get_wallet_closed_trades` with no address (senpi-improve-trades).
 - A position's market → `read_asset_signal`.
 - "My closed trades" one page at a time, per wallet → `get_wallet_closed_trades` with no address;
   "how has my equity moved" → `get_wallet_pnl_history` with no address (one series per wallet).

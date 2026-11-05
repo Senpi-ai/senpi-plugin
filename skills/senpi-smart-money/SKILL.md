@@ -27,6 +27,9 @@ Three tools:
   `divergences` between cohorts; `include_events: true` adds the newest wallet moves of $10k or
   more behind the flow. Quote `age_s`: the read is a snapshot, and says how old. "Smart money is
   short ETH" is positioning; "smart money sold ETH this afternoon" is flow — use the right one.
+  The per-asset totals are summed **across all cohorts**; one cohort's own moves come only from
+  the events — pass `include_events: true` and group them by cohort before saying what the
+  proven cohort, or the whales, did.
 - `get_whale_moves` — the 4h board's momentum events, one per trader (its newest that names
   `top_positions`), newest first, up to 8. Optional `asset`, `window_hours` (default 4, the
   board's own window; max 168).
@@ -47,7 +50,7 @@ Three tools:
 
 ## Follow-ups to offer
 
-- Depth on one trader → `compare_traders` or `find_top_traders` (senpi-trader-research).
+- Depth on one trader → `get_wallet_profile` or `find_top_traders` (senpi-trader-research).
 - Depth on one asset → `read_asset_signal`.
 - The 4h board's ranking and where its gains concentrate, or one trader's positions behind a
   momentum event → `get_leaderboard` (`trader` for the wallet).
