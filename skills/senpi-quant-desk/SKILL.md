@@ -33,7 +33,9 @@ stays with `senpi-trader-research` (`find_top_traders`, `get_wallet_profile`).
   follow-up. Every part is the full view — the list only trims the response.
 - `get_wallet_positions` — the live book, read in seconds without the trade history: each open
   position with entry, mark, leverage, liquidation price and distance, margin used and at risk,
-  the coin's average daily range (`daily_range_pct`), its stops and a protection `status`.
+  the coin's average daily range (`daily_range_pct`), its stops and a protection `status`; per
+  wallet, `perps_account_value` (the perps margin account, not the whole account), margin
+  utilization and withdrawable.
 
 ## Whose book
 
@@ -60,7 +62,12 @@ failure: wait about 30 seconds and call again **once**; it answers from cache.
    says what was measured — quote the line, it is the evidence. Then the flags. From `overview`:
    `track` (net, win rate, profit factor, trades), `drawdown` (`dd_pct` of equity, and
    `in_drawdown` now), `rank`, and `labels` where Senpi has them. `book_summary` gives the account
-   value and how much of it is at work.
+   value and how much of it is at work. Three account values come back and they are not the same
+   number: `equity.end` is the whole account (perps and spot) at the window's end,
+   `rank.leaderboard_account_value` is the stats leaderboard's lagging snapshot, and
+   `get_wallet_positions`' `perps_account_value` is the live perps margin account the margin and
+   liquidation figures run against. Name which one you quote; never call two of them "account
+   value" in one answer.
 2. **What's urgent** — `get_wallet_positions`. Read each `status` as written: `PROTECTED`,
    `PARTIAL`, `UNPROTECTED`, `UNKNOWN`, or `NO_POSITIONS` for the book. `protected_by` says what
    covers it: a stop resting on Hyperliquid (`hyperliquid_stop`) or Senpi's own ratchet stop

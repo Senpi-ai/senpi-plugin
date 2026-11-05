@@ -12,3 +12,7 @@ quant-desk	no	quant-desk	Run quant desk on 0xf21d494bb47339f399267c5519cbe11da07
 portfolio	yes	senpi-portfolio	Show my portfolio: balance, positions and strategies.
 review	yes	senpi-improve-trades	Review my closed trades from the last 30 days — win rate and where I'm losing money.
 account	yes	senpi-account-status	What plan am I on, how many Senpi points do I have and what is my rank and fee?
+qd-find	no	senpi-quant-desk	Find me some whale traders to run the quant desk on — who held up over the last month?
+qd-compare	no	senpi-quant-desk	Run the quant desk on both 0x029cd954c38838b2731cb5618e5c950ed4766956 and 0x526bbc5f8358ca4d6c082ac919bf8175417501c2 and compare them side by side.
+flow	no	senpi-smart-money	What did smart money do in the last 4 hours — what did the cohorts open, add to and close?
+stops	yes	senpi-portfolio	Did any of my stops trigger this week? Show my ratchet-stop events.
