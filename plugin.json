@@ -94,7 +94,7 @@
               "expected_behavior": "The assistant asks for or infers the account-size band, then find_top_traders with size_band whales (and the window) returns candidates off Hyperliquid's public leaderboard that actually trade, the most profitable over the window first, each with account value, PnL, ROI, volume and turnover. The assistant relays them with their numbers and offers to run get_wallet_analysis on the one the user picks. Public data, read-only."
             },
             {
-              "description": "Ask about Senpi's plans and pricing (no sign-in needed).",
+              "description": "Ask about Senpi's plans and pricing.",
               "prompt": "What does Senpi cost? What do I get on each plan?",
               "tools_triggered": "get_subscription_plan_catalog",
               "expected_behavior": "get_subscription_plan_catalog returns the live plan catalog (the same feed the Senpi app's paywall renders): each plan's price, included AI credits, points multiplier, trading-fee display and trial length. The assistant quotes those numbers as returned, never from memory. Plans closed to new subscribers are not listed. Read-only."
@@ -168,7 +168,7 @@
         }
       },
       "publication": {
-        "release_notes": "0.5.0 — Research connector. The plugin now points at Senpi's dedicated read-only research server: twenty-one typed tools covering market pulse, signal scans, asset briefs, smart-money positioning, whale moves, trader research and comparison, the Quant Desk (score, protection audit, leaks, sections, deep dives and your wallets), the strategy catalog, Senpi's live plan catalog, and — signed in — your own portfolio, trade review and account status. Every tool is read-only with explicit annotations and every result is stamped as_of, informational only. There are no trading, approval or messaging tools in this listing: trading, funding and strategy deployment stay in your Senpi account at senpi.ai."
+        "release_notes": "0.5.0 — Research connector. The plugin now points at Senpi's dedicated read-only research server: twenty-three typed tools covering market pulse, signal scans, asset signals, market data, funding, the 4h leaderboard, smart-money positioning and flow, whale moves, trader research and wallet profiles, the Quant Desk (one wallet analysis, the live book, and a side-by-side compare), wallet history and P&L, the strategy catalog, Senpi's live plan catalog, and — signed in — your own portfolio, trade review and account status. Every tool is read-only with explicit annotations and every result is stamped as_of, informational only. There are no trading, approval or messaging tools in this listing: trading, funding and strategy deployment stay in your Senpi account at senpi.ai."
       }
     },
     "ai.senpi": {

@@ -34,14 +34,14 @@ Every tool runs through your connected Senpi account: the connector asks you to 
 ## What this plugin runs, sends, and fetches
 
 - **Runs:** nothing on your machine. There are no scripts, hooks, or local servers.
-- **Sends:** tool calls to `https://open-mcp.senpi.ai/mcp` over HTTPS. Sign-in is OAuth 2.0 with your Senpi login, and is only required for the portfolio tools. Nothing else leaves your assistant.
+- **Sends:** tool calls to `https://open-mcp.senpi.ai/mcp` over HTTPS. Sign-in is OAuth 2.0 with your Senpi login and happens once, when you add the connector; every tool runs through it, and the account tools read only that account. Nothing else leaves your assistant.
 - **Fetches:** market data, trader statistics, strategy catalog entries, and — when you are signed in — your own portfolio and trade history.
 
 Privacy policy: <https://senpi.ai/privacy> · Terms: <https://senpi.ai/terms> · Support: <https://resources.senpi.ai/support>
 
 ## Install
 
-Signing in is optional and only unlocks the portfolio tools. Manage or disconnect any time at Senpi → Connectors.
+Sign-in is OAuth 2.0 with your Senpi login and happens once, when you add the connector. Manage or disconnect any time at Senpi → Connectors.
 
 ### Claude Code
 
@@ -88,9 +88,9 @@ hermes plugins install senpi
 hermes plugins enable senpi-agent
 ```
 
-Until the catalog entry is live, install from this repository instead: `hermes plugins install Senpi-ai/senpi-plugin --no-enable`, then `hermes plugins enable senpi-agent`. The market tools work right away; asking about your own portfolio opens the Senpi sign-in in your browser — approve it, then run `/reload-mcp` or start a new session so the tools load.
+Until the catalog entry is live, install from this repository instead: `hermes plugins install Senpi-ai/senpi-plugin --no-enable`, then `hermes plugins enable senpi-agent`. The first call of any tool opens the Senpi sign-in in your browser — approve it, then run `/reload-mcp` or start a new session so the tools load.
 
-Server only, without the skills: `hermes mcp install senpi` once the MCP catalog entry is live, or add `https://open-mcp.senpi.ai/mcp` under `mcp_servers` in `~/.hermes/config.yaml` with OAuth. Every tool on this server is read-only, so no trust gate is needed.
+Server only, without the skills: `hermes mcp install senpi-agent` once the MCP catalog entry is live, or add `https://open-mcp.senpi.ai/mcp` under `mcp_servers` in `~/.hermes/config.yaml` with OAuth. Every tool on this server is read-only, so no trust gate is needed.
 
 ### Anything else that speaks MCP
 

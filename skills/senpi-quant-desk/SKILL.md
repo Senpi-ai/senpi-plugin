@@ -16,7 +16,7 @@ description: >-
 
 # Quant Desk
 
-Every number comes from the desk's tools, computed server-side. Never recompute, estimate or
+Every number comes from the desk's tools. Never recompute, estimate or
 re-derive a score, a P&L figure or a leak yourself — relay what the tools return. The tools return
 data only; the words are yours, and this file says how to put them.
 
@@ -26,7 +26,7 @@ stays with `senpi-trader-research` (`find_top_traders`, `get_wallet_profile`).
 
 ## Two tools
 
-- `get_wallet_analysis` — one analysis, cached ten minutes, returned by parts (`include`):
+- `get_wallet_analysis` — one analysis, returned by parts (`include`):
   `overview` and `leaks` by default; `performance`, `strategy`, `context`, `smart`, `market`,
   `edge`, `scout`, `replay`, `funding` and `windows` on request; `["all"]` is every part but
   `replay`. Ask for what the question needs: the default for a first read, one part for a
@@ -34,8 +34,8 @@ stays with `senpi-trader-research` (`find_top_traders`, `get_wallet_profile`).
 - `get_wallet_positions` — the live book, read in seconds without the trade history: each open
   position with entry, mark, leverage, liquidation price and distance, margin used and at risk,
   the coin's average daily range (`daily_range_pct`), its stops and a protection `status`; per
-  wallet, `perps_account_value` (the perps margin account, not the whole account), margin
-  utilization and withdrawable.
+  wallet, `account_value`, margin utilization and withdrawable for the whole account
+  (`account_value_basis` says `whole_account` or `perps`; `account_value_perps` sits beside).
 
 ## Whose book
 
@@ -61,13 +61,12 @@ failure: wait about 30 seconds and call again **once**; it answers from cache.
    the score and archetype, then the dimensions worst-first: each has a `score` and a `line` that
    says what was measured — quote the line, it is the evidence. Then the flags. From `overview`:
    `track` (net, win rate, profit factor, trades), `drawdown` (`dd_pct` of equity, and
-   `in_drawdown` now), `rank`, and `labels` where Senpi has them. `book_summary` gives the account
-   value and how much of it is at work. Three account values come back and they are not the same
-   number: `equity.end` is the whole account (perps and spot) at the window's end,
-   `rank.leaderboard_account_value` is the stats leaderboard's lagging snapshot, and
-   `get_wallet_positions`' `perps_account_value` is the live perps margin account the margin and
-   liquidation figures run against. Name which one you quote; never call two of them "account
-   value" in one answer.
+   `in_drawdown` now), `rank`, and `labels` where Senpi has them. What the wallet holds is
+   `book_summary.account_value` (the whole account when readable, else the perps value — see
+   `account_value_perps`); quote that as its account value. `equity.start/end/avg` are the return
+   base — the value series less the window's net flows — not what it holds, and
+   `rank.leaderboard_account_value` is the stats leaderboard's lagging snapshot. Name which one you
+   quote; never call two of them "account value" in one answer.
 2. **What's urgent** — `get_wallet_positions`. Read each `status` as written: `PROTECTED`,
    `PARTIAL`, `UNPROTECTED`, `UNKNOWN`, or `NO_POSITIONS` for the book. `protected_by` says what
    covers it: a stop resting on Hyperliquid (`hyperliquid_stop`) or Senpi's own ratchet stop
