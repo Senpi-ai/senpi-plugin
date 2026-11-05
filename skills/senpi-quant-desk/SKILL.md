@@ -55,18 +55,65 @@ stays with `senpi-trader-research` (`find_top_traders`, `get_wallet_profile`).
 Stage it, don't dump it. The first `get_wallet_analysis` call does the full analysis: **tell the
 user the desk is running first**, it can take up to two minutes on a heavy wallet. Never fire a
 second call while one is in flight. A result saying the analysis is still running is not a
-failure: wait about 30 seconds and call again **once**; it answers from cache.
+failure: wait about 30 seconds and call again **once**.
 
-1. **The hook** — `get_wallet_analysis` (default parts). Lead with the verdict in one line, then
-   the score and archetype, then the dimensions worst-first: each has a `score` and a `line` that
-   says what was measured — quote the line, it is the evidence. Then the flags. From `overview`:
-   `track` (net, win rate, profit factor, trades), `drawdown` (`dd_pct` of equity, and
-   `in_drawdown` now), `rank`, and `labels` where Senpi has them. What the wallet holds is
-   `book_summary.account_value` (the whole account when readable, else the perps value — see
-   `account_value_perps`); quote that as its account value. `equity.start/end/avg` are the return
-   base — the value series less the window's net flows — not what it holds, and
-   `rank.leaderboard_account_value` is the stats leaderboard's lagging snapshot. Name which one you
-   quote; never call two of them "account value" in one answer.
+1. **The hook** — `get_wallet_analysis` (default parts). The tool returns numbers and labels; you
+   write the sentences from them, and every figure you quote names the measure it comes from.
+   Lead with the verdict in one line, then the score and archetype, then the dimensions
+   worst-first, then the flags.
+   - **Verdict** — `verdict.strength_kind` picks the opening clause:
+     - `edge` → "Real edge — profit factor {`profit_factor`} on {`trades`} trades"
+     - `payoff` → "Winners run — {`payoff_ratio`}× payoff"
+     - `win_rate` → "Picks well — {`win_rate`} win rate"
+     - `ledger_up` → "Net {`ledger_net`} on the ledger over the window (open book and funding included)"
+     - `ledger_down` → "Down {`ledger_net`} on the ledger over the window (open book and funding included)"
+     - `net_positive` → "Net positive — {`net`} realized over the window"
+     - `none` → "No edge shows up in this window"
+
+     Then join what the verdict also carries. `weakest {dimension, score}` →
+     "but {dimension} scores {score}" (say "and" after `ledger_down` or `none`), followed by that
+     dimension's worst measure from the list below. `nearest_liquidation` → "{coin} {side} sits
+     {liq_distance_pct}% from liquidation at {leverage}×". `underwater {unrealized, pct_of_equity,
+     unprotected, unprotected_unread, positions}` → "the open book is {unrealized} under water
+     ({pct_of_equity} of equity), {unprotected} of {positions} positions unprotected" (and
+     {unprotected_unread} unread, when above zero; unread is never "unprotected"). `thin: true` →
+     "only {trades} closed trades, too thin to grade". With none of these, say nothing in the
+     record is leaking badly.
+   - **Dimensions** — each has `score` (0-100) and `measures`. Quote the score, then the
+     measures below that are present, worst first; a key that is absent was not measured, so
+     leave it out. `judged: false` with a null score means the desk could not score it: say so
+     and quote only what was measured, never a score. Shares and rates are fractions (show as
+     percentages); `*_pct` keys are already percentages.
+     - `timing` — `chased_share` of `n` entries came after a ≥3% move (`chased_n`), run at
+       `chased_pf` against `calm_pf` before the move; `give_back_median` of a winner's peak given
+       back; `entry_lag_h` hours after the whale cohort's flow turns (negative: ahead of it).
+     - `risk` — `naked` (unprotected coins) and `unread` (coins whose stops could not be read) out
+       of `open_positions`; `nearest_liquidation`; `hold_ratio` (`hold_losers_h` against
+       `hold_winners_h`); `liquidations` costing `liquidation_loss`; `margin_utilization`;
+       `dd_pct` drawdown over `days`; `ledger_net`.
+     - `cost` — `cost_ratio` (`fees` plus paid `funding` against `gross_realized` and
+       `gross_income`), `net`, `ledger_net`, `taker_share`.
+     - `sizing` — `size_cv` and `size_max_over_median`; `loser_to_winner_size` (losers sized that
+       many times winners, over `losers_sized` and `winners_sized`); `big_positions` (`n` of them,
+       `winners` of which won); `exposure_over_equity`; `largest_share`; `complete_trades`.
+     - `consistency` — `trades`, `win_rate`, `profit_factor` (`"Infinity"`: no losing trade),
+       `payoff_ratio`.
+     - `market_fit` — `with_market` against `against` positions (`against_positions`: coin, side,
+       trend); `net_exposure`; `funding_per_day` and `funding_pct_of_equity_yr` on `account_value`;
+       `positions`.
+   - **Archetype** — `archetype` is facts, not a label. Say the `style` (`aggressive`, `balanced`
+     or `careful`) and the `bias` (`long` or `short`; empty means none), then describe how they
+     trade from the inputs: `max_leverage`, `exposure_over_equity`, `margin_utilization`,
+     `hold_winners_h` and `hold_losers_h`, `trades_per_day` over `active_days`, `chased_share`,
+     `long_share`. With `thin_record: true`, lead with "thin record — {`trades`} closed trades,
+     {`fills`} fills" and do not characterize their style beyond what the numbers show.
+   - **The rest of `overview`** — `track` (net, win rate, profit factor, trades), `drawdown`
+     (`dd_pct` of equity, and `in_drawdown` now), `rank`, and `labels` where Senpi has them. What
+     the wallet holds is `book_summary.account_value` (the whole account when readable, else the
+     perps value — see `account_value_perps`); quote that as its account value. `equity.start/end/avg`
+     are the return base — the value series less the window's net flows — not what it holds, and
+     `rank.leaderboard_account_value` is the stats leaderboard's lagging snapshot. Name which one
+     you quote; never call two of them "account value" in one answer.
 2. **What's urgent** — `get_wallet_positions`. Read each `status` as written: `PROTECTED`,
    `PARTIAL`, `UNPROTECTED`, `UNKNOWN`, or `NO_POSITIONS` for the book. `protected_by` says what
    covers it: a stop resting on Hyperliquid (`hyperliquid_stop`) or Senpi's own ratchet stop
@@ -80,24 +127,53 @@ failure: wait about 30 seconds and call again **once**; it answers from cache.
      readable here, so an `UNPROTECTED` position on a Senpi strategy wallet may still be covered in
      Senpi — say so.
 3. **The money** — the `leaks` part (in the default read): `costs` is the waterfall, gross →
-   fees → funding → net; then `leaks` ranked by dollar impact, each with its `evidence` and
-   `counterfactual` (what the same trades would have kept), and `recoverable` is the one figure
-   that does not double count. Quote the counterfactuals as measured on this wallet's own trades,
-   never as a promise.
+   fees → funding → net; then `leaks` ranked by dollar impact. Each leak has a `kind`, `usd`,
+   `unpriced`, `window` and `measures`; write one line from the kind and its measures:
+   - `taker_fees` — "{`taker_share`} of volume crossed the spread as a taker: {`fees_exec`} in fees
+     on {`volume`} at {`fee_rate_taker`} taker / {`fee_rate_maker`} maker"
+   - `funding_paid` — "paid {`funding`} in funding over {`days`} days; {`worst_coin`} alone cost
+     {`worst_coin_funding`}" (say so when it exceeds the net, other coins having collected funding
+     back), "the book pays {`funding_per_day`}/day at today's rates", and when priced "holds past 24h
+     paid {`paid_after_24h`}: {`funding_saved`} of funding plus {`exit_effect`} from closing
+     earlier"
+   - `open_past_24h` — "across {`complete_trades`} complete trades, the ones still open at 24h gave
+     back more than they added from there on"
+   - `hold_ratio` — "losers held {`hold_ratio`}× longer than winners: median {`hold_losers_h`}h
+     against {`hold_winners_h`}h over {`complete_trades`} complete trades"
+   - `give_back` — "winners give back a median {`give_back_median`} of their peak (they reach
+     {`mfe_median_winners`} before exit); {`losers_that_were_green`} of losers were green first"
+   - `give_back_unmeasured` — "no complete trade closed green, but {`n`} of them were in profit
+     first"
+   - `chased_entries` — "{`chased_n`} of {`n`} entries came after a ≥3% move and realized
+     {`chased_realized`} at profit factor {`chased_pf`}, against {`calm_pf`} when entering before
+     the move"
+   - `liquidations` — "{`liquidations`} liquidation(s) cost {`liquidation_loss`}"
+   - `oversized` — "{`n`} positions were sized over 1.5× the median winner; {`losers`} of them lost
+     money, {`total`} net"
+
+   `usd` is what the same trades would have kept, measured on this wallet's own trades over the
+   `window` — never a promise. `unpriced: true` means the pattern is measured, not priced: quote
+   its measures and give no dollar figure. `gross` (on `open_past_24h`, `give_back`,
+   `give_back_unmeasured`, `oversized`) is the gain before the offsetting cost, and `usd` is the
+   net. `recoverable` is the one figure that does not double count. Never add the leaks' `usd`
+   together yourself.
 4. **The rest, on request** — one part at a time: `performance` (the per-coin table, long against
-   short, holds, execution), `strategy` (what the book does, its fingerprint and statements),
-   `context` (today's market by asset class, the funding regime, the record by regime), `smart`
-   (the positions against the proven and hot cohorts), `market` (each open position's fit with
-   trend and funding), `edge` (best and worst setups, the measured rules).
+   short, holds, execution), `strategy` (what the book does: its fingerprint and families, as
+   measured fields — describe them in your own words; no wording comes with them), `context`
+   (today's market by asset class, the funding regime, the record by regime), `smart` (the
+   positions against the proven and hot cohorts), `market` (each open position's fit with trend and
+   funding; the book's stance comes as `stance`, `btc` and `median_funding_bp_8h`, in basis points
+   per 8 hours), `edge` (best and worst setups, the measured rules).
 5. **Going deeper** — `replay` (the worst 7-day window and its trades), `funding` (the next 30
    days at today's rates), `windows` (the last 30 days against the 60 before).
    - **Two or more wallets** ("compare these", "which of these is the better trader") →
      `compare_wallets`: per wallet the hook (score, archetype, verdict, rank, equity, drawdown,
-     track) and `separation` — each metric's value per wallet, which is best and worst at it, and
-     the spread (`lower_is_better` says which way). Lead with the metrics that separate them most,
-     in third person, and say each wallet's window and `analysed` count; a wallet marked `pending`
-     is still running — call again in about 30 seconds. For one wallet against a benchmark, pick
-     the benchmark from `find_top_traders` with a `size_band`.
+     track) — the verdict and archetype are facts, read as in step 1 — and `separation`: each
+     metric's value per wallet, which is best and worst at it, and the spread (`lower_is_better`
+     says which way). Lead with the metrics that separate them most, in third person, and say each
+     wallet's window and `analysed` count; a wallet marked `pending` is still running — call again
+     in about 30 seconds. For one wallet against a benchmark, pick the benchmark from
+     `find_top_traders` with a `size_band`.
    - **Live matches** ("what fits me today", "where do my patterns line up with the market") →
      the `scout` part. Process only: a match is a setup that fits how this trader wins, never a
      call to buy a coin.
@@ -106,8 +182,9 @@ failure: wait about 30 seconds and call again **once**; it answers from cache.
 
 - Someone else's wallet is "they"; the user's own book is "you". The tools do not choose — the
   `subject` field says which (`address` or `own_senpi_book`).
-- Numbers and labels exactly as returned: a dimension `line`, a flag, a leak's `evidence`. Round
-  dollars to the nearest dollar and percentages to one decimal when you restate them.
+- Numbers and labels exactly as returned: a measure, a flag, a leak's `usd`. Round dollars to the
+  nearest dollar and percentages to one decimal when you restate them. Never recompute a score or
+  a dollar figure — relay it, and name the measure each number comes from.
 - Warnings in `overview.meta.warnings` are part of the answer: a coverage line, a truncated
   history, a cohort that could not be read.
 
