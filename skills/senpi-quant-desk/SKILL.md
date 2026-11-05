@@ -10,7 +10,7 @@ description: >-
   trader", "find me traders to analyze / run the desk on", "what fits me today". Calls
   get_wallet_analysis (the analysis, by parts) and get_wallet_positions (the live book), with
   find_top_traders (size_band) for candidates, get_my_portfolio for the user's wallets and
-  quant_desk_compare for two to five wallets side by side. The user's own book needs their Senpi
+  compare_wallets for two to five wallets side by side. The user's own book needs their Senpi
   sign-in; any other address is public data. Read-only.
 ---
 
@@ -86,9 +86,12 @@ failure: wait about 30 seconds and call again **once**; it answers from cache.
 5. **Going deeper** — `replay` (the worst 7-day window and its trades), `funding` (the next 30
    days at today's rates), `windows` (the last 30 days against the 60 before).
    - **Two or more wallets** ("compare these", "which of these is the better trader") →
-     `quant_desk_compare`: the side-by-side numbers and what separates them, in third person. Say
-     each wallet's window. For one wallet against a benchmark, pick the benchmark from
-     `find_top_traders` with a `size_band`.
+     `compare_wallets`: per wallet the hook (score, archetype, verdict, rank, equity, drawdown,
+     track) and `separation` — each metric's value per wallet, which is best and worst at it, and
+     the spread (`lower_is_better` says which way). Lead with the metrics that separate them most,
+     in third person, and say each wallet's window and `analysed` count; a wallet marked `pending`
+     is still running — call again in about 30 seconds. For one wallet against a benchmark, pick
+     the benchmark from `find_top_traders` with a `size_band`.
    - **Live matches** ("what fits me today", "where do my patterns line up with the market") →
      the `scout` part. Process only: a match is a setup that fits how this trader wins, never a
      call to buy a coin.
