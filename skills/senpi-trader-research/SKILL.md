@@ -24,9 +24,11 @@ Four tools:
   the board's read `get_leaderboard` with `trader`, and a scored comparison `compare_wallets`
   (senpi-quant-desk).
 
-- `get_wallet_closed_trades` — one wallet's closed trades, newest first, one page of up to 200 per
-  call: `address`, with `window_days` (default 30) or `last` ("their last 20 trades"), an optional
-  `coin`, and `offset` for the next page (`has_more`, `next_offset`, `total_count`). Each trade
+- `get_wallet_closed_trades` — one wallet's closed trades, newest first, a page of 50 per call (up
+  to 200 with `last`): `address`, with `window_days` (default 30) or `last` ("their last 20
+  trades"), an optional `coin`, and `offset` for the next page (`has_more`, `next_offset`,
+  `total_count`; with a `coin` the filter is applied to the page, so `total_count` is null,
+  `total_count_all_coins` is the wallet's and `coin_matches_on_page` the page's). Each trade
   carries side, entry and exit, size, leverage, times, realized PnL, fees and `liquidation`; the
   page's `totals` give count, net PnL, fees and win rate for the rows returned, not the whole
   history.
