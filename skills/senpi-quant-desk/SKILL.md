@@ -72,7 +72,7 @@ failure: wait about 30 seconds and call again **once**.
 
      Then join what the verdict also carries. `weakest {dimension, score}` →
      "but {dimension} scores {score}" (say "and" after `ledger_down` or `none`), followed by that
-     dimension's worst measure from the list below. `nearest_liquidation` → "{coin} {side} sits
+     dimension's worst measure from the list below (by default `chased_share`, `hold_ratio`, `cost_ratio`, `loser_to_winner_size`, `win_rate`, `against` for the six dimensions). `nearest_liquidation` → "{coin} {side} sits
      {liq_distance_pct}% from liquidation at {leverage}×". `underwater {unrealized, pct_of_equity,
      unprotected, unprotected_unread, positions}` → "the open book is {unrealized} under water
      ({pct_of_equity} of equity), {unprotected} of {positions} positions unprotected" (and
@@ -82,10 +82,19 @@ failure: wait about 30 seconds and call again **once**.
    - **Dimensions** — each has `score` (0-100) and `measures`. Quote the score, then the
      measures below that are present, worst first; a key that is absent was not measured, so
      leave it out. `judged: false` with a null score means the desk could not score it: say so
-     and quote only what was measured, never a score. Shares and rates are fractions (show as
-     percentages); `*_pct` keys are already percentages.
+     and quote only what was measured, never a score.
+     - **Units.** Only `liq_distance_pct` and `daily_range_pct` are already percentages. Every
+       other key, with "pct" in its name or not, is a fraction to multiply by 100 when you show
+       it: `dd_pct`, `pct_of_equity`, `funding_pct_of_equity_yr`, `margin_utilization`,
+       `cost_ratio`, `losers_that_were_green`, `mfe_median_winners`, shares, rates and
+       `give_back_median`. Ratios (`hold_ratio`, `payoff_ratio`, `profit_factor`) are plain
+       multiples.
+     - **Signs.** Quote money as a magnitude and say the direction in words: `ledger_net` negative
+       is "down $X"; `funding` and `worst_coin_funding` negative is "paid $X", positive is
+       "collected $X"; `liquidation_loss` is a loss whatever its sign. Never print "down -$X".
+     - `naked` and `unread` are lists of coins; the count is their length.
      - `timing` — `chased_share` of `n` entries came after a ≥3% move (`chased_n`), run at
-       `chased_pf` against `calm_pf` before the move; `give_back_median` of a winner's peak given
+       `chased_pf` against `calm_pf` before the move (either can be very large when there were few losses; say so rather than quoting an absurd figure); `give_back_median` of a winner's peak given
        back; `entry_lag_h` hours after the whale cohort's flow turns (negative: ahead of it).
      - `risk` — `naked` (unprotected coins) and `unread` (coins whose stops could not be read) out
        of `open_positions`; `nearest_liquidation`; `hold_ratio` (`hold_losers_h` against
@@ -149,7 +158,7 @@ failure: wait about 30 seconds and call again **once**.
      the move"
    - `liquidations` — "{`liquidations`} liquidation(s) cost {`liquidation_loss`}"
    - `oversized` — "{`n`} positions were sized over 1.5× the median winner; {`losers`} of them lost
-     money, {`total`} net"
+     money, and capping them at the median winner would have kept {`usd`}"
 
    `usd` is what the same trades would have kept, measured on this wallet's own trades over the
    `window` — never a promise. `unpriced: true` means the pattern is measured, not priced: quote
