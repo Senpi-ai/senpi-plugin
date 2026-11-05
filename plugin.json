@@ -52,10 +52,16 @@
               "expected_behavior": "get_market_pulse (no arguments) returns a cross-asset read: momentum leaders, the funding regime, open-interest shifts and the smart-money lean, each section with data. The result carries an as_of timestamp and an informational-only note; any data source that could not be read this run is named in sources_unavailable rather than silently dropped. No order is placed and nothing on any account changes."
             },
             {
-              "description": "Scan for market anomalies and recent whale activity.",
-              "prompt": "Scan the market for anomalies and whale movements",
-              "tools_triggered": "scan_market_signals, get_whale_moves",
-              "expected_behavior": "scan_market_signals returns a ranked list of non-obvious market developments (funding, open interest, positioning, momentum). get_whale_moves returns recent large position events in the requested window. Both read-only, both stamped as_of."
+              "description": "Scan for market anomalies and follow the top hits.",
+              "prompt": "Scan the market for anomalies",
+              "tools_triggered": "scan_market_signals, read_asset_signal, get_asset_market_data",
+              "expected_behavior": "scan_market_signals returns a ranked list of non-obvious market developments, each with asset, type, strength and feed. For the top two or three by strength, read_asset_signal returns the asset's signals card (summary, signals, in_universe) and get_asset_market_data with intervals [\"1h\", \"1d\"] returns the daily move, funding and open interest behind it. The assistant lists the ranking first, one line each, then a short paragraph per followed asset, quotes as_of, and presents no signal as a trade instruction. Read-only public data."
+            },
+            {
+              "description": "Read recent whale activity.",
+              "prompt": "Any whale movements?",
+              "tools_triggered": "get_whale_moves",
+              "expected_behavior": "get_whale_moves returns recent large position events in the requested window, stamped as_of. Read-only public data; nothing is copied or placed."
             },
             {
               "description": "Get a brief on one asset.",

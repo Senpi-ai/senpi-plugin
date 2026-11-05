@@ -9,7 +9,7 @@ Every tool is read-only. Trading, funding and strategy deployment happen in your
 | Workflow | Tools |
 |---|---|
 | **Market Pulse** — cross-asset read: momentum, funding regime, open-interest shifts, smart-money lean | `get_market_pulse` |
-| **Signals** — ranked, non-obvious market developments from Senpi's detectors | `scan_market_signals` |
+| **Signals** — ranked anomalies from Senpi's detectors, with the card and market data behind the top hits | `scan_market_signals`, `read_asset_signal`, `get_asset_market_data` |
 | **Asset Signal** — one asset: its signals card, with price, daily move, funding and open interest | `read_asset_signal` |
 | **Smart Money Radar** — the proven cohort's positioning, what the cohorts did over a window, and recent large moves | `get_smart_money_positioning`, `get_smart_money_flow`, `get_whale_moves` |
 | **Trader Research** — rank Hyperliquid traders by window and metric, and who a wallet is | `find_top_traders`, `get_wallet_profile` |
