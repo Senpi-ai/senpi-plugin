@@ -3,7 +3,7 @@ name: senpi-market-pulse
 description: >-
   Read the Hyperliquid market as a whole with the Senpi connector. Use for "what's moving the
   markets today?", "how are markets?", "market overview", "what's the regime?", "anything happening
-  in crypto perps?" — any cross-market question that names no single asset. Calls get_market_pulse.
+  in crypto perps?", "funding extremes?" — any cross-market question that names no single asset. Calls get_market_pulse.
   For one asset, use read_asset_signal instead; for ranked anomalies, scan_market_signals
   (senpi-signals).
 ---

@@ -3,7 +3,7 @@ name: senpi-smart-money
 description: >-
   Read where top Hyperliquid traders sit with the Senpi connector. Use for "what's smart money
   doing?", "are the whales long or short?", "smart money on ETH?", "big moves lately?", "who's
-  buying?", "what did smart money do today?". Calls get_smart_money_positioning (the cohort's
+  buying?", "whale movements?", "what did smart money do today?". Calls get_smart_money_positioning (the cohort's
   current lean), get_smart_money_flow (what the cohorts did over a window) and get_whale_moves
   (recent large opens/closes). Public wallets, read-only.
 ---

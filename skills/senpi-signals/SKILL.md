@@ -18,7 +18,7 @@ Three steps, in order.
    comes first in its own order (by trade score), then the `news` feed (by social score); each row
    says which `feed` it is from.
 2. For the top two or three signals by strength, `read_asset_signal` with that `asset`: the card
-   (`summary`, `signals`, `in_universe`, `not_measured`, `as_of`, `stale`).
+   (`summary`, `signals`, `in_universe`, `not_measured`, `signals_as_of`, `signals_stale`).
 3. For each of those assets, `get_asset_market_data` with `asset` and `intervals` `["1h", "1d"]`:
    the daily move, funding and open interest behind the signal.
 
@@ -33,12 +33,12 @@ them there and do not scan.
 - The ranked list first: asset, type and strength, one line each, strongest first. Don't bury the
   ranking in prose.
 - Then one short paragraph per followed asset, from its card (the summary, the signals, whether it
-  is `in_universe`; say what `not_measured` lists, and that a `stale` card is old) and its market
+  is `in_universe`; say what `not_measured` lists, and that a card with `signals_stale: true` is old) and its market
   data (the daily move, funding, open interest).
 - If the user asked about a specific kind of signal, pass `signal_type` when a matching type exists
   in the results; otherwise scan once and filter in your answer, saying so.
 - `truncated: true` only happens when a `limit` was passed; call again without one.
-- Quote `as_of`. A signal is an observation, not a recommendation — never present one as a trade
+- Quote the call's `as_of` (the call time) and each card's `signals_as_of` (when its signals were read; the top-level `as_of` is not that). A signal is an observation, not a recommendation — never present one as a trade
   instruction.
 
 ## Follow-ups to offer

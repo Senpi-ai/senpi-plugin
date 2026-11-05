@@ -70,29 +70,44 @@ failure: wait about 30 seconds and call again **once**.
      - `net_positive` → "Net positive — {`net`} realized over the window"
      - `none` → "No edge shows up in this window"
 
-     Then join what the verdict also carries. `weakest {dimension, score}` →
-     "but {dimension} scores {score}" (say "and" after `ledger_down` or `none`), followed by that
-     dimension's worst measure from the list below (by default `chased_share`, `hold_ratio`, `cost_ratio`, `loser_to_winner_size`, `win_rate`, `against` for the six dimensions). `nearest_liquidation` → "{coin} {side} sits
-     {liq_distance_pct}% from liquidation at {leverage}×". `underwater {unrealized, pct_of_equity,
-     unprotected, unprotected_unread, positions}` → "the open book is {unrealized} under water
-     ({pct_of_equity} of equity), {unprotected} of {positions} positions unprotected" (and
-     {unprotected_unread} unread, when above zero; unread is never "unprotected"). `thin: true` →
-     "only {trades} closed trades, too thin to grade". With none of these, say nothing in the
-     record is leaking badly.
+     Then join only the one clause `weak_kind` names (absent: none of them), so the sentence says
+     what the engine said, in the same order of precedence:
+     - `underwater` → `underwater {unrealized, pct_of_equity, unprotected, unprotected_unread,
+       positions}`: "the open book is ${|unrealized|} under water ({pct_of_equity} of equity),
+       {unprotected} of {positions} positions unprotected" (`unrealized` is a negative number: quote
+       its magnitude; and {unprotected_unread} unread, when above zero; unread is never
+       "unprotected").
+     - `liquidation` → `nearest_liquidation`: "{coin} {side} sits {liq_distance_pct}% from
+       liquidation at {leverage}×", with its `protection` (`FULL` a full stop, `PARTIAL` a partial
+       stop, `NONE` no stop, empty: orders the desk could not read).
+     - `weakest` → "{dimension} scores {score}", then `measures[lead]` of that dimension (the
+       finding below). Say "and" rather than "but" after `ledger_down` or `none`.
+
+     The "but"/"and" joins whichever clause is said. `thin: true` → "only {trades} closed trades,
+     too thin to grade". With none of these, say nothing in the record is leaking badly.
    - **Dimensions** — each has `score` (0-100) and `measures`. Quote the score, then the
-     measures below that are present, worst first; a key that is absent was not measured, so
-     leave it out. `judged: false` with a null score means the desk could not score it: say so
+     `lead` finding, then the other measures below that are present; a key that is absent was not
+     measured, so leave it out. **`measures.lead` names the measure behind the line the desk
+     chose**: quote `measures[lead]` as that dimension's finding (with the measures it sits
+     beside). `lead: null` means nothing to flag for that dimension; say so. Order dimensions
+     worst score first. `judged: false` with a null score means the desk could not score it: say so
      and quote only what was measured, never a score.
-     - **Units.** Only `liq_distance_pct` and `daily_range_pct` are already percentages. Every
-       other key, with "pct" in its name or not, is a fraction to multiply by 100 when you show
-       it: `dd_pct`, `pct_of_equity`, `funding_pct_of_equity_yr`, `margin_utilization`,
-       `cost_ratio`, `losers_that_were_green`, `mfe_median_winners`, shares, rates and
-       `give_back_median`. Ratios (`hold_ratio`, `payoff_ratio`, `profit_factor`) are plain
-       multiples.
+     - **Units.** These keys are fractions; multiply by 100 when you show them: `chased_share`,
+       `give_back_median`, `dd_pct`, `current_dd_pct`, `margin_utilization`, `cost_ratio`,
+       `cost_drag`, `taker_share`, `win_rate`, `long_share`, `largest_share`,
+       `funding_pct_of_equity_yr`, `pct_of_equity`, `losers_that_were_green`,
+       `mfe_median_winners`, `fee_rate_taker`, `fee_rate_maker`. Everything else is shown as
+       returned: `liq_distance_pct` and `daily_range_pct` are already percentages; multiples
+       (`hold_ratio`, `payoff_ratio`, `profit_factor`, `loser_to_winner_size`,
+       `exposure_over_equity`), counts, hours and dollars go as they are.
      - **Signs.** Quote money as a magnitude and say the direction in words: `ledger_net` negative
        is "down $X"; `funding` and `worst_coin_funding` negative is "paid $X", positive is
-       "collected $X"; `liquidation_loss` is a loss whatever its sign. Never print "down -$X".
-     - `naked` and `unread` are lists of coins; the count is their length.
+       "collected $X"; `funding_per_day` negative means the book pays that much a day, positive
+       that it collects; `unrealized` (under water) and `chased_realized` are negative numbers:
+       say "$X under water" and "lost $X"; `liquidation_loss` is a loss whatever its sign. Never
+       print "down -$X".
+     - `naked` and `unread` are lists of coins; the count is their length (as a `lead`, name the
+       coins).
      - `timing` — `chased_share` of `n` entries came after a ≥3% move (`chased_n`), run at
        `chased_pf` against `calm_pf` before the move (either can be very large when there were few losses; say so rather than quoting an absurd figure); `give_back_median` of a winner's peak given
        back; `entry_lag_h` hours after the whale cohort's flow turns (negative: ahead of it).
@@ -101,7 +116,8 @@ failure: wait about 30 seconds and call again **once**.
        `hold_winners_h`); `liquidations` costing `liquidation_loss`; `margin_utilization`;
        `dd_pct` drawdown over `days`; `ledger_net`.
      - `cost` — `cost_ratio` (`fees` plus paid `funding` against `gross_realized` and
-       `gross_income`), `net`, `ledger_net`, `taker_share`.
+       `gross_income`), or, when the window has no gross to compare, `cost_drag` (costs against the
+       `cost_drag_basis` net result); `net`, `ledger_net`, `taker_share`.
      - `sizing` — `size_cv` and `size_max_over_median`; `loser_to_winner_size` (losers sized that
        many times winners, over `losers_sized` and `winners_sized`); `big_positions` (`n` of them,
        `winners` of which won); `exposure_over_equity`; `largest_share`; `complete_trades`.
@@ -110,12 +126,16 @@ failure: wait about 30 seconds and call again **once**.
      - `market_fit` — `with_market` against `against` positions (`against_positions`: coin, side,
        trend); `net_exposure`; `funding_per_day` and `funding_pct_of_equity_yr` on `account_value`;
        `positions`.
-   - **Archetype** — `archetype` is facts, not a label. Say the `style` (`aggressive`, `balanced`
-     or `careful`) and the `bias` (`long` or `short`; empty means none), then describe how they
-     trade from the inputs: `max_leverage`, `exposure_over_equity`, `margin_utilization`,
-     `hold_winners_h` and `hold_losers_h`, `trades_per_day` over `active_days`, `chased_share`,
-     `long_share`. With `thin_record: true`, lead with "thin record — {`trades`} closed trades,
-     {`fills`} fills" and do not characterize their style beyond what the numbers show.
+   - **Archetype** — `archetype` is facts, not a label. Say it as `style` + `bias` + `trader_type`:
+     `style` (`aggressive`, `balanced` or `careful`), `bias` (`long` becomes "long-only", `short`
+     "short-only"; empty means none), then the `trader_type` noun, e.g. "careful opportunist" or
+     "aggressive long-only momentum chaser". Then describe how they trade from the inputs:
+     `max_leverage`, `exposure_over_equity`, `margin_utilization`, `hold_winners_h` and
+     `hold_losers_h` (`hold_median_h` over `complete_trades`), `pre24_median`, `trades_per_day`
+     over `active_days`, `chased_share`, `long_share`. `trader_type` `thin record` or `early days`
+     (`thin_record: true`) means too few closed trades: lead with "thin record — {`trades`}
+     closed trades, {`fills`} fills" (or "early days — {`trades`} closed trades") and do not
+     characterize their style beyond what the numbers show.
    - **The rest of `overview`** — `track` (net, win rate, profit factor, trades), `drawdown`
      (`dd_pct` of equity, and `in_drawdown` now), `rank`, and `labels` where Senpi has them. What
      the wallet holds is `book_summary.account_value` (the whole account when readable, else the
@@ -142,7 +162,8 @@ failure: wait about 30 seconds and call again **once**.
      on {`volume`} at {`fee_rate_taker`} taker / {`fee_rate_maker`} maker"
    - `funding_paid` — "paid {`funding`} in funding over {`days`} days; {`worst_coin`} alone cost
      {`worst_coin_funding`}" (say so when it exceeds the net, other coins having collected funding
-     back), "the book pays {`funding_per_day`}/day at today's rates", and when priced "holds past 24h
+     back), "the book pays {|`funding_per_day`|}/day at today's rates" when `funding_per_day` is
+     negative, otherwise "the book collects {`funding_per_day`}/day", and when priced "holds past 24h
      paid {`paid_after_24h`}: {`funding_saved`} of funding plus {`exit_effect`} from closing
      earlier"
    - `open_past_24h` — "across {`complete_trades`} complete trades, the ones still open at 24h gave
@@ -153,12 +174,12 @@ failure: wait about 30 seconds and call again **once**.
      {`mfe_median_winners`} before exit); {`losers_that_were_green`} of losers were green first"
    - `give_back_unmeasured` — "no complete trade closed green, but {`n`} of them were in profit
      first"
-   - `chased_entries` — "{`chased_n`} of {`n`} entries came after a ≥3% move and realized
-     {`chased_realized`} at profit factor {`chased_pf`}, against {`calm_pf`} when entering before
-     the move"
+   - `chased_entries` — "{`chased_n`} of {`n`} entries came after a ≥3% move and lost
+     ${|`chased_realized`|} at profit factor {`chased_pf`}, against {`calm_pf`} when entering before
+     the move" (`chased_realized` is negative when they lost; say "made" only if it is positive)
    - `liquidations` — "{`liquidations`} liquidation(s) cost {`liquidation_loss`}"
    - `oversized` — "{`n`} positions were sized over 1.5× the median winner; {`losers`} of them lost
-     money, and capping them at the median winner would have kept {`usd`}"
+     money, and capping them at the median winner ({`median_winner`}) would have kept {`usd`}"
 
    `usd` is what the same trades would have kept, measured on this wallet's own trades over the
    `window` — never a promise. `unpriced: true` means the pattern is measured, not priced: quote
