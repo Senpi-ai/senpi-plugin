@@ -24,6 +24,14 @@ closed trades, P&L history). "Which of my wallets…" reads from that list.
   advise a trade. Deposits, withdrawals, and any change to positions or strategies happen in the
   Senpi app, not here.
 
+## My stops
+
+- "What did my stops do?", "did my ratchet trigger?", "why did my position close?" →
+  `get_my_stop_events`: the account's ratchet-stop timeline, newest first — each event with its
+  strategy, wallet, asset, `event_type` (a tier trigger, a lock move, an arm, a stop) and `details`.
+  `strategy_id` narrows to one strategy, `since` to a time. A strategy in `sources_unavailable`
+  could not be read: its events are missing, not absent.
+
 ## Follow-ups to offer
 
 - "How did I trade?" → `review_my_trades` (senpi-improve-trades).

@@ -11,7 +11,7 @@ Every tool is read-only. Trading, funding and strategy deployment happen in your
 | **Market Pulse** — cross-asset read: momentum, funding regime, open-interest shifts, smart-money lean | `get_market_pulse` |
 | **Signals** — ranked, non-obvious market developments from Senpi's detectors | `scan_market_signals` |
 | **Asset Signal** — one asset: its signals card, with price, daily move, funding and open interest | `read_asset_signal` |
-| **Smart Money Radar** — the proven cohort's positioning and recent large moves | `get_smart_money_positioning`, `get_whale_moves` |
+| **Smart Money Radar** — the proven cohort's positioning, what the cohorts did over a window, and recent large moves | `get_smart_money_positioning`, `get_smart_money_flow`, `get_whale_moves` |
 | **Trader Research** — rank Hyperliquid traders by window and metric, compare side by side | `find_top_traders`, `compare_traders` |
 | **Wallet History** — any wallet's closed trades, paged with totals, and its P&L, account value, flows and drawdown over a window | `get_wallet_closed_trades`, `get_wallet_pnl_history` |
 | **Market Data** — instrument specs, one asset's candles, order book, open interest and funding, funding extremes across the market | `list_instruments`, `get_asset_market_data`, `get_funding` |
@@ -19,7 +19,7 @@ Every tool is read-only. Trading, funding and strategy deployment happen in your
 | **Quant Desk** — read any wallet like a quant: 0-100 quant score, six dimensions, the live book's protection, priced leaks, deep dives, side by side | `get_wallet_analysis`, `get_wallet_positions`, `compare_wallets` (and `find_top_traders` with a size band, `get_my_portfolio` for your wallets) |
 | **Strategy Discovery** — browse Senpi's strategy template catalog by goal and risk | `browse_strategy_catalog`, `get_catalog_strategy` |
 | **Plans & Pricing** — Senpi's live plan catalog: prices, credits, points multipliers | `get_subscription_plan_catalog` |
-| **Portfolio & Trade Review** — your own book, and your closed trades aggregated; the wallet-history tools read your own wallets when given no address | `get_my_portfolio`, `review_my_trades` |
+| **Portfolio & Trade Review** — your own book, your closed trades aggregated, and your ratchet-stop timeline; the wallet-history tools read your own wallets when given no address | `get_my_portfolio`, `review_my_trades`, `get_my_stop_events` |
 | **Account Status** — your plan, remaining credits, points and rank, fee, referral earnings | `get_account_status` |
 
 Every tool runs through your connected Senpi account: the connector asks you to sign in to Senpi when you add it. The market, research and catalog tools read public data; the portfolio, trade-review and account tools read only your own account.

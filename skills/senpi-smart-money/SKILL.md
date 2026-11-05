@@ -3,13 +3,14 @@ name: senpi-smart-money
 description: >-
   Read where top Hyperliquid traders sit with the Senpi connector. Use for "what's smart money
   doing?", "are the whales long or short?", "smart money on ETH?", "big moves lately?", "who's
-  buying?". Calls get_smart_money_positioning (the cohort's current lean) and get_whale_moves
+  buying?", "what did smart money do today?". Calls get_smart_money_positioning (the cohort's
+  current lean), get_smart_money_flow (what the cohorts did over a window) and get_whale_moves
   (recent large opens/closes). Public wallets, read-only.
 ---
 
 # Smart Money Radar
 
-Two tools:
+Three tools:
 
 - `get_smart_money_positioning` — two cohorts read from the all-time realized-PnL ranking: the
   **smart** cohort (lifetime realized ≥ $1M, sampled to 150 wallets) and the **crowd** ($10k–$100k
@@ -20,6 +21,12 @@ Two tools:
   `cohorts` says how many wallets each sample holds and names them: this is a 150-wallet sample
   of the proven tier with every position counted, not the signals card's whole tier that
   `read_asset_signal` reads, so the two tools' holder counts differ by design.
+- `get_smart_money_flow` — what the cohorts **did**, not where they sit: positions opened, added
+  to, trimmed, closed and flipped over a `window` (`latest`, `1h`, `4h`, `24h`; default 1h), per
+  asset and cohort (`proven`, `crowd`, `apex`, `whale`), with `net_usd` per asset and the
+  `divergences` between cohorts; `include_events: true` adds the newest wallet moves of $10k or
+  more behind the flow. Quote `age_s`: the read is a snapshot, and says how old. "Smart money is
+  short ETH" is positioning; "smart money sold ETH this afternoon" is flow — use the right one.
 - `get_whale_moves` — the 4h board's momentum events, one per trader (its newest that names
   `top_positions`), newest first, up to 8. Optional `asset`, `window_hours` (default 4, the
   board's own window; max 168).

@@ -134,6 +134,18 @@
               "prompt": "Who is on top of the 4h board right now, and what is 0x526bbc5f8358ca4d6c082ac919bf8175417501c2 holding?",
               "tools_triggered": "get_leaderboard",
               "expected_behavior": "get_leaderboard with the trader address returns the board's status, the ranking (limit 20 by default) and the coin concentration, plus that trader's row and the positions behind its gain. When the board's status cannot be read the tool returns UNAVAILABLE and the assistant says the board is down rather than reporting an empty ranking. Public wallets, attributed by address; read-only."
+            },
+            {
+              "description": "Read what smart money did over a window.",
+              "prompt": "What did smart money do in the last 4 hours?",
+              "tools_triggered": "get_smart_money_flow",
+              "expected_behavior": "get_smart_money_flow with window 4h returns, per asset and cohort, the positions opened, added to, trimmed, closed and flipped over the window with the net flow in USD and any divergences between cohorts, plus age_s. The assistant describes the flow as what the cohorts did, quotes age_s, distinguishes it from current positioning, and does not advise following it. Read-only public data."
+            },
+            {
+              "description": "Read the user's ratchet-stop timeline.",
+              "prompt": "Did any of my stops trigger this week?",
+              "tools_triggered": "get_my_stop_events",
+              "expected_behavior": "Signed in, get_my_stop_events with since set to the start of the week returns the account's ratchet-stop events newest first, each with its strategy, wallet, asset, event type and details. The assistant lists the triggers and lock moves by strategy, says which strategies could not be read if any are named in sources_unavailable, and prescribes no change. Read-only; nothing on the account changes."
             }
           ],
           "negative": [
