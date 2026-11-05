@@ -9,8 +9,10 @@ description: >-
 
 # Portfolio
 
-One tool: `get_my_portfolio` (no arguments). Returns the user's balances, open positions, and
-running strategies.
+One tool: `get_my_portfolio` (no arguments). Returns the user's balances, open positions, running
+strategies, and `wallets` — their saved read-only wallets and Senpi strategy wallets, largest by
+Hyperliquid account value first, each usable as the `address` of the wallet tools (the Quant Desk,
+closed trades, P&L history). "Which of my wallets…" reads from that list.
 
 ## Presenting the result
 

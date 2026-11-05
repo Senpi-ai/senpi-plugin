@@ -33,6 +33,12 @@ Four tools:
   `return_on_avg_equity` and `drawdown`. On a unified account (`whole_account: true`) the drawdown
   is measured against the whole account's value.
 
+- `find_top_traders` with `size_band` (5k-10k, 10k-25k, 25k-100k, 100k-1m, whales) ranks by
+  P&L within an account-size bracket off Hyperliquid's public leaderboard instead of Senpi's
+  ranking — accounts that actually trade (at least $250k of window volume), the most profitable
+  first, or the least with `losers: true`; the window is weekly, monthly or all_time. This is how
+  "find me whales to look at" is answered; `sort_by` does not apply with a band.
+
 ## Judging a trader honestly
 
 - Never rank on ROI alone. A high-ROI trader with a deep max drawdown or a stale last trade is a

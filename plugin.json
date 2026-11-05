@@ -84,14 +84,14 @@
             {
               "description": "Read the user's own book with the Quant Desk (signed in).",
               "prompt": "Run Quant Desk on my wallet",
-              "tools_triggered": "quant_desk_overview, quant_desk_protection",
-              "expected_behavior": "The assistant says the analysis is starting (it can take up to a minute; it is computed server-side and cached for ten minutes), then quant_desk_overview returns the score: a 0-100 quant score with six explained dimensions, the trading archetype and verdict, flags and the top findings, and the assistant quotes analysis_as_of. It then offers or calls quant_desk_protection for the live book's protection audit, reading each position's status as written (PROTECTED, PARTIAL, UNPROTECTED or UNKNOWN) and never calling an UNKNOWN position unprotected. Findings stay descriptive: no trade, size, leverage or stop price is prescribed. Read-only: no order is placed and nothing on the account changes. If the overview times out it retries once after a pause, never firing concurrent calls."
+              "tools_triggered": "get_wallet_analysis, get_wallet_positions",
+              "expected_behavior": "The assistant says the analysis is starting (it can take up to two minutes on a heavy wallet; it is computed server-side and cached for ten minutes), then get_wallet_analysis returns the default parts: the 0-100 quant score with six dimensions each carrying a score and the line that says what was measured, the archetype and verdict, flags, the track record and drawdown, and the leaks priced in dollars with their counterfactuals. The assistant leads with the verdict, quotes the dimension lines as the evidence and analysis_as_of, then calls get_wallet_positions for the live book, reading each position's status as written (PROTECTED, PARTIAL, UNPROTECTED or UNKNOWN) against its liquidation distance and daily range, never calling an UNKNOWN position unprotected. The tools return data only; the assistant's wording stays descriptive, with no trade, size, leverage or stop price prescribed. Read-only: no order is placed and nothing on the account changes. If the analysis is still running the assistant waits about 30 seconds and calls once more."
             },
             {
               "description": "Candidate wallets by size",
               "prompt": "Find me some whale traders to analyze",
-              "tools_triggered": "quant_desk_find",
-              "expected_behavior": "quant_desk_find with band whales returns up to eight public wallets with account value, window PnL, ROI, volume and turnover; the assistant asks or states the window and offers to run the desk on one."
+              "tools_triggered": "find_top_traders",
+              "expected_behavior": "The assistant asks for or infers the account-size band, then find_top_traders with size_band whales (and the window) returns candidates off Hyperliquid's public leaderboard that actually trade, the most profitable over the window first, each with account value, PnL, ROI, volume and turnover. The assistant relays them with their numbers and offers to run get_wallet_analysis on the one the user picks. Public data, read-only."
             },
             {
               "description": "Ask about Senpi's plans and pricing (no sign-in needed).",
