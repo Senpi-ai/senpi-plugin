@@ -192,7 +192,9 @@ failure: wait about 30 seconds and call again **once**.
    short, holds, execution), `strategy` (what the book does: its fingerprint and families, as
    measured fields — describe them in your own words; no wording comes with them), `context`
    (today's market by asset class, the funding regime, the record by regime), `smart` (the
-   positions against the proven and hot cohorts), `market` (each open position's fit with trend and
+   positions against the proven and hot cohorts; each row's `cohort` is `side` — `LONG`, `SHORT`,
+   `SPLIT`, or null when none of the cohort holds it — with `wallets`, `bias`, and `thin` when too
+   few hold it to call a side), `market` (each open position's fit with trend and
    funding; the book's stance comes as `stance`, `btc` and `median_funding_bp_8h`, in basis points
    per 8 hours), `edge` (best and worst setups, the measured rules).
 5. **Going deeper** — `replay` (the worst 7-day window and its trades), `funding` (the next 30
@@ -206,8 +208,11 @@ failure: wait about 30 seconds and call again **once**.
      in about 30 seconds. For one wallet against a benchmark, pick the benchmark from
      `find_top_traders` with a `size_band`.
    - **Live matches** ("what fits me today", "where do my patterns line up with the market") →
-     the `scout` part. Process only: a match is a setup that fits how this trader wins, never a
-     call to buy a coin.
+     the `scout` part. Each match's `why` is a list of reasons as fields, by `kind`:
+     `cohort_holds`, `cohort_with_you`, `top_traders_gains`, `momentum`, `own_pattern`,
+     `fits_how_you_win`, `trend` (`with_you` true, false, or null when ranging), `funding`
+     (`you_pay`) and `already_moved`; word each from its numbers. Process only: a match is a setup
+     that fits how this trader wins, never a call to buy a coin.
 
 ## Voice
 
