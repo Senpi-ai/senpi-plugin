@@ -1,0 +1,73 @@
+---
+name: senpi-trader-research
+description: >-
+  Research public Hyperliquid traders with the Senpi connector. Use for "find top traders", "best
+  traders this month", "who's consistent?", "compare these wallets", "is 0x… any good?", "show me
+  their trades". Calls find_top_traders (ranked search), get_wallet_profile (who a wallet is, 1–5
+  at once), get_wallet_closed_trades (a wallet's trades) and get_wallet_pnl_history (its P&L
+  curve).
+  Read-only public data; nothing here copies or follows anyone.
+---
+
+# Trader Research
+
+Four tools:
+
+- `find_top_traders` — ranked traders over a `window` (daily/weekly/monthly, all_time; default
+  monthly), with `sort_by` (roi — the default — pnl, realized_pnl, win_rate, max_drawdown,
+  gain_to_pain, trader_age) and `limit` (default 20, max 1000). For "who's consistent?", read
+  more than one window and keep the wallets that rank in several. A null `maxDrawdown` or
+  `returnOnInvestment` means not computed — never "0% drawdown" or "flat"; quote
+  `generated_at` as the ranking's time.
+- `get_wallet_profile` — who a wallet is, for 1 to 5 addresses: the ranking row over the `window`
+  (default **all_time**, the whole record) with its labels, and `closed_trades` (the real count
+  from the trade history); `found: false` means Senpi has no row for it. A read that failed is
+  named in `sources_unavailable`; the rest stands. The current book is `get_wallet_positions`,
+  the board's read `get_leaderboard` with `trader`, and a scored comparison `compare_wallets`
+  (senpi-quant-desk).
+
+- `get_wallet_closed_trades` — one wallet's closed trades, newest first, a page of 50 per call (up
+  to 200 with `last`): `address`, with `window_days` (default 30) or `last` ("their last 20
+  trades"), an optional `coin`, and `offset` for the next page (`has_more`, `next_offset`,
+  `total_count`; with a `coin` the filter is applied to the page, so `total_count` is null,
+  `total_count_all_coins` is the wallet's and `coin_matches_on_page` the page's). Each trade
+  carries side, entry and exit, size, leverage, times, `realized_pnl` (gross, before fees), `fees`,
+  `net_pnl` (after fees) and `liquidation`; the page's `totals` give count, gross PnL, fees, net PnL
+  after fees and win rate (counted on net) for the rows returned, not the whole history. Funding
+  is not included.
+- `get_wallet_pnl_history` — the wallet's P&L and account-value series over `window_days` (7–90,
+  default 30), its `flows` (deposits and withdrawals), `equity` start/end/avg (what the account
+  held), `equity_ex_flows_summary` (that less deposits and withdrawals: the return base),
+  `ledger_net_pnl_usd`, `return_on_avg_equity` (a fraction) and `drawdown`. On a unified account
+  (`whole_account: true`) the drawdown is measured against the whole account's value. A null
+  drawdown means there was no data to measure, not no drawdown; an `abstraction` entry in
+  `sources_unavailable` means the account mode couldn't be read, so the figures may be the
+  perps-only side.
+
+- `find_top_traders` with `size_band` (5k-10k, 10k-25k, 25k-100k, 100k-1m, whales) ranks by
+  P&L within an account-size bracket off Hyperliquid's public leaderboard instead of Senpi's
+  ranking — accounts that actually trade (at least $250k of window volume), the most profitable
+  first, or the least with `losers: true`; the window is weekly, monthly or all_time. This is how
+  "find me whales to look at" is answered; `sort_by` does not apply with a band.
+
+## Judging a trader honestly
+
+- Never rank on ROI alone. A high-ROI trader with a deep max drawdown or a stale last trade is a
+  different proposition — surface win rate, drawdown, and recency together.
+- For "is this wallet good?", get_wallet_profile with that address plus a benchmark trader from
+  find_top_traders gives context a single profile lacks; `get_wallet_positions` says what they
+  hold now.
+- `found: false` for an address means Senpi has no ranking row for it in that window — say the
+  window, don't call the trader bad. When comparing records, say which window the numbers cover:
+  all-time and monthly rank the same wallets differently.
+
+## Presenting the result
+
+- Write for the user, not about the tools. Never name a tool, argument or response field, never show
+  a field as `key: value`, and never quote a raw code or enum value (snake_case labels, error codes,
+  request ids): say in plain words what was read and what it found. A failed read is "couldn't be
+  read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown.
+- A compact table reads best: address (shortened), ROI, win rate, drawdown, current exposure.
+- Quote `as_of`. Describe the record; never promise the record continues, and never tell the user
+  to copy a trader. Copying/mirroring is a Senpi-app action, not something these tools do.
+- "Show me their trades" → `get_wallet_closed_trades`; "how has their equity moved" → `get_wallet_pnl_history`.

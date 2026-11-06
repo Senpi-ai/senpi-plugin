@@ -1,6 +1,6 @@
 {
   "name": "senpi",
-  "description": "Turn your AI assistant into your AI quant engineer for perpetual futures markets. Ask your own Senpi agent what's moving, run a signals sweep, read smart-money positioning, research traders, score any wallet with the Quant Desk, review your own portfolio and trades, and work through a strategy. Research and analysis first; trades and changes need your approval, in the conversation or in your Senpi app settings, and deposits and withdrawals stay in the Senpi app.",
+  "description": "Turn your AI assistant into your AI quant researcher for perpetual futures markets. Read the day's market pulse, scan for signals and anomalies, see where smart money is positioned, research and compare Hyperliquid traders, score any wallet with the Quant Desk, browse Senpi's strategy catalog, and review your own portfolio and trade history. Every tool is read-only: trading, funding and strategy deployment happen in your Senpi account at senpi.ai, never through this plugin.",
   "owner": {
     "name": "Senpi",
     "url": "https://senpi.ai"
@@ -11,7 +11,7 @@
       "source": "./",
       "displayName": "Senpi — AI Quant",
       "description": "Market signals & research",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "author": {
         "name": "Senpi"
       },
@@ -22,7 +22,7 @@
         "senpi",
         "senpi-ai",
         "senpi agent",
-        "senpi quant desk",
+        "senpi market pulse",
         "senpi signals",
         "ai quant"
       ]
