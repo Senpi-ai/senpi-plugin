@@ -28,7 +28,10 @@ closed trades, P&L history). "Which of my wallets…" reads from that list.
   read behind it failed and counted as $0 — say "at least $X; part of the balance couldn't be read
   right now", never present it as the finished total. When `perps_and_spot_same_money` is true
   (a unified or portfolio-margin account), the perps and spot figures in the portfolio are the
-  same money: quote the total, never add the two.
+  same money: quote the total, never add the two. `account_mode` is the Hyperliquid margin mode of
+  the user's main wallet, not the state of their Senpi account: `disabled` or `default` is a
+  standard account (perps and spot kept apart) and nothing is wrong. Don't mention it unless the
+  user asks; it only tells you whether perps and spot are the same money.
 - `strategies: null` means that section could not be read this run — say so instead of implying
   the user runs none.
 - Quote figures exactly as returned with `as_of`. Never extrapolate value, promise performance, or
