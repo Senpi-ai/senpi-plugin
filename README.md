@@ -34,7 +34,7 @@ Every tool runs through your connected Senpi account: the connector asks you to 
 ## What this plugin runs, sends, and fetches
 
 - **Runs:** nothing on your machine. There are no scripts, hooks, or local servers.
-- **Sends:** tool calls to `https://open-mcp.senpi.ai/mcp` over HTTPS. Sign-in is OAuth 2.0 with your Senpi login and happens once, when you add the connector; every tool runs through it, and the account tools read only that account. Nothing else leaves your assistant.
+- **Sends:** tool calls to `https://senpi-agent-bridge.prod.senpi.ai/connector/mcp` over HTTPS. Sign-in is OAuth 2.0 with your Senpi login and happens once, when you add the connector; every tool runs through it, and the account tools read only that account. Nothing else leaves your assistant.
 - **Fetches:** market data, trader statistics, strategy catalog entries, and — when you are signed in — your own portfolio and trade history.
 
 Privacy policy: <https://senpi.ai/privacy> · Terms: <https://senpi.ai/terms> · Support: <https://resources.senpi.ai/support>
@@ -50,15 +50,15 @@ claude plugin marketplace add Senpi-ai/senpi-plugin
 claude plugin install senpi-agent@senpi
 ```
 
-Then `/mcp` inside Claude Code to sign in. Server only, without the skills: `claude mcp add --transport http --scope user senpi-agent https://open-mcp.senpi.ai/mcp`.
+Then `/mcp` inside Claude Code to sign in. Server only, without the skills: `claude mcp add --transport http --scope user senpi-agent https://senpi-agent-bridge.prod.senpi.ai/connector/mcp`.
 
 ### Claude (claude.ai and Claude Desktop)
 
-Add the plugin from **Customize → Plugins**, or add the connector directly with the URL `https://open-mcp.senpi.ai/mcp` and sign in.
+Add the plugin from **Customize → Plugins**, or add the connector directly with the URL `https://senpi-agent-bridge.prod.senpi.ai/connector/mcp` and sign in.
 
 ### ChatGPT
 
-Senpi is listed as **Senpi — AI Quant**. Or, in Developer Mode: Plugins → **+** → **Create MCP app**, server URL `https://open-mcp.senpi.ai/mcp`, authentication OAuth.
+Senpi is listed as **Senpi — AI Quant**. Or, in Developer Mode: Plugins → **+** → **Create MCP app**, server URL `https://senpi-agent-bridge.prod.senpi.ai/connector/mcp`, authentication OAuth.
 
 ### Codex CLI
 
@@ -73,12 +73,12 @@ codex mcp login senpi-agent
 Grok Bot installs connectors from the [Cursor Marketplace](https://cursor.com/marketplace). Install **Senpi — AI Quant** there, then complete the Senpi sign-in when prompted. Until the listing is live, add the server to `~/.cursor/mcp.json`:
 
 ```json
-{ "mcpServers": { "senpi-agent": { "url": "https://open-mcp.senpi.ai/mcp" } } }
+{ "mcpServers": { "senpi-agent": { "url": "https://senpi-agent-bridge.prod.senpi.ai/connector/mcp" } } }
 ```
 
 ### Grok (grok.com) and Grok Build
 
-- **grok.com:** Connectors → **New Connector** → **Custom** → paste `https://open-mcp.senpi.ai/mcp` and complete sign-in.
+- **grok.com:** Connectors → **New Connector** → **Custom** → paste `https://senpi-agent-bridge.prod.senpi.ai/connector/mcp` and complete sign-in.
 - **Grok Build:** install **senpi-agent** from the [xAI plugin marketplace](https://github.com/xai-org/plugin-marketplace) once the catalog entry is live.
 
 ### Hermes Agent
@@ -90,11 +90,11 @@ hermes plugins enable senpi-agent
 
 Until the catalog entry is live, install from this repository instead: `hermes plugins install Senpi-ai/senpi-plugin --no-enable`, then `hermes plugins enable senpi-agent`. The first call of any tool opens the Senpi sign-in in your browser — approve it, then run `/reload-mcp` or start a new session so the tools load.
 
-Server only, without the skills: `hermes mcp install senpi-agent` once the MCP catalog entry is live, or add `https://open-mcp.senpi.ai/mcp` under `mcp_servers` in `~/.hermes/config.yaml` with OAuth. Every tool on this server is read-only, so no trust gate is needed.
+Server only, without the skills: `hermes mcp install senpi-agent` once the MCP catalog entry is live, or add `https://senpi-agent-bridge.prod.senpi.ai/connector/mcp` under `mcp_servers` in `~/.hermes/config.yaml` with OAuth. Every tool on this server is read-only, so no trust gate is needed.
 
 ### Anything else that speaks MCP
 
-Server URL `https://open-mcp.senpi.ai/mcp`, Streamable HTTP transport, OAuth 2.0 (the MCP authorization spec, with discovery documents at `/.well-known/oauth-protected-resource/mcp`).
+Server URL `https://senpi-agent-bridge.prod.senpi.ai/connector/mcp`, Streamable HTTP transport, OAuth 2.0 (the MCP authorization spec, with discovery documents at `/.well-known/oauth-protected-resource/connector/mcp`).
 
 ## What's in this repo
 
