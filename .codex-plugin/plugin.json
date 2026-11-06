@@ -37,6 +37,7 @@
     "privacyPolicyURL": "https://senpi.ai/privacy",
     "termsOfServiceURL": "https://senpi.ai/terms",
     "logo": "./assets/senpi-logo.png",
+    "logoDark": "./assets/senpi-logo-plate-dark.png",
     "composerIcon": "./assets/senpi-logo.png"
   }
 }

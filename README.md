@@ -70,7 +70,7 @@ codex mcp login senpi-agent
 
 ### Cursor and Grok Bot
 
-Grok Bot installs connectors from the [Cursor Marketplace](https://cursor.com/marketplace). Install **Senpi — AI Quant** there, then complete the Senpi sign-in when prompted. Until the listing is live, add the server to `~/.cursor/mcp.json`:
+Grok Bot uses your Cursor plugins and connectors. Install **Senpi — AI Quant** from the [Cursor Marketplace](https://cursor.com/marketplace), then complete the Senpi sign-in when prompted. Until the listing is live, add the server to `~/.cursor/mcp.json`:
 
 ```json
 { "mcpServers": { "senpi-agent": { "url": "https://mcp.senpi.ai/mcp" } } }
