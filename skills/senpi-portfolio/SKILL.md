@@ -2,9 +2,10 @@
 name: senpi-portfolio
 description: >-
   Show the signed-in user their own Senpi account with the Senpi connector. Use for "my portfolio",
-  "my balance", "my positions", "my strategies", "how am I doing?". Calls get_my_portfolio.
-  Reads only the connected user's own account. Read-only — nothing here trades, moves funds, or
-  changes the account.
+  "my balance", "my positions", "my strategies", "how am I doing?" — and for their stops: "did any
+  of my stops trigger?", "my ratchet-stop events", "did my stop fire?". Calls get_my_portfolio and
+  get_my_stop_events. Reads only the connected user's own account. Read-only — nothing here
+  trades, moves funds, or changes the account.
 ---
 
 # Portfolio
@@ -16,6 +17,12 @@ closed trades, P&L history). "Which of my wallets…" reads from that list.
 
 ## Presenting the result
 
+- Write for the user, not about the tools. Never name a tool, argument or response field, never show
+  a field as `key: value`, and never quote a raw code or enum value (snake_case labels, error codes,
+  request ids): say in plain words what was read and what it found. A failed read is "couldn't be
+  read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown. For
+  example, "I checked your stop history since Monday", not `get_my_stop_events` with `since`; "your
+  strategy wallets couldn't be read", not `sources_unavailable`.
 - Lead with total balance, then positions (asset, side, size, PnL if present), then running
   strategies with their status.
 - `strategies: null` means that section could not be read this run — say so instead of implying

@@ -30,6 +30,12 @@ them there and do not scan.
 
 ## Presenting the result
 
+- Write for the user, not about the tools. Never name a tool, argument or response field, never show
+  a field as `key: value`, and never quote a raw code or enum value (snake_case labels, error codes,
+  request ids): say in plain words what was read and what it found. A failed read is "couldn't be
+  read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown. For
+  example, "open interest surge" and "extreme funding", not `oi_surge` or `funding_extreme`; "not
+  measured: funding", not `not_measured`; "in Senpi's tradeable universe", not `in_universe: true`.
 - The ranked list first: asset, type and strength, one line each, strongest first. Don't bury the
   ranking in prose.
 - Then one short paragraph per followed asset, from its card (the summary, the signals, whether it

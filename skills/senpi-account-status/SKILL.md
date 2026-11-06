@@ -21,6 +21,10 @@ Two tools, routed by what the question is about:
 
 ## Presenting the data
 
+- Write for the user, not about the tools. Never name a tool, argument or response field, never show
+  a field as `key: value`, and never quote a raw code or enum value (snake_case labels, error codes,
+  request ids): say in plain words what was read and what it found. A failed read is "couldn't be
+  read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown.
 - Lead with what they asked; don't dump every section for a single question.
 - **Fee**: quote `fee.percent` (and `fee.bps` when present) exactly as returned — `0` means a
   paid plan pays no Senpi trading fee (Hyperliquid's own exchange fees still apply). Never state

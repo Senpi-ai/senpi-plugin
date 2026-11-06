@@ -35,6 +35,14 @@ timeline is cut, so say it is incomplete.
 
 ## Presenting the review
 
+Write for the user, not about the tools. Never name a tool, argument or response field, never show a
+field as `key: value`, and never quote a raw code or enum value (snake_case labels, error codes,
+request ids): say in plain words what was read and what it found. A failed read is "couldn't be read
+right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown. For
+example, "your strategy wallets couldn't be read, so these numbers cover only your main wallet", not
+`sources_unavailable: ["strategies"]`; "read in full", not `history_read: ok`; "drawdown", not
+`dd_pct`.
+
 Four blocks, in this order. Quote `as_of`.
 
 1. **The net and the shape** (from the closed trades). Lead with the net number after fees, then

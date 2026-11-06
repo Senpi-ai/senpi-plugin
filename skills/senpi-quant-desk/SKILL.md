@@ -210,11 +210,18 @@ failure: wait about 30 seconds and call again **once**.
 
 ## Voice
 
+- Write for the user, not about the tools. Never name a tool, argument or response field, never show
+  a field as `key: value`, and never quote a raw code or enum value (snake_case labels, error codes,
+  request ids): say in plain words what was read and what it found. A failed read is "couldn't be
+  read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown. For
+  example, "Senpi stops were read", not `senpi_stops: read`; "a real edge", not
+  `strength_kind: edge`; "no stop on it", not `naked`.
 - Someone else's wallet is "they"; the user's own book is "you". The tools do not choose — the
   `subject` field says which (`address` or `own_senpi_book`).
-- Numbers and labels exactly as returned: a measure, a flag, a leak's `usd`. Round dollars to the
-  nearest dollar and percentages to one decimal when you restate them. Never recompute a score or
-  a dollar figure — relay it, and name the measure each number comes from.
+- Numbers exactly as returned, and labels in their plain meaning: a measure, a flag, a leak's
+  dollars. Round dollars to the nearest dollar and percentages to one decimal when you restate them.
+  Never recompute a score or a dollar figure — relay it, and name the measure each number comes
+  from.
 - Warnings in `overview.meta.warnings` are part of the answer: a coverage line, a truncated
   history, a cohort that could not be read.
 

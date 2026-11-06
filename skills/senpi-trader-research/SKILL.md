@@ -56,6 +56,10 @@ Four tools:
 
 ## Presenting the result
 
+- Write for the user, not about the tools. Never name a tool, argument or response field, never show
+  a field as `key: value`, and never quote a raw code or enum value (snake_case labels, error codes,
+  request ids): say in plain words what was read and what it found. A failed read is "couldn't be
+  read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown.
 - A compact table reads best: address (shortened), ROI, win rate, drawdown, current exposure.
 - Quote `as_of`. Describe the record; never promise the record continues, and never tell the user
   to copy a trader. Copying/mirroring is a Senpi-app action, not something these tools do.
