@@ -30,7 +30,9 @@ Three tools:
   short ETH" is positioning; "smart money sold ETH this afternoon" is flow — use the right one.
   The per-asset totals are summed **across all cohorts**; one cohort's own moves come only from
   the events — pass `include_events: true` and group them by cohort before saying what the
-  proven cohort, or the whales, did.
+  proven cohort, or the whales, did. Not every deployment offers this tool: when it is not in
+  your tool list, answer a "what did they do" question with `get_whale_moves` (the recent large
+  opens and closes) and say the per-cohort flow is not available here.
 - `get_whale_moves` — the 4h board's momentum events, one per trader (its newest that names
   `top_positions`), newest first, up to 8. Optional `asset`, `window_hours` (default 4, the
   board's own window; max 168).
