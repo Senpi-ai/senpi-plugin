@@ -16,3 +16,5 @@ qd-find	no	senpi-quant-desk	Find me some whale traders to run the quant desk on 
 qd-compare	no	senpi-quant-desk	Run the quant desk on both 0x029cd954c38838b2731cb5618e5c950ed4766956 and 0x526bbc5f8358ca4d6c082ac919bf8175417501c2 and compare them side by side.
 flow	no	senpi-smart-money	What did smart money do in the last 4 hours — what did the cohorts open, add to and close?
 stops	yes	senpi-portfolio	Did any of my stops trigger this week? Show my ratchet-stop events.
+signals-funding	no	senpi-market-pulse	Which coins are paying the most funding right now?
+review-empty	yes	senpi-improve-trades	Review my trades this week — did any of my stops fire?
