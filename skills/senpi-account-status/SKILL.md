@@ -26,9 +26,11 @@ Two tools, routed by what the question is about:
   request ids): say in plain words what was read and what it found. A failed read is "couldn't be
   read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown.
 - Lead with what they asked; don't dump every section for a single question.
-- **Fee**: quote `fee.percent` (and `fee.bps` when present) exactly as returned — `0` means a
-  paid plan pays no Senpi trading fee (Hyperliquid's own exchange fees still apply). Never state
-  a rate the data didn't return.
+- **Fee**: quote `fee.percent` (and `fee.bps`, in basis points: 3 bps = 0.03%) exactly as
+  returned — `0` means a paid plan pays no Senpi trading fee (Hyperliquid's own exchange fees
+  still apply). A fee with `unknown_reason` means the fee couldn't be confirmed (the plan
+  couldn't be read alongside it): say so, never that they pay nothing. Never state a rate the
+  data didn't return.
 - **Credits**: report `remaining_usd` and `cycle_end` as returned. Do not compute "low credits"
   percentages or burn projections — the app's own meter and notifications are the source of truth
   for that judgment, and top-ups make simple ratios misleading. For the exact live figure, point

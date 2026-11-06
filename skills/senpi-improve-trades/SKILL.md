@@ -15,23 +15,35 @@ the user's whole book — every Senpi strategy wallet (active, paused **and clos
 strategy's trades are history, not a live verdict), every saved wallet, and the Senpi main
 wallet — paging each to the window start, and returns `wallets` (each with its `kind`, `label`,
 `status`, whether its history was read and whether it was `truncated`), `totals` over every
-trade in the window (`trades`, `net_realized_pnl_usd`, `fees_usd`, `win_rate`, `largest_wins`,
-`largest_losses`), and `trades` — the first page of up to 200, newest first, each with its
-wallet, strategy and `strategy_status`; `has_more` and `next_offset` page the rest. A wallet in
+trade in the window, and `trades` — the first page of up to 200, newest first, each with its
+wallet, strategy, `strategy_status`, `realized_pnl` (gross, before fees), `fees` and `net_pnl`
+(after fees); `has_more` and `next_offset` page the rest. The totals: `trades`, `wins`, `losses`,
+`break_even`, `gross_realized_pnl_usd` (before fees), `fees_usd`, `net_realized_pnl_usd` (gross
+less fees — the number to lead with), `win_rate` (a fraction, wins counted on net after fees, the
+app's rule), and `largest_wins` / `largest_losses` ranked by net. `net_realized_pnl_usd` is null
+when some trades carry no fee (`trades_missing_fees`): then quote the gross and say fees aren't
+netted. Funding is in none of these (`funding_included: false`). A wallet in
 `truncated_wallets` had more closes than the 2,000 read: say its totals are short rather than
-complete.
+complete. `strategies_closed_before_window` lists strategies that closed before the window
+started: they can have no trade in it, so they were not read — never call them missing or
+unreadable; if the user asks, say they closed before the period.
 
 Second, `get_wallet_pnl_history` with **no address** and the same `window_days` (it reads 7 to 90
 days: it rejects windows under 7, so ask for 7 and say the equity path covers 7 days; for a longer window ask for 90 and say the equity path covers the last 90). It returns one
 entry per own wallet, each with `equity` (`start`, `end`, `avg`: what the wallet held), `equity_ex_flows_summary` (the
 equity less deposits and withdrawals: the return base), `return_on_avg_equity` (a fraction: multiply by 100) and `drawdown` (`dd`, `dd_pct`,
-`in_drawdown`, `current_dd_pct`); `wallets_omitted` names wallets it did not read. `dd_pct` and
+`in_drawdown`, `current_dd_pct`) and `ledger_net_pnl_usd` (the account's P&L in the window as
+Hyperliquid books it); `wallets_omitted` names wallets it did not read, and
+`strategies_closed_before_window` the ones skipped because they closed earlier. `dd_pct` and
 `current_dd_pct` are fractions too: multiply by 100 when you present the equity block.
 
 Third, `get_my_stop_events` with `since` set to the window start as an RFC 3339 time (and
 `strategy_id` only if the user asked about one strategy). It returns `events` (newest first, default limit 100),
-`strategies`, `strategies_omitted`, `sources_unavailable` and `truncated`; when `truncated` is true the
-timeline is cut, so say it is incomplete.
+`strategies` (each with `by_type`: how many events of each type it had in the window — complete even
+when the list is cut), `total_events`, `strategies_omitted`, `strategies_closed_before_since`,
+`sources_unavailable` and `truncated`. Summarise the stops from `by_type`, which covers every event;
+`truncated` only means the event list is a sample, not that the counts are short. A strategy whose
+`capped` is true had more events than one read holds: say its counts are at least that many.
 
 ## Presenting the review
 
@@ -45,15 +57,22 @@ example, "your strategy wallets couldn't be read, so these numbers cover only yo
 
 Four blocks, in this order. Quote `as_of`.
 
-1. **The net and the shape** (from the closed trades). Lead with the net number after fees, then
-   win rate and how concentrated the PnL is in the largest wins/losses.
+1. **The net and the shape** (from the closed trades). Lead with the net number after fees, show
+   the gross and the fees beside it, then win rate (wins counted after fees) and how concentrated
+   the PnL is in the largest wins/losses. Say funding is not included.
 2. **The equity path** (from the PnL history), per wallet: start and end equity, return on average
    equity (`return_on_avg_equity` times 100), the max drawdown (`dd`, and `dd_pct` times 100) and whether the wallet is in drawdown
    now. Read the return from `return_on_avg_equity`, not from end minus start: deposits and
    withdrawals move equity without being trading. A wallet in `wallets_omitted` is missing, not flat.
-3. **What the stops did** (from the stop events): the events in the window, grouped by strategy
-   (a tier trigger, a lock move, an arm, a stop). No events is an answer: say no stop acted in the
-   window. Name any strategy in `strategies_omitted` (and any `sources_unavailable`) as unread, not
+   **The ledger and the closed trades measure different things — never call them inconsistent.**
+   The ledger is everything that moved the account in the window: closed trades, open positions'
+   unrealized P&L, funding and fees. The closed trades are only positions that closed in the window,
+   after fees, before funding, including the full P&L of trades opened before the window. When they
+   differ, say which of those explains it (open positions down or up, funding paid, trades opened
+   earlier), not that the data doesn't reconcile.
+3. **What the stops did** (from the stop events): per strategy, the counts from `by_type` (stops
+   hit, tier triggers, lock moves, arms), with a few examples from the list. No events is an answer:
+   say no stop acted in the window. Name any strategy in `strategies_omitted` (and any `sources_unavailable`) as unread, not
    as quiet.
 4. **The honest readings** this data supports, below.
 

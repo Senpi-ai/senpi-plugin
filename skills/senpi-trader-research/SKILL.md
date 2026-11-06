@@ -16,7 +16,9 @@ Four tools:
 - `find_top_traders` — ranked traders over a `window` (daily/weekly/monthly, all_time; default
   monthly), with `sort_by` (roi — the default — pnl, realized_pnl, win_rate, max_drawdown,
   gain_to_pain, trader_age) and `limit` (default 20, max 1000). For "who's consistent?", read
-  more than one window and keep the wallets that rank in several.
+  more than one window and keep the wallets that rank in several. A null `maxDrawdown` or
+  `returnOnInvestment` means not computed — never "0% drawdown" or "flat"; quote
+  `generated_at` as the ranking's time.
 - `get_wallet_profile` — who a wallet is, for 1 to 5 addresses: the ranking row over the `window`
   (default **all_time**, the whole record) with its labels, and `closed_trades` (the real count
   from the trade history); `found: false` means Senpi has no row for it. A read that failed is
@@ -29,13 +31,18 @@ Four tools:
   trades"), an optional `coin`, and `offset` for the next page (`has_more`, `next_offset`,
   `total_count`; with a `coin` the filter is applied to the page, so `total_count` is null,
   `total_count_all_coins` is the wallet's and `coin_matches_on_page` the page's). Each trade
-  carries side, entry and exit, size, leverage, times, realized PnL, fees and `liquidation`; the
-  page's `totals` give count, net PnL, fees and win rate for the rows returned, not the whole
-  history.
+  carries side, entry and exit, size, leverage, times, `realized_pnl` (gross, before fees), `fees`,
+  `net_pnl` (after fees) and `liquidation`; the page's `totals` give count, gross PnL, fees, net PnL
+  after fees and win rate (counted on net) for the rows returned, not the whole history. Funding
+  is not included.
 - `get_wallet_pnl_history` — the wallet's P&L and account-value series over `window_days` (7–90,
-  default 30), its `flows` (deposits and withdrawals), `equity` start/end/avg, `ledger_net_pnl_usd`,
-  `return_on_avg_equity` and `drawdown`. On a unified account (`whole_account: true`) the drawdown
-  is measured against the whole account's value.
+  default 30), its `flows` (deposits and withdrawals), `equity` start/end/avg (what the account
+  held), `equity_ex_flows_summary` (that less deposits and withdrawals: the return base),
+  `ledger_net_pnl_usd`, `return_on_avg_equity` (a fraction) and `drawdown`. On a unified account
+  (`whole_account: true`) the drawdown is measured against the whole account's value. A null
+  drawdown means there was no data to measure, not no drawdown; an `abstraction` entry in
+  `sources_unavailable` means the account mode couldn't be read, so the figures may be the
+  perps-only side.
 
 - `find_top_traders` with `size_band` (5k-10k, 10k-25k, 25k-100k, 100k-1m, whales) ranks by
   P&L within an account-size bracket off Hyperliquid's public leaderboard instead of Senpi's
@@ -50,7 +57,7 @@ Four tools:
 - For "is this wallet good?", get_wallet_profile with that address plus a benchmark trader from
   find_top_traders gives context a single profile lacks; `get_wallet_positions` says what they
   hold now.
-- `found: false` for an address means no profile in the window and no open book — say the
+- `found: false` for an address means Senpi has no ranking row for it in that window — say the
   window, don't call the trader bad. When comparing records, say which window the numbers cover:
   all-time and monthly rank the same wallets differently.
 

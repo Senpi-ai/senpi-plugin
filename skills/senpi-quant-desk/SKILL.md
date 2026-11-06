@@ -97,7 +97,8 @@ failure: wait about 30 seconds and call again **once**.
        `give_back_median`, `dd_pct`, `current_dd_pct`, `margin_utilization`, `cost_ratio`,
        `cost_drag`, `taker_share`, `win_rate`, `long_share`, `largest_share`,
        `funding_pct_of_equity_yr`, `pct_of_equity`, `losers_that_were_green`,
-       `mfe_median_winners`, `fee_rate_taker`, `fee_rate_maker`. Everything else is shown as
+       `mfe_median_winners`, `fee_rate_taker`, `fee_rate_maker`, `return_on_avg_equity`. In a
+       comparison, a metric's `spread` is in that metric's units. Everything else is shown as
        returned: `liq_distance_pct` and `daily_range_pct` are already percentages; multiples
        (`hold_ratio`, `payoff_ratio`, `profit_factor`, `loser_to_winner_size`,
        `exposure_over_equity`), counts, hours and dollars go as they are.

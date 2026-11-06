@@ -5,7 +5,7 @@ description: >-
   doing?", "are the whales long or short?", "smart money on ETH?", "big moves lately?", "who's
   buying?", "whale movements?", "what did smart money do today?". Calls get_smart_money_positioning (the cohort's
   current lean), get_smart_money_flow (what the cohorts did over a window) and get_whale_moves
-  (recent large opens/closes). Public wallets, read-only.
+  (top traders whose 4h P&L crossed a tier). Public wallets, read-only.
 ---
 
 # Smart Money Radar
@@ -30,12 +30,17 @@ Three tools:
   short ETH" is positioning; "smart money sold ETH this afternoon" is flow — use the right one.
   The per-asset totals are summed **across all cohorts**; one cohort's own moves come only from
   the events — pass `include_events: true` and group them by cohort before saying what the
-  proven cohort, or the whales, did. Not every deployment offers this tool: when it is not in
-  your tool list, answer a "what did they do" question with `get_whale_moves` (the recent large
-  opens and closes) and say the per-cohort flow is not available here.
+  proven cohort, or the whales, did. The events are the newest 50 at most: when
+  `events_cut_at_limit` is true they are a sample of the window, so say "among the latest moves",
+  never a cohort's total for the window. Not every deployment offers this tool: when it is not in
+  your tool list, answer a "what did they do" question with `get_whale_moves` (top traders whose
+  4h P&L crossed a tier — not trades) and say the per-cohort flow is not available here.
 - `get_whale_moves` — the 4h board's momentum events, one per trader (its newest that names
-  `top_positions`), newest first, up to 8. Optional `asset`, `window_hours` (default 4, the
-  board's own window; max 168).
+  `top_positions`), newest first, up to 8. Each is a top trader whose 4h P&L crossed a tier
+  (`tier_label`, `delta_pnl`), with the positions they held — **not** an open or a close: never
+  say a whale opened or closed anything from it. Optional `asset`, `window_hours` (default 4, the
+  board's own window; max 168). When `read_cut_at_limit` is true the moves only reach back to
+  `oldest_event_read`: say the span they cover, not the whole window.
 
 ## Presenting the result
 

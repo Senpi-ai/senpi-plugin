@@ -24,7 +24,11 @@ closed trades, P&L history). "Which of my wallets…" reads from that list.
   example, "I checked your stop history since Monday", not `get_my_stop_events` with `since`; "your
   strategy wallets couldn't be read", not `sources_unavailable`.
 - Lead with total balance, then positions (asset, side, size, PnL if present), then running
-  strategies with their status.
+  strategies with their status. **When `total_complete` is false, the total is a floor**: some
+  read behind it failed and counted as $0 — say "at least $X; part of the balance couldn't be read
+  right now", never present it as the finished total. When `perps_and_spot_same_money` is true
+  (a unified or portfolio-margin account), the perps and spot figures in the portfolio are the
+  same money: quote the total, never add the two.
 - `strategies: null` means that section could not be read this run — say so instead of implying
   the user runs none.
 - Quote figures exactly as returned with `as_of`. Never extrapolate value, promise performance, or
