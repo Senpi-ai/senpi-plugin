@@ -31,7 +31,11 @@ One tool call answers this: `get_market_pulse` (no arguments). It reads the whol
   read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown.
 - Lead with the one-line read: the `day_classification` label and the group averages behind it
   (crypto vs. equities vs. commodities) — then the two or three movers that matter, with their
-  conviction (volume, funding, OI trend).
+  conviction (volume, funding, OI trend). Say the label in words — a "risk-on day", a "risk-off
+  day", a "mixed day" — and let it stand: it counts how many groups moved, so never call a risk-on
+  day "mixed" because one group fell; say which group went against it ("a risk-on day led by
+  equities, while crypto fell"). A null label means too few groups were read to call the day: say
+  so, don't pick one.
 - Then the confirmation checklist as returned: gold, dollar, VIX, dispersion — quote the `read`
   labels; they are the engine's, not yours to recompute.
 - The groups are *today*. Where the money is *right now* is the 4h board, `get_leaderboard`: read
