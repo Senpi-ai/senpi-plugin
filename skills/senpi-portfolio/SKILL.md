@@ -13,7 +13,11 @@ description: >-
 One tool: `get_my_portfolio` (no arguments). Returns the user's balances, open positions, running
 strategies, and `wallets` — their saved read-only wallets and Senpi strategy wallets, largest by
 Hyperliquid account value first, each usable as the `address` of the wallet tools (the Quant Desk,
-closed trades, P&L history). "Which of my wallets…" reads from that list.
+closed trades, P&L history). "Which of my wallets…" reads from that list. Strategy wallets holding
+$0 (closed strategies, mostly) are counted in `empty_wallets`, not listed: give the count when you
+list the wallets ("plus 51 empty strategy wallets"), never call them missing. The list comes a page
+at a time: while `next_offset` is set, call again with `offset` set to it, and read every page
+before you present the list as complete.
 
 ## Presenting the result
 
@@ -43,8 +47,10 @@ closed trades, P&L history). "Which of my wallets…" reads from that list.
 - "What did my stops do?", "did my ratchet trigger?", "why did my position close?" →
   `get_my_stop_events`: the account's ratchet-stop timeline, newest first — each event with its
   strategy, wallet, asset, `event_type` (a tier trigger, a lock move, an arm, a stop) and `details`.
-  `strategy_id` narrows to one strategy, `since` to a time. A strategy in `sources_unavailable`
-  could not be read: its events are missing, not absent.
+  `strategy_id` narrows to one strategy, `since` to a time. The events come a page at a time:
+  each strategy's `by_type` counts all of them, so a summary needs no further page; to list them,
+  follow `next_offset` (call again with `offset` set to it) until it is null. A strategy in
+  `sources_unavailable` could not be read: its events are missing, not absent.
 
 ## Follow-ups to offer
 

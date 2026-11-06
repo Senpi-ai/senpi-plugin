@@ -25,32 +25,39 @@ when some trades carry no fee (`trades_missing_fees`): then quote the gross and 
 netted. Those trades have no net, so they are in none of `wins`, `losses` or `break_even`, and the
 win rate covers only the trades with fees: say so when `trades_missing_fees` is above 0. Funding is in none of these (`funding_included: false`). A wallet in
 `truncated_wallets` had more closes than the 2,000 read: say its totals are short rather than
-complete. `strategies_closed_before_window` lists strategies that closed before the window
+complete. `strategies_closed_before_window` counts strategies that closed before the window
 started: they can have no trade in it, so they were not read — never call them missing or
-unreadable; if the user asks, say they closed before the period. `wallets_omitted` lists wallets
-past the ten one read covers (live wallets are read first, then closed strategies from the most
-recently closed, so the ones closed longest ago are left out): their trades
+unreadable; if the user asks, say they closed before the period. Every wallet is read:
+`wallets_read` counts them, `wallets` lists the ones with a trade in the window (or a read that
+failed or ran out) and `wallets_without_trades` counts the quiet rest. `trades` comes a page at a
+time: the totals already cover every trade, so follow `next_offset` only when the user wants the
+trades themselves listed. `wallets_omitted` lists wallets past the 200 one read covers (live
+wallets are read first, then closed strategies from the most recently closed, so the ones closed
+longest ago are left out): their trades
 are not in the totals, so say how many wallets were left out and that the totals cover the rest —
 not that they "couldn't be read".
 
 Second, `get_wallet_pnl_history` with **no address** and the same `window_days` (it reads 7 to 90
 days: it rejects windows under 7, so ask for 7 and say the equity path covers 7 days; for a longer window ask for 90 and say the equity path covers the last 90). It returns one
-entry per own wallet, each with `equity` (`start`, `end`, `avg`: what the wallet held), `equity_ex_flows_summary` (the
+entry per own wallet, a page of wallets at a time: while `next_offset` is set, call it again with
+`offset` set to it, and read every page before you present the equity block. Each entry has `equity` (`start`, `end`, `avg`: what the wallet held), `equity_ex_flows_summary` (the
 equity less deposits and withdrawals: the return base), `return_on_avg_equity` (a fraction: multiply by 100) and `drawdown` (`dd`, `dd_pct`,
 `in_drawdown`, `current_dd_pct`) and `ledger_net_pnl_usd` (the account's P&L in the window as
 Hyperliquid books it); `wallets_omitted` names wallets it did not read, and
-`strategies_closed_before_window` the ones skipped because they closed earlier. `dd_pct` and
+`strategies_closed_before_window` counts the ones skipped because they closed earlier. `dd_pct` and
 `current_dd_pct` are fractions too: multiply by 100 when you present the equity block. A null
 drawdown means none could be measured (no P&L in the window), not a drawdown of 0: say "no
 drawdown measured", never "0%".
 
 Third, `get_my_stop_events` with `since` set to the window start as an RFC 3339 time (and
-`strategy_id` only if the user asked about one strategy). It returns `events` (newest first, default limit 100),
-`strategies` (each with `by_type`: how many events of each type it had in the window — complete even
-when the list is cut), `total_events`, `strategies_omitted`, `strategies_closed_before_since`,
-`sources_unavailable` and `truncated`. Summarise the stops from `by_type`, which covers every event;
-`truncated` only means the event list is a sample, not that the counts are short. A strategy whose
-`capped` is true had more events than one read holds: say its counts are at least that many.
+`strategy_id` only if the user asked about one strategy). It returns `events` (newest first, a page
+at a time, up to `limit`), `strategies` (each with `by_type`: how many events of each type it had in
+the window — complete whatever the page), `total_events`, `strategies_omitted`,
+`strategies_closed_before_since` (a count), `sources_unavailable`, `truncated` and `next_offset`.
+Summarise the stops from `by_type`, which covers every event: no further page is needed for that.
+When the user wants the events themselves, follow `next_offset` (call again with `offset` set to it)
+until it is null. A strategy whose
+`capped` is true had more than 2,000 events in the period: say its counts are at least that many.
 
 ## Presenting the review
 

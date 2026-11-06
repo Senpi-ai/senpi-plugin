@@ -36,6 +36,9 @@ stays with `senpi-trader-research` (`find_top_traders`, `get_wallet_profile`).
   the coin's average daily range (`daily_range_pct`), its stops and a protection `status`; per
   wallet, `account_value`, margin utilization and withdrawable for the whole account
   (`account_value_basis` says `whole_account` or `perps`; `account_value_perps` sits beside).
+  Wallets with nothing open are summed in `flat_wallets` (how many, and their account value),
+  not listed; the rest come largest first, a page at a time — while `next_offset` is set, call
+  again with `offset` set to it before you call the book complete.
 
 ## Whose book
 
@@ -45,7 +48,8 @@ stays with `senpi-trader-research` (`find_top_traders`, `get_wallet_profile`).
   `size_band`; ask the band first (a $9k book and a $9M book teach different lessons), then the
   window — relay the candidates with their numbers, then run the desk on the one they pick.
 - "My wallets" / "which of my wallets" → `get_my_portfolio`: its `wallets` list, largest first,
-  each usable as the `address`.
+  each usable as the `address` (strategy wallets at $0 are counted in `empty_wallets`; follow
+  `next_offset` for the rest of the list).
 - Treat an address as the user's own when they say it is theirs; as research when they're reading
   someone else ("score this trader").
 - `window_days` is optional: 7 to 90, default 90.
@@ -231,7 +235,8 @@ failure: wait about 30 seconds and call again **once**.
   from.
 - `response_truncated: true` means the answer was cut to fit: `response_omitted` names each list
   and how many rows were dropped. Say which part is incomplete, and offer that part on its own
-  (`include` with just it) rather than presenting a cut list as the whole.
+  (`include` with just it) rather than presenting a cut list as the whole. A result with a
+  `next_offset` has more: the same call with `offset` set to it returns the next page.
 - Warnings in `overview.meta.warnings` are part of the answer: a coverage line, a truncated
   history, a cohort that could not be read.
 
