@@ -2,7 +2,7 @@
   "mcpServers": {
     "senpi-agent": {
       "type": "http",
-      "url": "https://senpi-agent-bridge.prod.senpi.ai/connector/mcp"
+      "url": "https://mcp.senpi.ai/mcp"
     }
   }
 }
