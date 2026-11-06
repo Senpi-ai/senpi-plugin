@@ -80,8 +80,9 @@ failure: wait about 30 seconds and call again **once**.
      - `liquidation` → `nearest_liquidation`: "{coin} {side} sits {liq_distance_pct}% from
        liquidation at {leverage}×", with its `protection` (`FULL` a full stop, `PARTIAL` a partial
        stop, `NONE` no stop, empty: orders the desk could not read).
-     - `weakest` → "{dimension} scores {score}", then `measures[lead]` of that dimension (the
-       finding below). Say "and" rather than "but" after `ledger_down` or `none`.
+     - `weakest` → "{dimension} scores {score}", then `weakest.measures[lead]` (that dimension's
+       measures, carried on the verdict, so they are there in a comparison too). Say "and" rather
+       than "but" after `ledger_down` or `none`.
 
      The "but"/"and" joins whichever clause is said. `thin: true` → "only {trades} closed trades,
      too thin to grade". With none of these, say nothing in the record is leaking badly.
@@ -222,6 +223,9 @@ failure: wait about 30 seconds and call again **once**.
   dollars. Round dollars to the nearest dollar and percentages to one decimal when you restate them.
   Never recompute a score or a dollar figure — relay it, and name the measure each number comes
   from.
+- `response_truncated: true` means the answer was cut to fit: `response_omitted` names each list
+  and how many rows were dropped. Say which part is incomplete, and offer that part on its own
+  (`include` with just it) rather than presenting a cut list as the whole.
 - Warnings in `overview.meta.warnings` are part of the answer: a coverage line, a truncated
   history, a cohort that could not be read.
 
