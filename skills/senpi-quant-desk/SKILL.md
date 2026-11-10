@@ -9,8 +9,8 @@ description: >-
   "is my book protected?", "compare these wallets with the desk", "which of these is the better
   trader", "find me traders to analyze / run the desk on", "what fits me today". Calls
   get_wallet_analysis (the analysis, by parts) and get_wallet_positions (the live book), with
-  find_top_traders (size_band) for candidates, get_my_portfolio for the user's wallets and
-  compare_wallets for two to five wallets side by side. The user's own book needs their Senpi
+  find_top_traders (size_band) for candidates, get_my_portfolio for the user's wallets (offered
+  one by one or all together as one book) and compare_wallets for two to five wallets side by side. The user's own book needs their Senpi
   sign-in; any other address is public data. Read-only.
 ---
 
@@ -44,13 +44,39 @@ stays with `senpi-trader-research` (`find_top_traders`, `get_wallet_profile`).
 ## Whose book
 
 - **An address given** (`address: 0x…`) → that wallet, from public data.
-- **No address** → the user's own book (all their Senpi strategy wallets, read as one).
+- **Several addresses to read as one** ("these wallets together", "all of them as one book") →
+  `addresses` (two to ten, instead of `address`; the same on `get_wallet_positions`): one combined
+  book, the wallets' trades and positions in one desk. The `subject` says `combined_book` and
+  whether it is the user's own (`mine`). If a wallet in it could not be read, the call fails and
+  names it: say which wallet, and offer to run again or without it; never count it as nothing.
+- **No address, a bare "run quant desk" / "analyze my wallet"** → choose the wallet first, then
+  run. Call `get_my_portfolio` and read **every page of its `wallets`** (while `next_offset` is
+  set, call again with `offset` set to it) before listing anything. List all of the user's wallets
+  in one list, largest first, never split by where they came from: each saved wallet (by the label
+  they gave it), each Senpi strategy, and their Senpi main wallet (say it is their funding wallet,
+  usually no trades of its own). **Never leave a saved wallet out**, and never quietly swap it for a
+  strategy wallet. Strategy wallets holding $0 are counted in `empty_wallets`, not listed: give the
+  count ("plus 51 empty strategy wallets"). A value that could not be read is "couldn't load",
+  never $0, and a wallet list that could not be read at all is "I couldn't load your wallets";
+  say that, and ask for an address.
+  - **More than one wallet** → ask which to read, in plain words and with each one's value:
+    "Which one do you want me to run the desk on — MetaMask ($12,400), Aegis ($3,000)? Or I can
+    read them all together as one book." Their pick is the `address`; "all of them" is
+    `addresses` with every wallet listed, saved ones included (up to ten; with more, say so
+    plainly and ask which ten to read, so none is dropped without their say).
+  - **Exactly one wallet** → run it without asking.
+  - **A Senpi strategy of several wallets** is read as one: pass all of its wallets in
+    `addresses`, never one instance of it.
+  - **None** → ask for an address, and offer to run the desk on one of the best current traders
+    (`find_top_traders`) so they see what it gives them.
+  - Only when they say "my Senpi strategies" (or the like) and nothing else, leave `address` out:
+    that reads every Senpi strategy wallet as one book. A saved wallet is read-only; analyzing it
+    is all Senpi does with it.
 - "find me traders to analyse" / no address and no own book → `find_top_traders` with
   `size_band`; ask the band first (a $9k book and a $9M book teach different lessons), then the
   window — relay the candidates with their numbers, then run the desk on the one they pick.
-- "My wallets" / "which of my wallets" → `get_my_portfolio`: its `wallets` list, largest first,
-  each usable as the `address` (strategy wallets at $0 are counted in `empty_wallets`; follow
-  `next_offset` for the rest of the list).
+- "My wallets" / "which of my wallets" → the same wallet list as above, each one usable as the
+  `address`.
 - Treat an address as the user's own when they say it is theirs; as research when they're reading
   someone else ("score this trader").
 - `window_days` is optional: 7 to 90, default 90.
@@ -259,7 +285,8 @@ Skip any offer that has nothing behind it (a fully protected book needs no prote
   example, "Senpi stops were read", not `senpi_stops: read`; "a real edge", not
   `strength_kind: edge`; "no stop on it", not `naked`.
 - Someone else's wallet is "they"; the user's own book is "you". The tools do not choose — the
-  `subject` field says which (`address` or `own_senpi_book`).
+  `subject` field says which: `address` is research voice, `own_senpi_book` is "you", and a
+  combined book is "you" when it says it is the user's own (`mine`), "they" otherwise.
 - Numbers exactly as returned, and labels in their plain meaning: a measure, a flag, a leak's
   dollars. Round dollars to the nearest dollar and percentages to one decimal when you restate them.
   Never recompute a score or a dollar figure — relay it, and name the measure each number comes
