@@ -3,26 +3,29 @@ name: senpi-strategy-discover
 description: >-
   Help the user explore Senpi's public strategy catalog with the Senpi connector. Use for "what
   strategies does Senpi have?", "recommend a strategy for a choppy market", "something low-risk",
-  "what's in the catalog?", "details on Athena". Calls browse_strategy_catalog and get_catalog_strategy.
+  "what's in the catalog?", "details on Athena". Calls browse_strategy_catalog and get_catalog_strategy, with get_my_portfolio
+  (the user's budget and holdings, when signed in) and get_asset_market_data (why now).
   Read-only catalog: nothing is deployed, funded, or started from here — that happens in senpi.ai.
 ---
 
 # Strategy Discovery
 
-Two tools:
+Four tools; the last two are optional context:
 
 - `browse_strategy_catalog` — the catalog as cards, one per variant family (a card's `variants` lists
   its siblings — offer those only through the parent), in neutral alphabetical order, or ranked
   for the user's `goal` (plain words, max 300 chars); optional `risk`
   (conservative/moderate/aggressive) and the constraints below. `limit` defaults to 8 — raise it when the user asks to see
   more or the whole catalog ("list everything" → `limit: 500`); `truncated: true` says more exist,
-  `families` and `total_in_catalog` say how many. With `risk`, `matching` is how many fit that
-  risk level; `total_in_catalog` is still the whole catalog — never call the match "the
-  catalog". A page holds only what fits in one response:
+  `families` and `total_in_catalog` say how many. With `risk`, `assets`, `direction` or `exclude`,
+  `matching` is how many fit them; `total_in_catalog` is still the whole catalog — never call the
+  match "the catalog". A page holds only what fits in one response:
   for the whole catalog, call again with `offset` set to the page's `next_offset` until it comes
   back null, then present every family. Don't re-ask with different goals or risks to fill gaps.
 - `get_catalog_strategy` — one entry in full by `strategy_id`: thesis, archetype, direction,
   leverage cap, minimum budget, declared risk level.
+- `get_my_portfolio` — the signed-in user's balance and holdings (see below).
+- `get_asset_market_data` — one coin's market read, for "why now" (see below).
 
 ## Turn the user's words into constraints
 
@@ -59,14 +62,16 @@ without a budget or holdings and say so once.
 
 ## Why now
 
-For the top three results, say why now, from the market: `get_catalog_strategy` for each lists its
-markets; for up to two of those coins, `get_asset_market_data` with `asset` and `intervals`
-`["4h"]`. Read three things and say them plainly: the 24-hour change, whether funding is positive
-(longs pay) or negative (shorts pay), and the 4-hour trend — up or down when the close of the last
-candle is more than 1.5% from the close seven candles before it, otherwise sideways. Say what that
-means for the strategy's style (a trend-follower likes a clear trend; a fader likes a stretched
-one). A coin that cannot be read is left out; never make up a number. This is context for the
-choice, not a signal to act on.
+For the top three results, say why now, from the market. Each card lists up to four `assets`:
+take up to two of those coins and read `get_asset_market_data` with `asset`, `intervals` `["4h"]`
+and `candle_limit` `8`. Read three things and say them plainly: the 24-hour change, whether
+funding is positive (longs pay) or negative (shorts pay), and the 4-hour trend. The trend needs at
+least four closes: compare the last close with the close six candles before it (the seventh from
+the end; the oldest one if fewer) — up when it is more than 1.5% higher, down when more than 1.5%
+lower, otherwise flat. Say what that means for the strategy's style (a trend-follower likes a
+clear trend; a fader likes a stretched one). A card with no assets trades the whole universe: say
+that, and give no single-coin "why now" for it. A coin that cannot be read is left out; never make
+up a number. This is context for the choice, not a signal to act on.
 
 ## What this data is — and isn't
 
