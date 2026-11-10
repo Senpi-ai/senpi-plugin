@@ -18,3 +18,4 @@ flow	no	senpi-smart-money	What did smart money do in the last 4 hours — what d
 stops	yes	senpi-portfolio	Did any of my stops trigger this week? Show my ratchet-stop events.
 signals-funding	no	senpi-market-pulse	Which coins are paying the most funding right now?
 review-empty	yes	senpi-improve-trades	Review my trades this week — did any of my stops fire?
+pulse-full	no	senpi-market-pulse	Give me the full market pulse — what's moving, who's winning the last 4 hours, and any signals worth a look.

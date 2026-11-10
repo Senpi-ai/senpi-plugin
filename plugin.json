@@ -49,8 +49,8 @@
             {
               "description": "Get a current market overview.",
               "prompt": "What's moving the markets today?",
-              "tools_triggered": "get_market_pulse",
-              "expected_behavior": "get_market_pulse (no arguments) returns a cross-asset read: momentum leaders, the funding regime, open-interest shifts and the smart-money lean, each section with data. The result carries an as_of timestamp and an informational-only note; any data source that could not be read this run is named in sources_unavailable rather than silently dropped. No order is placed and nothing on any account changes."
+              "tools_triggered": "get_market_pulse, get_leaderboard, get_whale_moves, scan_market_signals",
+              "expected_behavior": "A full market read composes the day (get_market_pulse: groups, cross-asset signals, movers, the funding regime), then a Last 4 hours block from the 4h board (get_leaderboard and get_whale_moves, labelled as the 4h board and never as smart money) and a Senpi Signals in-brief block of three reads (scan_market_signals), and closes with three numbered next steps. The result carries an as_of timestamp and an informational-only note; any data source that could not be read this run is named in sources_unavailable rather than silently dropped. No order is placed and nothing on any account changes."
             },
             {
               "description": "Scan for market anomalies and follow the top hits.",
