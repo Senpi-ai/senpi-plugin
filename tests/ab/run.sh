@@ -6,9 +6,9 @@
 #
 #   run.sh [-o out-dir] [-s "A B"|A|B] [-q id,id,...]
 #
-# Side A needs SENPI_AUTH_TOKEN_FILE (a dev Privy token; ~/.senpi-dev-token by
-# default) for the signed-in questions. Side B needs a one-time sign-in:
-#   cd ~/.cache/senpi-ab && claude   then /mcp → senpi-dev → Authenticate → /exit.
+# Both sides need SENPI_AUTH_TOKEN_FILE (a dev Privy token; ~/.senpi-dev-token by
+# default, valid an hour). Side A passes it to the senpi-skills engines; side B
+# trades it for a connector token before each question (signin.py).
 #
 # The runs are read-only by construction: the only tools allowed are the skills,
 # file reads, python3 (the senpi-skills engines) and the plugin's MCP server.
@@ -23,7 +23,7 @@ mkdir -p "$OUT"; OUT=$(cd "$OUT" && pwd)
 TOKEN_FILE=${SENPI_AUTH_TOKEN_FILE:-"$HOME/.senpi-dev-token"}
 MCP_A=${SENPI_MCP_URL:-https://mcp.dev.senpi.ai/mcp}
 ALLOW_A="Skill,Read,Glob,Grep,Bash(python3:*),Bash(cd:*)"
-ALLOW_B="Skill,Read,Glob,Grep,mcp__senpi-dev"
+ALLOW_B="Skill,Read,Glob,Grep,mcp__senpi-tok"
 SYS="You are being run headless for a test. Answer the question fully in your final message with every number, name and label the tools returned. Never ask a clarifying question; never ask whether to continue; never stop at a plan. If a tool fails, say which tool and what it returned."
 
 run_one() {  # id side question
@@ -36,12 +36,23 @@ run_one() {  # id side question
     env=(SENPI_MCP_URL="$MCP_A"); allow=$ALLOW_A; mcpflag=(--strict-mcp-config --max-turns 40)   # no MCP servers at all on A
     [ -r "$TOKEN_FILE" ] && env+=(SENPI_AUTH_TOKEN="$(cat "$TOKEN_FILE")")
   fi
+  if [ "$side" = B ]; then
+    # A fresh connector token per run (signin.py: the dev OAuth flow approved with the
+    # Privy token), sent as a header on a server named senpi-tok: the name keeps Claude
+    # Code from reusing an expired keychain sign-in held for senpi-dev.
+    local tok="$OUT/.tok.$id" cfg="$OUT/.mcp.$id.json"
+    python3 "$HERE/signin.py" "$TOKEN_FILE" "$tok" || { echo "$id B: sign-in failed" >&2; return 0; }
+    (umask 077; printf '{"mcpServers":{"senpi-tok":{"type":"http","url":"%s","headers":{"Authorization":"Bearer %s"}}}}' \
+      "${OPEN_MCP_DEV_URL:-https://senpi-agent-bridge.dev.senpi.ai/connector/mcp}" "$(cat "$tok")" > "$cfg")
+    mcpflag=(--strict-mcp-config --mcp-config "$cfg" --max-turns 40)
+  fi
   local t0=$(date +%s)
   (cd "$BUILD" && env "${env[@]}" claude -p "$q" \
       --plugin-dir "$BUILD/$side" --setting-sources project \
       --append-system-prompt "$SYS" \
       --allowedTools "$allow" "${mcpflag[@]}" --no-session-persistence \
       --output-format stream-json --verbose < /dev/null > "$raw" 2> "$OUT/$id.$side.err") || true   # </dev/null: claude -p would eat the questions on stdin
+  [ "$side" = B ] && rm -f "$OUT/.tok.$id" "$OUT/.mcp.$id.json"   # the token never outlives its run
   python3 - "$raw" "$OUT/$id.$side.json" "$id" "$side" "$q" $(( $(date +%s) - t0 )) <<'EOF'
 import json, sys
 raw, dst, qid, side, q, secs = sys.argv[1:7]
