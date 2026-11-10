@@ -62,7 +62,8 @@ Two tools, routed by what the question is about:
 - **Credits are not money**: they can't be traded, withdrawn or deposited into a strategy. A
   shrinking meter is usage (messages and tool turns), never a trading loss.
 - **Billing is a 30-day rolling cycle** from the user's own start date, never a calendar month.
-  Full credits land at the start of the cycle and expire at its end (no rollover).
+  The plan's own credits land in full at the start of the cycle and expire at its end (no rollover).
+  Purchased top-ups are separate: each keeps its own expiry and is not cleared at renewal.
 - **Every plan includes every model.** Plans differ on credits and points rate, never on model
   access, so a cheaper plan never locks anyone out of the better model.
 - **Upgrading is instant**, any day: the new plan's credits land immediately and the cycle restarts.

@@ -46,11 +46,15 @@ in order and narrate each layer as it returns:
    Then a "Hyperfeed movers" line or short list from the same board read: up to 5 markets climbing
    the board right now, each with its place on the board, how much of the winners' gain it carries
    and its 15-minute change, and which way the winners lean. Present them as climbers, not as
-   signals or trade ideas, and say there is no history behind them. When the list is empty, say in
-   one line that nothing is climbing the board right now; never drop the block silently.
+   signals or trade ideas, and say there is no history behind them. Only an empty list means nothing
+   is climbing the board right now: say that in one line. A missing list, or a failed board read,
+   means the movers couldn't be read right now: say that once, and never call the board quiet. Never
+   drop the block silently. When every mover shows the same 15-minute change (steps of 0.1% are
+   common on a quiet board) the list is not a ranking: say they are tied, and never call the top row
+   the hottest.
 3. **Senpi Signals, in brief.** `scan_market_signals` (`limit: 3`). Narrate a "Senpi Signals, in
    brief" block: the three top reads, one line each, from the scan as it stands.
-4. **A catalyst, when one is needed.** When a mover is unusually large or unexplained, run at most
+4. **A catalyst, when one is needed.** When one of the day's biggest movers is unusually large or unexplained, run at most
    one web search for the reason and say it is a search result, not Senpi data. Skip it otherwise.
 5. **Close** with "What do you want to do next?" and three numbered offers, the last block of the
    answer: (1) the full signals scan, (2) Quant Desk on their wallet, (3) one asset's card (the
@@ -68,7 +72,7 @@ a dash, never 0%.
   request ids): say in plain words what was read and what it found. A failed read is "couldn't be
   read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown.
 - Lead with the one-line read: the `day_classification` label and the group averages behind it
-  (crypto vs. equities vs. commodities) — then the two or three movers that matter, with their
+  (crypto vs. equities vs. commodities) — then the two or three of the day's biggest movers that matter, with their
   conviction (volume, funding, OI trend). Say the label in words — a "risk-on day", a "risk-off
   day", a "mixed day" — and let it stand: it counts how many groups moved, so never call a risk-on
   day "mixed" because one group fell; say which group went against it ("a risk-on day led by

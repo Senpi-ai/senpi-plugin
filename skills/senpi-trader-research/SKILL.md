@@ -64,7 +64,12 @@ right now. These two reads add that.
   `shortlist` comes back already ordered for copyability — present it in that order, never re-sorted
   by ROI or by fit. `seen_in` lists the rankings each trader appears in: in two or three means proven
   *and* performing now — say so. `pool` is how many traders the rankings held, `enriched` how many
-  had their book read.
+  had their book read. A ranking named in `sources_unavailable` means the blend is missing that
+  view (say which, in plain words: the 7-day return, the 30-day return or the 30-day realized
+  profit), and the "seen in two or three" reading is weaker. A book or momentum read named there
+  means those rows' fit or momentum is unknown, not poor or flat.
+- **A wallet the user says is theirs** (or one of their saved wallets) goes to the Quant Desk
+  (senpi-quant-desk), not the copy shortlist or the vet, and never gets a "minimum to mirror" figure.
 - **"Is 0x… any good?", "should I copy 0x…?"** → `get_wallet_profile` with that address and
   `vet: true`. Its `reliability` uses the real closed-trade count.
 - **Market fit** → also call `get_market_pulse` and say, for the top candidates, whether their book

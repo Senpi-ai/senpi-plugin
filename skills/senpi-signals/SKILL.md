@@ -36,8 +36,12 @@ When the ask is for what is climbing or heating up, or for movers or Hyperfeed, 
 climbing the 4h board right now. Add a "Hyperfeed movers" block after the signals: one line per
 market with its place on the board, how much of the winners' gain it carries, its 15-minute change
 and the side the winners are on. These are the last four hours' winners, not smart money, and there
-is no history behind them: a climber is an observation, not a trade instruction. When the list is
-empty, say in one line that nothing is climbing the board right now; never drop the block silently.
+is no history behind them: a climber is an observation, not a trade instruction. Only an empty list
+means nothing is climbing the board right now: say that in one line. A missing list, or a failed
+board read, means the movers couldn't be read right now: say that once, and never call the board
+quiet. Never drop the block silently. When every mover shows the same 15-minute change (steps of
+0.1% are common on a quiet board) the list is not a ranking: say they are tied, and never call the
+top row the hottest.
 Never name the tool or its fields to the user.
 
 ## Presenting the result

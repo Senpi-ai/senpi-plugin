@@ -35,7 +35,9 @@ Pass what the user states as arguments, not as goal text. Leave out anything the
   `xyz:NVDA`) or a class word (`btc_eth`, `major_alts`, `universe_crypto`, `xyz_equities`,
   `commodities`, `fx`, `indices`, `pre_ipo`; "stocks", "gold" and "forex" map to one). A ticker no
   strategy trades widens once to its class when nothing else would be left: `widened` says so (name
-  the class in words and say it is a broader fit, not an exact one).
+  the class in words and say it is a broader fit, not an exact one). When the ticker was an `xyz:`
+  one, `widened` lists several xyz classes: call it "other markets on Senpi's equities, commodities
+  and FX venue" or "other xyz markets", plainly, never one class.
 - "Long only", "no shorting", "I want to short" → `direction` `long` or `short`; "no shorts at
   all" → `exclude` `shorting` too.
 - "Not copy trading", "no crypto", "no stocks", "not DCA" → `exclude` with `copy_trading`,
@@ -70,7 +72,8 @@ least four closes: compare the last close with the close six candles before it (
 the end; the oldest one if fewer) — up when it is more than 1.5% higher, down when more than 1.5%
 lower, otherwise flat. Say what that means for the strategy's style (a trend-follower likes a
 clear trend; a fader likes a stretched one). A card with no assets trades the whole universe: say
-that, and give no single-coin "why now" for it. A coin that cannot be read is left out; never make
+that, and give no single-coin "why now" for it. Read each coin once across the cards: a coin
+already read for an earlier card (BTC or ETH, say) is not read or described again. A coin that cannot be read is left out; never make
 up a number. This is context for the choice, not a signal to act on.
 
 ## What this data is — and isn't
