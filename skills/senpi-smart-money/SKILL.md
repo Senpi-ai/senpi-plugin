@@ -42,6 +42,32 @@ Three tools:
   board's own window; max 168). When `read_cut_at_limit` is true the moves only reach back to
   `oldest_event_read`: say the span they cover, not the whole window.
 
+## The full read, in order
+
+For "what's smart money doing?", "where are the whales leaning?" and "smart money vs the crowd", run
+these in order and narrate each block as it returns. Each block names its population and window
+("proven traders' open positions", "the 4h board's winners"), and the two populations are never
+merged: the proven cohort (positioning, over its whole record) and the 4h board (whoever is winning
+the last four hours, survivors included) are regularly on opposite sides of the same coin.
+
+1. **Headline lean.** `get_smart_money_positioning`: where the proven traders (lifetime realized
+   ≥ $1M) are net-leaning now, with how many of them — "N proven traders, net X% short ETH" — set
+   against the crowd sample ($10k–$100k realized).
+2. **Smart vs the crowd.** The divergences from the same read: who is on which side, how lopsided,
+   how many wallets. Lead with the cases on opposite sides. This is the core signal.
+3. **Near-term flow.** `get_smart_money_flow` with `window: "4h"`: are the cohorts adding or
+   unwinding? Then `get_leaderboard` (`limit: 5`, `concentration_limit: 8`) for the 4h board's
+   winners: does the board confirm the lean or fight it? A "confirms or fights" verdict compares two
+   populations, so state both. If flow is not in your tool list, use `get_whale_moves` for this step
+   and say the per-cohort flow isn't available here.
+4. **Bottom line.** One paragraph: where the proven money sits, where it splits from the crowd,
+   whether the last four hours back it, and a "what to watch" line.
+
+An asset question ("smart money on ETH?") passes `asset` to positioning and flow and skips the 4h
+board. A narrow ask ("who's long what?") runs only the block it needs. Fail open: if a later read
+fails or is unavailable, say once, in plain words, that the layer couldn't be read right now, and
+finish the answer with what you have.
+
 ## Presenting the result
 
 - Write for the user, not about the tools. Never name a tool, argument or response field, never show
