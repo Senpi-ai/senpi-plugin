@@ -43,6 +43,11 @@ in order and narrate each layer as it returns:
    often on opposite sides of the same coin. Say which population each statement is about. A
    momentum event is a trader's 4h P&L crossing a tier; give the trader, tier and size, and never
    guess its markets or say it was an open or a close.
+   Then a "Hyperfeed movers" line or short list from the same board read: up to 5 markets climbing
+   the board right now, each with its place on the board, how much of the winners' gain it carries
+   and its 15-minute change, and which way the winners lean. Present them as climbers, not as
+   signals or trade ideas, and say there is no history behind them. When the list is empty, say in
+   one line that nothing is climbing the board right now; never drop the block silently.
 3. **Senpi Signals, in brief.** `scan_market_signals` (`limit: 3`). Narrate a "Senpi Signals, in
    brief" block: the three top reads, one line each, from the scan as it stands.
 4. **A catalyst, when one is needed.** When a mover is unusually large or unexplained, run at most

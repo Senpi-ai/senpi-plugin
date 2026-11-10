@@ -29,6 +29,17 @@ Two questions are not this skill. "Funding extremes?" → `get_funding` (no asse
 funding clears the threshold). "Whale movements?" → `get_whale_moves` (senpi-smart-money). Route
 them there and do not scan.
 
+## Hyperfeed movers
+
+When the ask is for what is climbing or heating up, or for movers or Hyperfeed, also read
+`get_leaderboard` (`limit: 1`, `concentration_limit: 1`) and use its movers: up to 5 markets
+climbing the 4h board right now. Add a "Hyperfeed movers" block after the signals: one line per
+market with its place on the board, how much of the winners' gain it carries, its 15-minute change
+and the side the winners are on. These are the last four hours' winners, not smart money, and there
+is no history behind them: a climber is an observation, not a trade instruction. When the list is
+empty, say in one line that nothing is climbing the board right now; never drop the block silently.
+Never name the tool or its fields to the user.
+
 ## Presenting the result
 
 - Write for the user, not about the tools. Never name a tool, argument or response field, never show
