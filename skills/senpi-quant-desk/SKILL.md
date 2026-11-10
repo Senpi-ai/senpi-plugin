@@ -28,9 +28,10 @@ stays with `senpi-trader-research` (`find_top_traders`, `get_wallet_profile`).
 
 - `get_wallet_analysis` — one analysis, returned by parts (`include`):
   `overview` and `leaks` by default; `performance`, `strategy`, `context`, `smart`, `market`,
-  `edge`, `scout`, `replay`, `funding` and `windows` on request; `["all"]` is every part but
-  `replay`. Ask for what the question needs: the default for a first read, one part for a
-  follow-up. Every part is the full view — the list only trims the response.
+  `edge` and `scout` are the rest of the staged report (stage 4, one call); `replay`, `funding`
+  and `windows` stay on request; `["all"]` is every part but `replay`. A full run is the four
+  stages below; a narrow question gets just the part it needs. Every part is the full view — the
+  list only trims the response.
 - `get_wallet_positions` — the live book, read in seconds without the trade history: each open
   position with entry, mark, leverage, liquidation price and distance, margin used and at risk,
   the coin's average daily range (`daily_range_pct`), its stops and a protection `status`; per
@@ -60,6 +61,15 @@ Stage it, don't dump it. The first `get_wallet_analysis` call does the full anal
 user the desk is running first**, it can take up to two minutes on a heavy wallet. Never fire a
 second call while one is in flight. A result saying the analysis is still running is not a
 failure: wait about 30 seconds and call again **once**.
+
+A full run ("run quant desk", "analyze my wallet", "score this trader") is four stages, delivered
+in order, **all in one turn**: the hook (1), what's urgent (2), the money (3), then the rest in one
+call (4). Each stage lands as its own message, so the reader is reading stage 1 while stage 2 is
+read. Never end a turn between stages, and never announce a stage you are not about to run: if you
+name the next one, its call goes in the same turn. Stop early only when a read actually failed, and
+say so plainly rather than promising. The stage numbers order your work; they are not headings, so
+never show them. A narrow question ("is my book protected?", "find leaks") gets just its stage,
+not the whole report.
 
 1. **The hook** — `get_wallet_analysis` (default parts). The tool returns numbers and labels; you
    write the sentences from them, and every figure you quote names the measure it comes from.
@@ -193,7 +203,12 @@ failure: wait about 30 seconds and call again **once**.
    `give_back_unmeasured`, `oversized`) is the gain before the offsetting cost, and `usd` is the
    net. `recoverable` is the one figure that does not double count. Never add the leaks' `usd`
    together yourself.
-4. **The rest, on request** — one part at a time: `performance` (the per-coin table, long against
+4. **The rest** — one more `get_wallet_analysis` call with `include` set to `["strategy",
+   "context", "performance", "smart", "market", "edge", "scout"]`, right after the money, in the
+   same turn; the analysis is cached, so it returns at once. Relay it as a short section per part,
+   in your own words from the measured fields; skip a part that came back empty, and if the answer
+   is cut (`response_truncated`), say which part is incomplete and offer it on its own. The parts:
+   `performance` (the per-coin table, long against
    short, holds, execution), `strategy` (what the book does: its fingerprint and families, as
    measured fields — describe them in your own words; no wording comes with them), `context`
    (today's market by asset class, the funding regime, the record by regime), `smart` (the
@@ -202,8 +217,9 @@ failure: wait about 30 seconds and call again **once**.
    few hold it to call a side), `market` (each open position's fit with trend and
    funding; the book's stance comes as `stance`, `btc` and `median_funding_bp_8h`, in basis points
    per 8 hours), `edge` (best and worst setups, the measured rules).
-5. **Going deeper** — `replay` (the worst 7-day window and its trades), `funding` (the next 30
-   days at today's rates), `windows` (the last 30 days against the 60 before).
+5. **Going deeper, on request only** — never part of the staged report: `replay` (the worst 7-day
+   window and its trades), `funding` (the next 30 days at today's rates), `windows` (the last 30
+   days against the 60 before).
    - **Two or more wallets** ("compare these", "which of these is the better trader") →
      `compare_wallets`: per wallet the hook (score, archetype, verdict, rank, equity, drawdown,
      track) — the verdict and archetype are facts, read as in step 1 — and `separation`: each
@@ -218,6 +234,21 @@ failure: wait about 30 seconds and call again **once**.
      `fits_how_you_win`, `trend` (`with_you` true, false, or null when ranging), `funding`
      (`you_pay`) and `already_moved`; word each from its numbers. Process only: a match is a setup
      that fits how this trader wins, never a call to buy a coin.
+
+## Closing
+
+After a full run, close with three offers, each phrased as something the user can ask for or do —
+the desk states measured facts and gives no instruction:
+
+1. **Protect first** — name the positions that are unprotected or only partly protected, and any
+   whose orders could not be read (say so: "check those on Hyperliquid"). A book the user
+   custodies is protected by setting stops on Hyperliquid themselves; Senpi cannot place one there.
+2. **Fix the biggest leak** — the top leak's title and what the same trades would have kept (its
+   dollars, over its window), and offer to go through that leak trade by trade.
+3. **A follow-up read** — offer one more read: the worst week, what funding costs over the next 30
+   days, the last 30 days against the 60 before, or the trades behind a number.
+
+Skip any offer that has nothing behind it (a fully protected book needs no protect-first line).
 
 ## Voice
 
