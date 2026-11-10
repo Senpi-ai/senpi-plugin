@@ -22,6 +22,9 @@ Four tools; the last two are optional context:
   match "the catalog". A page holds only what fits in one response:
   for the whole catalog, call again with `offset` set to the page's `next_offset` until it comes
   back null, then present every family. Don't re-ask with different goals or risks to fill gaps.
+  Before you say "all N", count the families you actually list: the count must equal `families`.
+  If it doesn't (a page you didn't read, or entries you grouped away), list the missing ones or say
+  plainly how many you're showing of how many — never claim the whole catalog over a shorter list.
 - `get_catalog_strategy` — one entry in full by `strategy_id`: thesis, archetype, direction,
   leverage cap, minimum budget, declared risk level.
 - `get_my_portfolio` — the signed-in user's balance and holdings (see below).

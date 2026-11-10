@@ -51,6 +51,12 @@ before you present the list as complete.
   each strategy's `by_type` counts all of them, so a summary needs no further page; to list them,
   follow `next_offset` (call again with `offset` set to it) until it is null. A strategy in
   `sources_unavailable` could not be read: its events are missing, not absent.
+- **Scope what an empty timeline proves.** It is Senpi's ratchet-stop record only. No events in
+  the window means "no Senpi ratchet stop acted on your strategies since Monday", never "none of
+  your stops fired" or "no stop closed anything": a stop resting on Hyperliquid's book, a manual
+  close or a liquidation leaves no event here, and this connector can't see how a position
+  closed. When the user asks why a position closed or whether "a stop" fired, say what the
+  ratchet record shows and that other exits aren't visible from here.
 
 ## Follow-ups to offer
 

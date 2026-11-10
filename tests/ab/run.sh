@@ -56,17 +56,23 @@ run_one() {  # id side question
   python3 - "$raw" "$OUT/$id.$side.json" "$id" "$side" "$q" $(( $(date +%s) - t0 )) <<'EOF'
 import json, sys
 raw, dst, qid, side, q, secs = sys.argv[1:7]
-answer, tools, cost = "", [], None
+answer, tools, cost, texts = "", [], None, []
 for line in open(raw):
     try: m = json.loads(line)
     except ValueError: continue
     if m.get("type") == "assistant":
         for b in m.get("message", {}).get("content", []):
+            # A skill that answers in stages (the quant desk) writes one message per stage:
+            # the answer is every message, not just the last one.
+            if b.get("type") == "text" and b.get("text", "").strip():
+                texts.append(b["text"].strip())
             if b.get("type") == "tool_use":
                 i = b.get("input", {})
                 tools.append({"tool": b["name"], "input": i if b["name"] != "Bash" else {"command": i.get("command", "")[:300]}})
     elif m.get("type") == "result":
         answer = m.get("result") or ""; cost = m.get("total_cost_usd")
+if len(texts) > 1:
+    answer = "\n\n".join(texts)
 json.dump({"id": qid, "side": side, "question": q, "seconds": int(secs), "cost_usd": cost,
            "tools": tools, "answer": answer}, open(dst, "w"), indent=1)
 print(f"{qid:12s} {side}  {secs:>4}s  {len(tools):>2} tool calls  {len(answer):>5} chars" + ("" if answer else "  ← EMPTY ANSWER"))

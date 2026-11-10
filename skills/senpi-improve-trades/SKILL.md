@@ -85,8 +85,11 @@ Four blocks, in this order. Quote `as_of`.
    differ, say which of those explains it (open positions down or up, funding paid, trades opened
    earlier), not that the data doesn't reconcile.
 3. **What the stops did** (from the stop events): per strategy, the counts from `by_type` (stops
-   hit, tier triggers, lock moves, arms), with a few examples from the list. No events is an answer:
-   say no stop acted in the window. Name any strategy in `strategies_omitted` (and any `sources_unavailable`) as unread, not
+   hit, tier triggers, lock moves, arms), with a few examples from the list. No events is an answer
+   about Senpi's ratchet stops only: say "no Senpi ratchet stop acted in the window", never "no stop
+   fired" or that the trades closed without a stop. A stop resting on Hyperliquid's book, a manual
+   close or a liquidation leaves no event here, and this review can't see how each trade closed:
+   say so when the user asks whether a stop closed a trade. Name any strategy in `strategies_omitted` (and any `sources_unavailable`) as unread, not
    as quiet.
 4. **The honest readings** this data supports, below.
 
