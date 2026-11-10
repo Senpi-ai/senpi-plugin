@@ -65,20 +65,25 @@ catalog (see senpi-strategy-discover; `get_catalog_strategy` for details):
 - Signals Hunter: trades these smart-money signals on an hourly clock. It runs its own scan, so its
   reads are close to this feed but not identical, and its score floor is higher, so it acts on fewer.
 - Puffin: the same engine, one position at a time, higher risk and reward: one stop-out is about
-  19-23% of the account, and a round trip costs roughly 0.8-0.9% of the wallet in fees. Offer it only
-  when the user asks for size or the aggressive one.
+  19-23% of the account, and a round trip costs roughly 0.8-0.9% of the wallet in fees. It is listed
+  with that cost in the same breath, but never recommended as the default or a first strategy: Signals
+  Hunter stays the default answer for this feed, and Puffin is the one to lean on only when the user
+  asks for size or the aggressive one.
 - Athena: a hedge-fund style strategy built on these smart-money signals.
 - Hyperfeed momentum strategies (such as Penguin for crypto, Pelican for all assets): these chase
   live Hyperfeed rotations, a different source from the smart-money reads above, so say so; they do
   not trade what was just read.
 
-Offer all four each time. These are strategies to explore, not something this connector places or
+List all four every time (OG's rule); the cost and default notes above govern how each is described. These are strategies to explore, not something this connector places or
 starts: the catalog is read-only and deploying happens in senpi.ai. A single trade on a read takes the
 side the read names (a funding extreme names no side, so it is never a one-trade setup). Never promise
 results or call a strategy proven. If the user says no or doesn't answer, stop; don't repeat the offer.
 Keep the question out of anything written for public posting, which stays observation-only.
 
 ## Follow-ups to offer
+
+These are for after the user replies or asks for more; the run itself still ends on the one question
+above, with nothing after it.
 
 - Another asset in the list → `read_asset_signal` and `get_asset_market_data` on it.
 - Who is driving it → `get_whale_moves` with that asset, or the cohorts' lean from
