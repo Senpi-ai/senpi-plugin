@@ -56,7 +56,7 @@
               "description": "Scan for market anomalies and follow the top hits.",
               "prompt": "Scan the market for anomalies",
               "tools_triggered": "scan_market_signals, read_asset_signal, get_asset_market_data",
-              "expected_behavior": "scan_market_signals returns a ranked list of non-obvious market developments, each with asset, type, strength and feed. For the top two or three by strength, read_asset_signal returns the asset's signals card (summary, signals, in_universe) and get_asset_market_data with intervals [\"1h\", \"1d\"] returns the daily move, funding and open interest behind it. The assistant lists the ranking first, one line each, then a short paragraph per followed asset, quotes as_of, and presents no signal as a trade instruction. Read-only public data."
+              "expected_behavior": "scan_market_signals returns a ranked list of non-obvious market developments, each with asset, type, strength and feed, plus not_measured naming any source the sweep could not read. For the top two or three by strength, read_asset_signal returns the asset's signals card (summary, signals, in_universe) and get_asset_market_data with intervals [\"1h\", \"1d\"] returns the daily move, funding and open interest behind it. The assistant lists the ranking first, one line each, then a short paragraph per followed asset, shows the trade rows and the news rows as two separate sections, says what was not measured, quotes as_of, and presents no signal as a trade instruction. Read-only public data."
             },
             {
               "description": "Read recent whale activity.",
@@ -67,8 +67,8 @@
             {
               "description": "Get a brief on one asset.",
               "prompt": "Give me a brief on ETH",
-              "tools_triggered": "read_asset_signal",
-              "expected_behavior": "read_asset_signal returns ETH's price with its daily change, funding, open interest, any active signals and recent momentum events. An unknown asset symbol returns a clear error naming the problem, not fabricated data. Read-only."
+              "tools_triggered": "read_asset_signal, get_asset_market_data",
+              "expected_behavior": "read_asset_signal returns ETH's signals card (summary, active signals, what was not measured) and get_asset_market_data returns its price with its daily change, funding, open interest and recent momentum. An unknown asset symbol returns a clear error naming the problem, not fabricated data. Read-only."
             },
             {
               "description": "Research and compare top traders.",
