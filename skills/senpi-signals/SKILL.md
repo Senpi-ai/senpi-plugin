@@ -42,6 +42,20 @@ board read, means the movers couldn't be read right now: say that once, and neve
 quiet. Never drop the block silently. When every mover shows the same 15-minute change (steps of
 0.1% are common on a quiet board) the list is not a ranking: say they are tied, and never call the
 top row the hottest.
+
+The same read carries **Hyperfeed rotations**: markets that just jumped the board since an earlier
+read of it, scored with Penguin's rotation scorer (`rotations`, each with its score, reasons, how
+far it jumped and from where). Add a "Hyperfeed rotations" block after the movers, one line per
+market: the jump (from #prev to #now), the side the winners are on and the reasons in plain words
+(a first jump onto the board, a sharp rise in its share of the winners' gain, a long climb, the US
+session). How old the earlier read was decides what to say (`rotation_baseline`):
+- LIVE (up to 5 minutes): the rotations as scored. No rows is "nothing jumped the board in the last
+  few minutes".
+- WIDE (up to 30 minutes): the same, and say it compares over a longer window than Penguin's own
+  scan, so it is not the same signal.
+- NONE, TOOFRESH or STALE: nothing was scored. Say rotations need a second read of the board a
+  couple of minutes apart and offer to check again shortly; never say nothing jumped.
+Rotations are the 4h winners' board, not smart money, and an observation, not a trade instruction.
 Never name the tool or its fields to the user.
 
 ## Presenting the result

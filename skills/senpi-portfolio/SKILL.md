@@ -11,7 +11,7 @@ description: >-
 # Portfolio
 
 One tool: `get_my_portfolio` (no arguments). Returns the user's balances, open positions, running
-strategies, and `wallets` — their saved read-only wallets and Senpi strategy wallets, largest by
+strategies, the money map (`money`), one entry per strategy (`strategy_groups`), and `wallets` — their saved read-only wallets and Senpi strategy wallets, largest by
 Hyperliquid account value first, each usable as the `address` of the wallet tools (the Quant Desk,
 closed trades, P&L history). "Which of my wallets…" reads from that list. Strategy wallets holding
 $0 (closed strategies, mostly) are counted in `empty_wallets`, not listed: give the count when you
@@ -37,7 +37,62 @@ before you present the list as complete.
   standard account (perps and spot kept apart) and nothing is wrong. Don't mention it unless the
   user asks; it only tells you whether perps and spot are the same money.
 - `strategies: null` means that section could not be read this run — say so instead of implying
-  the user runs none.
+  the user runs none. The money map and the strategy groups need that list too: when it is
+  missing they are unknown, never empty.
+
+## The money map — three pools that never mix
+
+Every dollar of the user's Senpi money sits in exactly one pool (`money`), and the most common
+mistake is mixing them:
+
+| Pool | What it is |
+|---|---|
+| The main wallet's idle cash (`main_wallet.idle_usd`) | Truly free: Hyperliquid perps and spot USDC plus stablecoins on EVM chains. Only the Hyperliquid part can fund a strategy; the EVM stablecoins don't move in on their own. |
+| Idle inside strategies (`idle_in_strategies_usd`) | Free margin inside a strategy wallet, not in a position: waiting for a signal. |
+| Deployed (`deployed_in_positions_usd`) | Margin backing open positions. |
+
+- **Always say where idle money is**: "$X idle in your main wallet, free to deploy or withdraw" is
+  a different statement from "$Y sitting in strategy wallets waiting for signals". Never call the
+  second one free cash.
+- The grand total is the three pools added up. When `reconciles` is false, the pools and the
+  account total disagree: quote both figures and say part of the money couldn't be placed, never
+  pick one. When `strategy_wallets_unread` names a wallet, its money is missing from the pools:
+  say the pools are incomplete and leave `reconciles` unmentioned.
+- A strategy wallet's crypto and equities views share one free balance; the pools already count
+  it once. Never add the two views yourself.
+- The saved wallets the user trades by hand are not part of these pools. Show them in the wallet
+  list, never inside the three pools.
+
+## A strategy is all its wallets
+
+`strategy_groups` has one entry per strategy. A strategy can run on several wallets (a long book
+and a short book, a core and a ballast); they are the legs of one design, never separate
+strategies. Present and judge each group as one strategy, with its wallets as detail.
+
+- **Totals** cover every wallet of the strategy. A total that is null means a wallet couldn't be
+  read: say so, never $0.
+- **A wallet with no open position** (`flat_wallets`) in a multi-wallet strategy is its other book
+  waiting for its signal. It is not idle money to move elsewhere, and never "dead money".
+- **The closed record** covers each wallet's last 50 closes: quote the record, the win rate and the
+  newest close as given, never a rate worked out from the recent sample. Say "has not closed a
+  trade in X hours", never "has not traded": an entry taken since the last close is invisible
+  here. A strategy in `quiet_strategies` that is holding positions is fully allocated, not stuck.
+- **The mandate** is the template's declared job, from Senpi's catalog. Lead each strategy with
+  that job in the user's words, then judge whether it is behaving the way that job says, with the
+  positions as evidence. Never judge a hedge, a market-neutral or an all-weather book by whether
+  it caught this week's move, and never call a selective strategy with nothing open "dead": it is
+  flat, waiting for its setup. When the mandate is null, the strategy wasn't made from a catalog
+  template and its declared job lives in its own setup on the user's machine: say the mandate
+  isn't visible from here and judge cautiously on behaviour.
+
+## What this connector can't see
+
+Whether a strategy's runtime is actually running, why a running strategy hasn't opened a position,
+the signals it skipped, and a self-written strategy's own description all live in the runtime on
+the user's machine. When the user asks "is it running?" or "why hasn't it traded?", say what the
+account shows (funded, positions, last close) and that the runtime's own status isn't visible from
+this connector; their Senpi agent can read it. Never say a strategy is running, or broken, on that
+evidence alone.
 - Quote figures exactly as returned with `as_of`. Never extrapolate value, promise performance, or
   advise a trade. Deposits, withdrawals, and any change to positions or strategies happen in the
   Senpi app, not here.

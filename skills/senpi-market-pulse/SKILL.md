@@ -46,12 +46,15 @@ in order and narrate each layer as it returns:
    Then a "Hyperfeed movers" line or short list from the same board read: up to 5 markets climbing
    the board right now, each with its place on the board, how much of the winners' gain it carries
    and its 15-minute change, and which way the winners lean. Present them as climbers, not as
-   signals or trade ideas, and say there is no history behind them. Only an empty list means nothing
+   signals or trade ideas. Only an empty list means nothing
    is climbing the board right now: say that in one line. A missing list, or a failed board read,
    means the movers couldn't be read right now: say that once, and never call the board quiet. Never
    drop the block silently. When every mover shows the same 15-minute change (steps of 0.1% are
    common on a quiet board) the list is not a ranking: say they are tied, and never call the top row
-   the hottest.
+   the hottest. When the same read's rotation baseline is LIVE or WIDE and it scored rotations, add
+   one line for the biggest jump (from #prev to #now, the winners' side); a WIDE baseline compares
+   over a longer window than Penguin's scan, so say so. With any other baseline, leave rotations out
+   of the pulse.
 3. **Senpi Signals, in brief.** `scan_market_signals` (`limit: 3`). Narrate a "Senpi Signals, in
    brief" block: the three top reads, one line each, from the scan as it stands.
 4. **A catalyst, when one is needed.** When one of the day's biggest movers is unusually large or unexplained, run at most

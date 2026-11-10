@@ -9,9 +9,9 @@ description: >-
   "is my book protected?", "compare these wallets with the desk", "which of these is the better
   trader", "find me traders to analyze / run the desk on", "what fits me today". Calls
   get_wallet_analysis (the analysis, by parts) and get_wallet_positions (the live book), with
-  find_top_traders (size_band) for candidates, get_my_portfolio for the user's wallets (offered
-  one by one or all together as one book) and compare_wallets for two to five wallets side by side. The user's own book needs their Senpi
-  sign-in; any other address is public data. Read-only.
+  find_top_traders (size_band) for candidates, get_my_portfolio for the user's wallets (one by
+  one or all as one book) and compare_wallets for two to five wallets side by side. The user's own
+  book needs their Senpi sign-in; any other address is public data. Read-only.
 ---
 
 # Quant Desk
