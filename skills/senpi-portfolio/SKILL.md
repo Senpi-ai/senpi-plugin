@@ -69,6 +69,13 @@ mistake is mixing them:
 and a short book, a core and a ballast); they are the legs of one design, never separate
 strategies. Present and judge each group as one strategy, with its wallets as detail.
 
+- **Names.** Most strategies have no name of their own. When `name_source` is `package`, the
+  name shown is the package the strategy was made from, not its name: say "your Spider strategy",
+  and tell two of them apart by wallet. When it is null the strategy is unnamed: call it by its
+  wallet.
+- **Positions placed through the trade skill** (package `senpi-trade`: a position the user asked
+  for, or a copy-trade) are each their own entry. They have no runtime and no mandate by design:
+  never call one "not running", unprotected for lack of a runtime, or off-mandate.
 - **Totals** cover every wallet of the strategy. A total that is null means a wallet couldn't be
   read: say so, never $0.
 - **A wallet with no open position** (`flat_wallets`) in a multi-wallet strategy is its other book
@@ -82,8 +89,9 @@ strategies. Present and judge each group as one strategy, with its wallets as de
   positions as evidence. Never judge a hedge, a market-neutral or an all-weather book by whether
   it caught this week's move, and never call a selective strategy with nothing open "dead": it is
   flat, waiting for its setup. When the mandate is null, the strategy wasn't made from a catalog
-  template and its declared job lives in its own setup on the user's machine: say the mandate
-  isn't visible from here and judge cautiously on behaviour.
+  template: unless it is a trade-skill position (above), its declared job lives in its own setup
+  on the user's machine. Say the mandate isn't visible from here and judge cautiously on
+  behaviour.
 
 ## What this connector can't see
 
