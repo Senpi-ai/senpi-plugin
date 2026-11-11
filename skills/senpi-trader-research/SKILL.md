@@ -121,6 +121,17 @@ drawdown, closed trades, history); the labels in plain words; what they hold now
 right now (4h momentum, how often and how recently they trade); every flag in plain words; the
 rough minimum.
 
+A vet always reads the book itself, not only its summary:
+- Call `get_wallet_positions` with the address and list every open position: coin, side,
+  notional, entry, current price, unrealized return and leverage, and whether it has a stop. With
+  more than six, list the six largest and count the rest. "Most of the book is in one position"
+  names the position.
+- Call `get_leaderboard` with `trader` set to the address: give their place on the 4h board and
+  their 4h P&L, or say they aren't on it.
+- State the mirror fit in a word before the number behind it: "a good fit to mirror now: all of
+  the book is within 5% of their entry" (good, partial or poor; unknown when the book couldn't be
+  read).
+
 ## Judging a trader honestly
 
 - Never rank on ROI alone. A high-ROI trader with a deep max drawdown or a stale last trade is a

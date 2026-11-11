@@ -100,7 +100,13 @@ Five blocks, in this order. Quote `as_of`.
 
 1. **The net and the shape** (from the closed trades). Lead with the net number after fees, show
    the gross and the fees beside it, then win rate (wins counted after fees) and how concentrated
-   the PnL is in the largest wins/losses. Say funding is not included.
+   the PnL is in the largest wins/losses. Say funding is not included. **The review is of the
+   Senpi-managed wallets**: take these numbers from `review.senpi_totals`, not from `totals`
+   (which adds every wallet together). When `review.saved_wallets` is present, give the saved
+   wallets one line of their own after it — "your saved wallet, which you trade by hand: N closes,
+   net $X; it is not part of the review above" — and never mix them into the review's counts.
+   Then a per-wallet table from `wallets`: each wallet or strategy, its closes, wins and losses,
+   fees and net after fees, largest net loss first, with closed strategies marked as closed.
 2. **The equity path** (from the PnL history), per wallet: start and end equity, return on average
    equity (`return_on_avg_equity` times 100), the max drawdown (`dd`, and `dd_pct` times 100) and whether the wallet is in drawdown
    now. Read the return from `return_on_avg_equity`, not from end minus start: deposits and

@@ -52,7 +52,10 @@ the last four hours, survivors included) are regularly on opposite sides of the 
 
 1. **Headline lean.** `get_smart_money_positioning`: where the proven traders (lifetime realized
    ≥ $1M) are net-leaning now, with how many of them — "N proven traders, net X% short ETH" — set
-   against the crowd sample ($10k–$100k realized).
+   against the crowd sample ($10k–$100k realized). Open with the cohort's size from `cohorts`:
+   "all N proven wallets" (the whole proven tier, not a sample of it). Every holder count and
+   dollar total is out of that base, so a reader comparing against another read knows why the
+   numbers are larger.
 2. **Smart vs the crowd.** The divergences from the same read: who is on which side, how lopsided,
    how many wallets. Lead with the cases on opposite sides. This is the core signal.
 3. **Near-term flow.** `get_smart_money_flow` with `window: "4h"`: are the cohorts adding or

@@ -41,8 +41,11 @@ Pass what the user states as arguments, not as goal text. Leave out anything the
   the class in words and say it is a broader fit, not an exact one). When the ticker was an `xyz:`
   one, `widened` lists several xyz classes: call it "other markets on Senpi's equities, commodities
   and FX venue" or "other xyz markets", plainly, never one class.
-- "Long only", "no shorting", "I want to short" → `direction` `long` or `short`; "no shorts at
-  all" → `exclude` `shorting` too.
+- "Long only", "long-only", "no shorting", "never short" → `direction` `long` **and** `exclude`
+  `shorting`, in the first call: `direction: long` alone only drops the short-only strategies and
+  keeps the many that trade both sides, which is not what "long only" asks for. "I want to go
+  long on X" (a view, not a rule) → `direction` `long` alone. "I want to short" → `direction`
+  `short`.
 - "Not copy trading", "no crypto", "no stocks", "not DCA" → `exclude` with `copy_trading`,
   `crypto`, `equities`, `dca`.
 - What they have to put in ("I have $500") → `budget_usd`. It never removes anything: a strategy
@@ -64,6 +67,11 @@ read `get_my_portfolio` once: their balance sets `budget_usd`, and the coins the
 reason to prefer a strategy that trades them, or one that does not pile onto the same book. Use the
 balance the user named over the one read. If that read fails or they are not signed in, carry on
 without a budget or holdings and say so once.
+
+When the user is signed in and names a budget, still read `get_my_portfolio` once and compare:
+if the amount they named is more than the idle cash in their main wallet, say so in one line
+("you named $500; your main wallet holds about $16, so the rest would need depositing first").
+Never treat the named amount as money they have.
 
 ## Why now
 
