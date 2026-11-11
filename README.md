@@ -18,7 +18,6 @@ Every tool is read-only. Trading, funding and strategy deployment happen in your
 | **4h Leaderboard** — the live board: ranking, coin concentration, one trader's row and positions | `get_leaderboard` |
 | **Quant Desk** — read any wallet like a quant: 0-100 quant score, six dimensions, the live book's protection, priced leaks, deep dives, side by side | `get_wallet_analysis`, `get_wallet_positions`, `compare_wallets` (and `find_top_traders` with a size band, `get_my_portfolio` for your wallets) |
 | **Strategy Discovery** — browse Senpi's strategy template catalog by goal and risk | `browse_strategy_catalog`, `get_catalog_strategy` |
-| **Plans & Pricing** — Senpi's live plan catalog: prices, credits, points multipliers | `get_subscription_plan_catalog` |
 | **Portfolio & Trade Review** — your own book, your closed trades reviewed whole with your equity path and your stop events; the wallet-history tools read your own wallets when given no address | `get_my_portfolio`, `get_wallet_closed_trades`, `get_wallet_pnl_history`, `get_my_stop_events` |
 | **Account Status** — your plan, remaining credits, points and rank, fee, referral earnings | `get_account_status` |
 
