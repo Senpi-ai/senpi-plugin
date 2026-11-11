@@ -58,11 +58,18 @@ the last four hours, survivors included) are regularly on opposite sides of the 
    numbers are larger.
 2. **Smart vs the crowd.** The divergences from the same read: who is on which side, how lopsided,
    how many wallets. Lead with the cases on opposite sides. This is the core signal.
-3. **Near-term flow.** `get_smart_money_flow` with `window: "4h"`: are the cohorts adding or
-   unwinding? Then `get_leaderboard` (`limit: 5`, `concentration_limit: 8`) for the 4h board's
+3. **What they did (flow).** `get_smart_money_flow` with `window: "4h"`, under its own heading,
+   kept apart from positioning: where they sit is one thing, what they changed is another. Cover
+   every cohort that came back — proven, crowd, apex (accounts of $5M or more) and whale ($1M to
+   $5M) — and when the user asked about "the whales", lead with apex and whale. **Name each move
+   with its intent, in plain words**: adding to a winning position, adding to a losing one, cutting
+   at a loss, taking profit, opening new, or liquidated — "six proven wallets cut ETH shorts at a
+   loss", never the label. Say how old the read is ("as of about 7 minutes ago"); never call it
+   real time. Then `get_leaderboard` (`limit: 5`, `concentration_limit: 8`) for the 4h board's
    winners: does the board confirm the lean or fight it? A "confirms or fights" verdict compares two
-   populations, so state both. If flow is not in your tool list, use `get_whale_moves` for this step
-   and say the per-cohort flow isn't available here.
+   populations, so state both. If flow is not in your tool list, or it fails, say the flow isn't
+   available (quote the reason it gave, in plain words), give positioning only, and use
+   `get_whale_moves` for this step.
 4. **Bottom line.** One paragraph: where the proven money sits, where it splits from the crowd,
    whether the last four hours back it, and a "what to watch" line.
 

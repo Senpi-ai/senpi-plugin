@@ -17,7 +17,10 @@ Two tools, routed by what the question is about:
   fee, unclaimed referral earnings, and account basics.
 - **Plans and pricing** → `get_subscription_plan_catalog`. The catalog is read live from
   the same feed the app's paywall renders, so quote it as returned — never from memory, and never
-  from this file. Plans closed to new subscribers don't appear.
+  from this file. Plans closed to new subscribers don't appear. Starter is one: it is closed to
+  new subscribers, so never offer it. People already on it keep it and can upgrade, but cannot
+  return to it after leaving. When the user's own plan reads Starter, say so and quote their plan
+  as their account status returns it.
 
 ## Presenting the data
 
