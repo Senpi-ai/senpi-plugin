@@ -1,26 +1,25 @@
 ---
 name: senpi-account-status
 description: >-
-  The user's standing across Senpi, and Senpi's plans and pricing, with the Senpi connector. Use
-  for "how many points do I have?", "what's my rank?", "what are my fees?", "my referral rewards",
-  "what plan am I on?", "how many credits do I have left?", "what plans are there?", "how much does
-  Senpi cost?", "what do I get on Pro?". Calls get_account_status (the user's own account) and
-  get_subscription_plan_catalog (public). Read-only.
+  The user's own standing across Senpi, with the Senpi connector. Use for "how many points do I
+  have?", "what's my rank?", "what are my fees?", "my referral rewards", "what plan am I on?",
+  "how many credits do I have left?". Calls get_account_status (the user's own account). A question
+  about which plans Senpi has or what one costs is answered with a link to senpi.ai/pricing, never
+  a list. Read-only.
 ---
 
 # Senpi Account Status
 
-Two tools, routed by what the question is about:
+One tool, `get_account_status`: the user's own standing. Returns: current plan with renewal date,
+remaining AI credits for the cycle, points (total, base/perp split, multiplier, rank and rank
+change), the Senpi trading fee, unclaimed referral earnings, and account basics.
 
-- **The user's own standing** → `get_account_status`. Returns: current plan with renewal date, remaining AI credits for
-  the cycle, points (total, base/perp split, multiplier, rank and rank change), the Senpi trading
-  fee, unclaimed referral earnings, and account basics.
-- **Plans and pricing** → `get_subscription_plan_catalog`. The catalog is read live from
-  the same feed the app's paywall renders, so quote it as returned — never from memory, and never
-  from this file. Plans closed to new subscribers don't appear. Starter is one: it is closed to
-  new subscribers, so never offer it. People already on it keep it and can upgrade, but cannot
-  return to it after leaving. When the user's own plan reads Starter, say so and quote their plan
-  as their account status returns it.
+**Plans and prices are not listed here.** This connector has no plan catalog. When the user asks
+which plans exist, what one costs or what a plan includes, say that Senpi's plans are shown at
+senpi.ai/pricing and give that link. Never list plans, never quote a price or a credit size from
+memory or from this file, and never suggest an upgrade. The user's own plan is theirs to hear:
+quote it as their account status returns it, Starter included (a plan closed to new subscribers
+that people already on it keep).
 
 ## Presenting the data
 
@@ -37,9 +36,9 @@ Two tools, routed by what the question is about:
 - **Credits**: report `remaining_usd` and `cycle_end` as returned — the live balance is readable
   here, so give the figure rather than sending the user to the app. Do not compute "low credits"
   percentages or burn projections — the app's own meter and notifications are the source of truth
-  for that judgment, and top-ups make simple ratios misleading. Credit top-ups exist; for how to
-  buy one, point at the app header meter or senpi.ai/settings/subscription, and never quote a
-  top-up price or size from memory.
+  for that judgment, and top-ups make simple ratios misleading. Credit top-ups exist; they are
+  handled in the user's own Senpi account, never through this connector. Give no link to a payment
+  page, and never quote a top-up price or size from memory.
 - **Referral**: `unclaimed_usdc > 0` is claimable — in the Senpi app, not here. Referrals pay 15%
   of a referred friend's monthly Senpi spend for their first 12 months.
 - A source named in `sources_unavailable` is unknown, not zero — say so rather than reporting
@@ -76,8 +75,10 @@ Two tools, routed by what the question is about:
   quote a credit figure for the trial: the starting amount has changed more than once, and the
   user's subscription page is the only source. When it ends or runs out, the agent and its
   strategies pause, but open positions are **not** auto-closed and funds are untouched.
-- **Plan prices and credit sizes come only from the plan catalog**, read live — never from memory
-  or this file.
-- **Payment is web-only** (senpi.ai/settings/subscription); the app links out to it.
+- **Plan prices and credit sizes are not read here**: never quote one from memory or this file.
+  senpi.ai/pricing shows them.
+- **Payment happens in the user's own Senpi account, on the web**, never here. Give no link to a
+  payment or checkout page: senpi.ai/pricing, which only describes the plans, is the one link to
+  give.
 - Changing, upgrading or cancelling a plan, and claiming referral rewards, happen in the user's
   own Senpi account — never through this connector, which is read-only.
