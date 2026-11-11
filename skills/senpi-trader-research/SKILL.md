@@ -2,10 +2,12 @@
 name: senpi-trader-research
 description: >-
   Research public Hyperliquid traders with the Senpi connector. Use for "find top traders", "best
-  traders this month", "who's consistent?", "compare these wallets", "is 0x… any good?", "show me
-  their trades". Calls find_top_traders (ranked search), get_wallet_profile (who a wallet is, 1–5
-  at once), get_wallet_closed_trades (a wallet's trades) and get_wallet_pnl_history (its P&L
-  curve).
+  traders this month", "who's consistent?", "find traders to copy", "who could I mirror?",
+  "compare these wallets", "is 0x… any good?", "show me their trades". Calls find_top_traders
+  (ranked search, or with shortlist a ranking for copyability), get_wallet_profile (who a wallet
+  is, 1–5 at once; with vet, its current book read for copyability), get_wallet_closed_trades (a
+  wallet's trades), get_wallet_pnl_history (its P&L curve) and get_market_pulse (the day's tape a
+  shortlist is read against).
   Read-only public data; nothing here copies or follows anyone.
 ---
 
@@ -15,14 +17,15 @@ Four tools:
 
 - `find_top_traders` — ranked traders over a `window` (daily/weekly/monthly, all_time; default
   monthly), with `sort_by` (roi — the default — pnl, realized_pnl, win_rate, max_drawdown,
-  gain_to_pain, trader_age) and `limit` (default 20, max 1000). For "who's consistent?", read
-  more than one window and keep the wallets that rank in several. A null `maxDrawdown` or
+  gain_to_pain, trader_age) and `limit` (default 20, max 1000). A null `maxDrawdown` or
   `returnOnInvestment` means not computed — never "0% drawdown" or "flat"; quote
-  `generated_at` as the ranking's time.
+  `generated_at` as the ranking's time. With `shortlist: true` it ranks for copyability instead
+  (below).
 - `get_wallet_profile` — who a wallet is, for 1 to 5 addresses: the ranking row over the `window`
   (default **all_time**, the whole record) with its labels, and `closed_trades` (the real count
   from the trade history); `found: false` means Senpi has no row for it. A read that failed is
-  named in `sources_unavailable`; the rest stands. The current book is `get_wallet_positions`,
+  named in `sources_unavailable`; the rest stands. With `vet: true` each wallet also carries the
+  copyability read of its current book (below). The full position list is `get_wallet_positions`,
   the board's read `get_leaderboard` with `trader`, and a scored comparison `compare_wallets`
   (senpi-quant-desk).
 
@@ -50,13 +53,91 @@ Four tools:
   first, or the least with `losers: true`; the window is weekly, monthly or all_time. This is how
   "find me whales to look at" is answered; `sort_by` does not apply with a band.
 
+## Copyability: the shortlist and the vet
+
+A track record says whether a trader is good; it never says whether their book could be mirrored
+right now. These two reads add that.
+
+- **"Find traders to copy", "who could I mirror?", "who's consistent?"** → `find_top_traders` with
+  `shortlist: true` and no `window` or `sort_by` (the shortlist blends the 7-day return, 30-day
+  return and 30-day realized-profit rankings; naming a window or sort makes it one ranking). The
+  `shortlist` comes back already ordered for copyability — present it in that order, never re-sorted
+  by ROI or by fit. `seen_in` lists the rankings each trader appears in: in two or three means proven
+  *and* performing now — say so. `pool` is how many traders the rankings held, `enriched` how many
+  had their book read. A ranking named in `sources_unavailable` means the blend is missing that
+  view (say which, in plain words: the 7-day return, the 30-day return or the 30-day realized
+  profit), and the "seen in two or three" reading is weaker. A book or momentum read named there
+  means those rows' fit or momentum is unknown, not poor or flat.
+- **A wallet the user says is theirs** (or one of their saved wallets) goes to the Quant Desk
+  (senpi-quant-desk), not the copy shortlist or the vet, and never gets a "minimum to mirror" figure.
+- **"Is 0x… any good?", "should I copy 0x…?"** → `get_wallet_profile` with that address and
+  `vet: true`. Its `reliability` uses the real closed-trade count.
+- **Market fit** → also call `get_market_pulse` and say, for the top candidates, whether their book
+  (its net bias and biggest names) leans with or against what is working today. The connector has
+  no market-fit figure: this is your read, and the one thing that may move the pick off the first
+  row — say so in the same line when it does. Market fit never rescues a near-liquidation record.
+
+What to say from each row:
+
+- **How copyable now** — `mirrorability.fresh_entry_surface_pct` as "about N% of their book is still
+  near their entry" (within 5% on the side a mirror's slippage gates on). Lead with that share, not
+  the fit word. An unknown fit with no `book` means their positions couldn't be read right now —
+  say that, never "no positions" or "flat".
+- **What they hold** — `book`: open positions, longs and shorts, net bias, biggest names. A mirror
+  inherits this book.
+- **Rough minimum to mirror it** — `min_mirror_budget.min_budget_usd` as "a rough minimum of about $X
+  to open their current book at Hyperliquid's position minimums", and `opens_nothing_below_usd` as
+  the floor below which nothing would open. It is information about the trader's book, an estimate
+  only — never advice on how much to put in, never an offer to set anything up. Null means nothing
+  in the book would open now.
+- **Activity** — last trade and trades per day: a mirror only acts when the trader does. The 4h
+  `momentum` (hot, cold, flat) is P&L direction, not activity; it is unknown below the top ten
+  rows or when the trader isn't on the board — never call that idle.
+- **Reliability** — solid, ok, choppy, or a record too short to trust. Never quote a closed-trade
+  count for a shortlist row: the shortlist has none. The vet has the real count.
+- **Every flag, in plain words** (never the flag's name):
+  - too short a record to trust (under 5 closed trades or under a week of history)
+  - erratic results
+  - came near liquidation once (a max drawdown of 83% or worse) — the only drawdown to alarm on;
+    drawdowns of 50–80% are normal for leveraged perps
+  - a positive return percentage beside a negative dollar P&L — show both, don't lead with the
+    percentage
+  - trades so often a copy would bleed fees (over 8 trades a day)
+  - rarely opens new trades (a mirror would sit idle between them)
+  - hasn't traded in over a month
+  - using over 80% (high) or over 90% (critical) of their margin
+  - underwater on their open positions right now
+  - most of the book in one position; only one position
+  - nothing open right now — nothing for a mirror to open until they trade again
+
+The shortlist answer: one line with the pick (the first row unless market fit moves it, and why),
+a table in the shortlist's order (address, share near entry, book, rough minimum, last traded,
+reliability, flags), one line per top candidate on why (record, copyability now, market fit), then
+the tempting names you passed over — what would have drawn the user (a big ROI, top of a ranking)
+and the flag that rules them out.
+
+The vet answer: a verdict line with the biggest reason; the track record (ROI, win rate, max
+drawdown, closed trades, history); the labels in plain words; what they hold now with margin use;
+right now (4h momentum, how often and how recently they trade); every flag in plain words; the
+rough minimum.
+
+A vet always reads the book itself, not only its summary:
+- Call `get_wallet_positions` with the address and list every open position: coin, side,
+  notional, entry, current price, unrealized return and leverage, and whether it has a stop. With
+  more than six, list the six largest and count the rest. "Most of the book is in one position"
+  names the position.
+- Call `get_leaderboard` with `trader` set to the address: give their place on the 4h board and
+  their 4h P&L, or say they aren't on it.
+- State the mirror fit in a word before the number behind it: "a good fit to mirror now: all of
+  the book is within 5% of their entry" (good, partial or poor; unknown when the book couldn't be
+  read).
+
 ## Judging a trader honestly
 
 - Never rank on ROI alone. A high-ROI trader with a deep max drawdown or a stale last trade is a
   different proposition — surface win rate, drawdown, and recency together.
-- For "is this wallet good?", get_wallet_profile with that address plus a benchmark trader from
-  find_top_traders gives context a single profile lacks; `get_wallet_positions` says what they
-  hold now.
+- For "is this wallet good?", the vet above; a benchmark trader from the shortlist gives context a
+  single profile lacks, and `get_wallet_positions` lists every position they hold.
 - `found: false` for an address means Senpi has no ranking row for it in that window — say the
   window, don't call the trader bad. When comparing records, say which window the numbers cover:
   all-time and monthly rank the same wallets differently.

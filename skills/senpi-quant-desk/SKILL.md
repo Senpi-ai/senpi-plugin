@@ -9,9 +9,9 @@ description: >-
   "is my book protected?", "compare these wallets with the desk", "which of these is the better
   trader", "find me traders to analyze / run the desk on", "what fits me today". Calls
   get_wallet_analysis (the analysis, by parts) and get_wallet_positions (the live book), with
-  find_top_traders (size_band) for candidates, get_my_portfolio for the user's wallets and
-  compare_wallets for two to five wallets side by side. The user's own book needs their Senpi
-  sign-in; any other address is public data. Read-only.
+  find_top_traders (size_band) for candidates, get_my_portfolio for the user's wallets (one by
+  one or all as one book) and compare_wallets for two to five wallets side by side. The user's own
+  book needs their Senpi sign-in; any other address is public data. Read-only.
 ---
 
 # Quant Desk
@@ -28,9 +28,10 @@ stays with `senpi-trader-research` (`find_top_traders`, `get_wallet_profile`).
 
 - `get_wallet_analysis` — one analysis, returned by parts (`include`):
   `overview` and `leaks` by default; `performance`, `strategy`, `context`, `smart`, `market`,
-  `edge`, `scout`, `replay`, `funding` and `windows` on request; `["all"]` is every part but
-  `replay`. Ask for what the question needs: the default for a first read, one part for a
-  follow-up. Every part is the full view — the list only trims the response.
+  `edge` and `scout` are the rest of the staged report (stage 4, one call); `replay`, `funding`
+  and `windows` stay on request; `["all"]` is every part but `replay`. A full run is the four
+  stages below; a narrow question gets just the part it needs. Every part is the full view — the
+  list only trims the response.
 - `get_wallet_positions` — the live book, read in seconds without the trade history: each open
   position with entry, mark, leverage, liquidation price and distance, margin used and at risk,
   the coin's average daily range (`daily_range_pct`), its stops and a protection `status`; per
@@ -43,13 +44,43 @@ stays with `senpi-trader-research` (`find_top_traders`, `get_wallet_profile`).
 ## Whose book
 
 - **An address given** (`address: 0x…`) → that wallet, from public data.
-- **No address** → the user's own book (all their Senpi strategy wallets, read as one).
+- **Several addresses to read as one** ("these wallets together", "all of them as one book") →
+  `addresses` (two to ten, instead of `address`; the same on `get_wallet_positions`): one combined
+  book, the wallets' trades and positions in one desk. The `subject` says `combined_book` and
+  whether it is the user's own (`mine`: true, false, or null when unknown). On the analysis, if a
+  wallet in it could not be read, the call fails and names it: say which wallet, and offer to run
+  again or without it; never count it as nothing. On the live book, the call does not fail: the
+  wallet that could not be read comes back unread and the book's status is unknown; say so, never
+  "unprotected" or empty.
+- **No address, a bare "run quant desk" / "analyze my wallet"** → choose the wallet first, then
+  run. Call `get_my_portfolio` and read **every page of its `wallets`** (while `next_offset` is
+  set, call again with `offset` set to it) before listing anything. List all of the user's wallets
+  in one list, largest first, never split by where they came from: each saved wallet (by the label
+  they gave it), and each Senpi strategy. **Never leave a saved wallet out**, and never quietly swap it for a
+  strategy wallet. Strategy wallets holding $0 are counted in `empty_wallets`, not listed: give the
+  count ("plus 51 empty strategy wallets"). A value that could not be read is "couldn't load",
+  never $0, and a wallet list that could not be read at all is "I couldn't load your wallets";
+  say that, and ask for an address.
+  - **More than one wallet** → ask which to read, in plain words and with each one's value:
+    "Which one do you want me to run the desk on — MetaMask ($12,400), Aegis ($3,000)? Or I can
+    read them together as one book, or side by side." Their pick is the `address`; "all of them" is
+    `addresses` with every wallet listed, saved ones included (up to ten; with more, say so
+    plainly and ask which ten to read, so none is dropped without their say).
+  - "Side by side" is `compare_wallets` (two to five addresses); "together as one book" is
+    `addresses`.
+  - **Exactly one wallet** → run it without asking.
+  - **A Senpi strategy of several wallets** is read as one: pass all of its wallets in
+    `addresses`, never one instance of it.
+  - **None** → ask for an address, and offer to run the desk on one of the best current traders
+    (`find_top_traders`) so they see what it gives them.
+  - Only when they say "my Senpi strategies" (or the like) and nothing else, leave `address` out:
+    that reads every Senpi strategy wallet as one book. A saved wallet is read-only; analyzing it
+    is all Senpi does with it.
 - "find me traders to analyse" / no address and no own book → `find_top_traders` with
   `size_band`; ask the band first (a $9k book and a $9M book teach different lessons), then the
   window — relay the candidates with their numbers, then run the desk on the one they pick.
-- "My wallets" / "which of my wallets" → `get_my_portfolio`: its `wallets` list, largest first,
-  each usable as the `address` (strategy wallets at $0 are counted in `empty_wallets`; follow
-  `next_offset` for the rest of the list).
+- "My wallets" / "which of my wallets" → the same wallet list as above, each one usable as the
+  `address`.
 - Treat an address as the user's own when they say it is theirs; as research when they're reading
   someone else ("score this trader").
 - `window_days` is optional: 7 to 90, default 90.
@@ -60,6 +91,15 @@ Stage it, don't dump it. The first `get_wallet_analysis` call does the full anal
 user the desk is running first**, it can take up to two minutes on a heavy wallet. Never fire a
 second call while one is in flight. A result saying the analysis is still running is not a
 failure: wait about 30 seconds and call again **once**.
+
+A full run ("run quant desk", "analyze my wallet", "score this trader") is four stages, delivered
+in order, **all in one turn**: the hook (1), what's urgent (2), the money (3), then the rest in one
+call (4). Each stage lands as its own message, so the reader is reading stage 1 while stage 2 is
+read. Never end a turn between stages, and never announce a stage you are not about to run: if you
+name the next one, its call goes in the same turn. Stop early only when a read actually failed, and
+say so plainly rather than promising. The stage numbers order your work; they are not headings, so
+never show them. A narrow question ("is my book protected?", "find leaks") gets just its stage,
+not the whole report.
 
 1. **The hook** — `get_wallet_analysis` (default parts). The tool returns numbers and labels; you
    write the sentences from them, and every figure you quote names the measure it comes from.
@@ -193,7 +233,12 @@ failure: wait about 30 seconds and call again **once**.
    `give_back_unmeasured`, `oversized`) is the gain before the offsetting cost, and `usd` is the
    net. `recoverable` is the one figure that does not double count. Never add the leaks' `usd`
    together yourself.
-4. **The rest, on request** — one part at a time: `performance` (the per-coin table, long against
+4. **The rest** — one more `get_wallet_analysis` call with `include` set to `["strategy",
+   "context", "performance", "smart", "market", "edge", "scout"]`, right after the money, in the
+   same turn; the analysis is cached, so it returns at once. Relay it as a short section per part,
+   in your own words from the measured fields; skip a part that came back empty, and if the answer
+   is cut (`response_truncated`), say which part is incomplete and offer it on its own. The parts:
+   `performance` (the per-coin table, long against
    short, holds, execution), `strategy` (what the book does: its fingerprint and families, as
    measured fields — describe them in your own words; no wording comes with them), `context`
    (today's market by asset class, the funding regime, the record by regime), `smart` (the
@@ -202,8 +247,9 @@ failure: wait about 30 seconds and call again **once**.
    few hold it to call a side), `market` (each open position's fit with trend and
    funding; the book's stance comes as `stance`, `btc` and `median_funding_bp_8h`, in basis points
    per 8 hours), `edge` (best and worst setups, the measured rules).
-5. **Going deeper** — `replay` (the worst 7-day window and its trades), `funding` (the next 30
-   days at today's rates), `windows` (the last 30 days against the 60 before).
+5. **Going deeper, on request only** — never part of the staged report: `replay` (the worst 7-day
+   window and its trades), `funding` (the next 30 days at today's rates), `windows` (the last 30
+   days against the 60 before).
    - **Two or more wallets** ("compare these", "which of these is the better trader") →
      `compare_wallets`: per wallet the hook (score, archetype, verdict, rank, equity, drawdown,
      track) — the verdict and archetype are facts, read as in step 1 — and `separation`: each
@@ -219,6 +265,21 @@ failure: wait about 30 seconds and call again **once**.
      (`you_pay`) and `already_moved`; word each from its numbers. Process only: a match is a setup
      that fits how this trader wins, never a call to buy a coin.
 
+## Closing
+
+After a full run, close with three offers, each phrased as something the user can ask for or do —
+the desk states measured facts and gives no instruction:
+
+1. **Protect first** — name the positions that are unprotected or only partly protected, and any
+   whose orders could not be read (say so: "check those on Hyperliquid"). A book the user
+   custodies is protected by setting stops on Hyperliquid themselves; Senpi cannot place one there.
+2. **Fix the biggest leak** — the top leak's title and what the same trades would have kept (its
+   dollars, over its window), and offer to go through that leak trade by trade.
+3. **A follow-up read** — offer one more read: the worst week, what funding costs over the next 30
+   days, the last 30 days against the 60 before, or the trades behind a number.
+
+Skip any offer that has nothing behind it (a fully protected book needs no protect-first line).
+
 ## Voice
 
 - Write for the user, not about the tools. Never name a tool, argument or response field, never show
@@ -228,7 +289,9 @@ failure: wait about 30 seconds and call again **once**.
   example, "Senpi stops were read", not `senpi_stops: read`; "a real edge", not
   `strength_kind: edge`; "no stop on it", not `naked`.
 - Someone else's wallet is "they"; the user's own book is "you". The tools do not choose — the
-  `subject` field says which (`address` or `own_senpi_book`).
+  `subject` field says which: `address` is research voice, `own_senpi_book` is "you", and a
+  combined book follows `mine`: true is "you", false is "they", null (unknown) is "you" when they
+  said the wallets are theirs, otherwise neutral ("the book").
 - Numbers exactly as returned, and labels in their plain meaning: a measure, a flag, a leak's
   dollars. Round dollars to the nearest dollar and percentages to one decimal when you restate them.
   Never recompute a score or a dollar figure — relay it, and name the measure each number comes

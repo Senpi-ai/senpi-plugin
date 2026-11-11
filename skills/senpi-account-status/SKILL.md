@@ -17,7 +17,10 @@ Two tools, routed by what the question is about:
   fee, unclaimed referral earnings, and account basics.
 - **Plans and pricing** → `get_subscription_plan_catalog`. The catalog is read live from
   the same feed the app's paywall renders, so quote it as returned — never from memory, and never
-  from this file. Plans closed to new subscribers don't appear.
+  from this file. Plans closed to new subscribers don't appear. Starter is one: it is closed to
+  new subscribers, so never offer it. People already on it keep it and can upgrade, but cannot
+  return to it after leaving. When the user's own plan reads Starter, say so and quote their plan
+  as their account status returns it.
 
 ## Presenting the data
 
@@ -31,10 +34,12 @@ Two tools, routed by what the question is about:
   still apply). A fee with `unknown_reason` means the fee couldn't be confirmed (the plan
   couldn't be read alongside it): say so, never that they pay nothing. Never state a rate the
   data didn't return.
-- **Credits**: report `remaining_usd` and `cycle_end` as returned. Do not compute "low credits"
+- **Credits**: report `remaining_usd` and `cycle_end` as returned — the live balance is readable
+  here, so give the figure rather than sending the user to the app. Do not compute "low credits"
   percentages or burn projections — the app's own meter and notifications are the source of truth
-  for that judgment, and top-ups make simple ratios misleading. For the exact live figure, point
-  at the meter in the app header or senpi.ai/settings/subscription.
+  for that judgment, and top-ups make simple ratios misleading. Credit top-ups exist; for how to
+  buy one, point at the app header meter or senpi.ai/settings/subscription, and never quote a
+  top-up price or size from memory.
 - **Referral**: `unclaimed_usdc > 0` is claimable — in the Senpi app, not here. Referrals pay 15%
   of a referred friend's monthly Senpi spend for their first 12 months.
 - A source named in `sources_unavailable` is unknown, not zero — say so rather than reporting
@@ -49,8 +54,30 @@ Two tools, routed by what the question is about:
   cycle's credits run out, the agent and every strategy on it pause — no scans, no new entries,
   no stop moves. Open positions stay open; a stop already resting on the exchange still triggers;
   funds stay withdrawable. Never tell a user a subscription is not needed.
+- **What spends credits**: every message the user sends and every tool turn the agent runs. Long
+  threads cost more, because the whole conversation is re-sent each turn: a fresh thread is cheaper
+  than a long one. Scheduled check-ins the agent runs for the user (a recurring monitor of a
+  strategy, say) are the usual silent drain — each firing is a full model turn.
+- **A running strategy spends no credits**: its runtime ticks without a model call. That is not the
+  same as needing no plan — the strategy runs on the agent, and a lapsed plan pauses both.
+- **Chat is not free**: every turn spends credits, including the turn that asks what a turn cost.
+  Never say "chatting is free" or "that cost nothing".
 - **Credits are not money**: they can't be traded, withdrawn or deposited into a strategy. A
   shrinking meter is usage (messages and tool turns), never a trading loss.
+- **Billing is a 30-day rolling cycle** from the user's own start date, never a calendar month.
+  The plan's own credits land in full at the start of the cycle and expire at its end (no rollover).
+  Purchased top-ups are separate: each keeps its own expiry and is not cleared at renewal.
+- **Every plan includes every model.** Plans differ on credits and points rate, never on model
+  access, so a cheaper plan never locks anyone out of the better model.
+- **Upgrading is instant**, any day: the new plan's credits land immediately and the cycle restarts.
+  **Downgrading or cancelling takes effect at the next renewal**, never mid-cycle, with benefits kept
+  until then. There are no refunds for the unused part of a cycle.
+- **The free trial lasts 14 days** from when the user deploys their agent, and is one-time. Never
+  quote a credit figure for the trial: the starting amount has changed more than once, and the
+  user's subscription page is the only source. When it ends or runs out, the agent and its
+  strategies pause, but open positions are **not** auto-closed and funds are untouched.
+- **Plan prices and credit sizes come only from the plan catalog**, read live — never from memory
+  or this file.
 - **Payment is web-only** (senpi.ai/settings/subscription); the app links out to it.
 - Changing, upgrading or cancelling a plan, and claiming referral rewards, happen in the user's
   own Senpi account — never through this connector, which is read-only.

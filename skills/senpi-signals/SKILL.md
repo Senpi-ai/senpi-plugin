@@ -16,7 +16,8 @@ Three steps, in order.
 1. `scan_market_signals`. Optional `signal_type` (filter to one detector type) and `limit` — omit
    it: the sweep holds a dozen reads at most and the default returns all of them. The `trade` feed
    comes first in its own order (by trade score), then the `news` feed (by social score); each row
-   says which `feed` it is from.
+   says which `feed` it is from. A read can appear once in each feed; keep both. The result also
+   carries `not_measured` (the sources the sweep couldn't read), `coverage` and `signals_stale`.
 2. For the top two or three signals by strength, `read_asset_signal` with that `asset`: the card
    (`summary`, `signals`, `in_universe`, `not_measured`, `signals_as_of`, `signals_stale`).
 3. For each of those assets, `get_asset_market_data` with `asset` and `intervals` `["1h", "1d"]`:
@@ -28,6 +29,35 @@ Two questions are not this skill. "Funding extremes?" → `get_funding` (no asse
 funding clears the threshold). "Whale movements?" → `get_whale_moves` (senpi-smart-money). Route
 them there and do not scan.
 
+## Hyperfeed movers
+
+When the ask is for what is climbing or heating up, or for movers or Hyperfeed, also read
+`get_leaderboard` (`limit: 1`, `concentration_limit: 1`) and use its movers: up to 5 markets
+climbing the 4h board right now. Add a "Hyperfeed movers" block after the signals: one line per
+market with its place on the board, how much of the winners' gain it carries, its 15-minute change
+and the side the winners are on. These are the last four hours' winners, not smart money, and there
+is no history behind them: a climber is an observation, not a trade instruction. Only an empty list
+means nothing is climbing the board right now: say that in one line. A missing list, or a failed
+board read, means the movers couldn't be read right now: say that once, and never call the board
+quiet. Never drop the block silently. When every mover shows the same 15-minute change (steps of
+0.1% are common on a quiet board) the list is not a ranking: say they are tied, and never call the
+top row the hottest.
+
+The same read carries **Hyperfeed rotations**: markets that just jumped the board since an earlier
+read of it, scored with Penguin's rotation scorer (`rotations`, each with its score, reasons, how
+far it jumped and from where). Add a "Hyperfeed rotations" block after the movers, one line per
+market: the jump (from #prev to #now), the side the winners are on and the reasons in plain words
+(a first jump onto the board, a sharp rise in its share of the winners' gain, a long climb, the US
+session). How old the earlier read was decides what to say (`rotation_baseline`):
+- LIVE (up to 5 minutes): the rotations as scored. No rows is "nothing jumped the board in the last
+  few minutes".
+- WIDE (up to 30 minutes): the same, and say it compares over a longer window than Penguin's own
+  scan, so it is not the same signal.
+- NONE, TOOFRESH or STALE: nothing was scored. Say rotations need a second read of the board a
+  couple of minutes apart and offer to check again shortly; never say nothing jumped.
+Rotations are the 4h winners' board, not smart money, and an observation, not a trade instruction.
+Never name the tool or its fields to the user.
+
 ## Presenting the result
 
 - Write for the user, not about the tools. Never name a tool, argument or response field, never show
@@ -36,8 +66,16 @@ them there and do not scan.
   read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown. For
   example, "open interest surge" and "extreme funding", not `oi_surge` or `funding_extreme`; "not
   measured: funding", not `not_measured`; "in Senpi's tradeable universe", not `in_universe: true`.
-- The ranked list first: asset, type and strength, one line each, strongest first. Don't bury the
-  ranking in prose.
+- Two sections, in this order, each ranked in its own feed's order, one line per row (asset, type,
+  strength). Never merge them or drop a row because the other section has it:
+  - **Tradeable dislocations, for building ideas** — the trade rows.
+  - **Market news, for content** — the news rows (strength here is the social score).
+  Don't bury the ranking in prose. Omit a section that has no rows.
+- Then the not-measured line, only when `not_measured` is non-empty: "Not measured this run:" and the
+  sources in plain words (e.g. the 4h leaderboard). A source not measured is not one that found
+  nothing: never say "nothing there" about it.
+- Then, only when `signals_stale` is true: say the reading is from `signals_as_of`, that it is older
+  than usual, and that the Senpi backend is behind.
 - Then one short paragraph per followed asset, from its card (the summary, the signals, whether it
   is `in_universe`; say what `not_measured` lists, and that a card with `signals_stale: true` is old) and its market
   data (the daily move, funding, open interest).
@@ -47,7 +85,34 @@ them there and do not scan.
 - Quote the call's `as_of` (the call time) and each card's `signals_as_of` (when its signals were read; the top-level `as_of` is not that). A signal is an observation, not a recommendation — never present one as a trade
   instruction.
 
+## How every run ends: one question
+
+After the sections and a few sentences, end with one question and nothing after it: "Want to act on
+any of these?" Offer a single trade on one read, or four strategies the user can look at in the
+catalog (see senpi-strategy-discover; `get_catalog_strategy` for details):
+
+- Signals Hunter: trades these smart-money signals on an hourly clock. It runs its own scan, so its
+  reads are close to this feed but not identical, and its score floor is higher, so it acts on fewer.
+- Puffin: the same engine, one position at a time, higher risk and reward: one stop-out is about
+  19-23% of the account, and a round trip costs roughly 0.8-0.9% of the wallet in fees. It is listed
+  with that cost in the same breath, but never recommended as the default or a first strategy: Signals
+  Hunter stays the default answer for this feed, and Puffin is the one to lean on only when the user
+  asks for size or the aggressive one.
+- Athena: a hedge-fund style strategy built on these smart-money signals.
+- Hyperfeed momentum strategies (such as Penguin for crypto, Pelican for all assets): these chase
+  live Hyperfeed rotations, a different source from the smart-money reads above, so say so; they do
+  not trade what was just read.
+
+List all four every time (OG's rule); the cost and default notes above govern how each is described. These are strategies to explore, not something this connector places or
+starts: the catalog is read-only and deploying happens in senpi.ai. A single trade on a read takes the
+side the read names (a funding extreme names no side, so it is never a one-trade setup). Never promise
+results or call a strategy proven. If the user says no or doesn't answer, stop; don't repeat the offer.
+Keep the question out of anything written for public posting, which stays observation-only.
+
 ## Follow-ups to offer
+
+These are for after the user replies or asks for more; the run itself still ends on the one question
+above, with nothing after it.
 
 - Another asset in the list → `read_asset_signal` and `get_asset_market_data` on it.
 - Who is driving it → `get_whale_moves` with that asset, or the cohorts' lean from

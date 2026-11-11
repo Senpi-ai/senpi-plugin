@@ -3,13 +3,14 @@ name: senpi-improve-trades
 description: >-
   Review the signed-in user's own closed Hyperliquid trades with the Senpi connector. Use for
   "review my trades", "how did I trade this month?", "where am I losing money?", "what should I
-  fix?", "my win rate?". Calls get_wallet_closed_trades, get_wallet_pnl_history and
-  get_my_stop_events with no address, which reads the connected user's own book. Read-only.
+  fix?", "my win rate?", "how did my exits do?", "did I sell too early?". Calls
+  get_wallet_closed_trades (with review), get_wallet_pnl_history and get_my_stop_events with no
+  address, which reads the connected user's own book. Read-only.
 ---
 
 # Trade Review
 
-Three calls, in this order, over the same window. First `get_wallet_closed_trades` with **no address**, with `window_days` (default 30, max 365)
+Three calls, in this order, over the same window. First `get_wallet_closed_trades` with **no address** and `review: true`, with `window_days` (default 30, max 365)
 or `last` (the N most recent closed trades, for "my last 10 trades"; then derive the window for the other two calls from the oldest returned trade's close time, or use 30 days if none came back, and say which you used). With no address it reads
 the user's whole book — every Senpi strategy wallet (active, paused **and closed**: a closed
 strategy's trades are history, not a live verdict), every saved wallet, and the Senpi main
@@ -36,6 +37,32 @@ wallets are read first, then closed strategies from the most recently closed, so
 longest ago are left out): their trades
 are not in the totals, so say how many wallets were left out and that the totals cover the rest —
 not that they "couldn't be read".
+
+With `review: true` each trade also carries `exit` and `if_held`, and `review` holds three summaries
+over every trade in the window (complete whatever the page):
+
+- `exit` — how the trade ended, from its Senpi ratchet-stop record on the user's own strategy
+  wallets: `SL_TRIGGERED` (the stop fired: a hard stop when no tier had armed, else a locked profit
+  tier, with `tier_number` and `high_water_roe`), `CLOSED_OFF_LADDER` (the position went away by
+  another route — the strategy's runtime, the agent or the user on the venue; the record can't
+  tell which, so never "you closed it"), `LIQUIDATED`, `ADL`, `UNKNOWN` (no record matched: the
+  exit mechanism isn't known — never guess one) or `NOT_A_STRATEGY_WALLET` (a saved or main-wallet
+  trade). `premature: true` marks a tier 1 or 2 lock on a high-water ROE of 5% or less: the lock
+  armed and trailed out almost at once. `record_unread` means that wallet's record couldn't be
+  read; `record_capped` means the record holds only its newest 100 stops, so an older trade's may
+  be past it.
+- `if_held` — what holding from the exit to now would have added (`delta_usd` positive,
+  `held_higher`) or given back (`exit_ahead`), at today's mark. It is hindsight over one stretch of
+  the market and ignores the risk the exit avoided: context, never a grade. `held_higher` is never
+  "you exited too early". `unknown` means no current price or side.
+- `review.timing` — the counts of exits ahead and held-higher, `if_all_held_to_now_usd` (the whole
+  book's hold-to-now, beside the realized P&L, never a target), by crypto and equity/index.
+- `review.exit_mix` — closes by how they ended, overall, by asset class and by strategy, with the
+  premature locks and a few examples. `sources` says how many exits came from a record, had none,
+  or sat on a wallet whose record couldn't be read.
+- `review.book_vs_market` — the 4h board's 12 biggest movers, whether the book traded each and on
+  which side (`aligned`: long into a rise or short into a fall), and the `gaps` it didn't trade. The
+  board is the last 4 hours and the book the whole window: say so, and never call a gap a mistake.
 
 Second, `get_wallet_pnl_history` with **no address** and the same `window_days` (it reads 7 to 90
 days: it rejects windows under 7, so ask for 7 and say the equity path covers 7 days; for a longer window ask for 90 and say the equity path covers the last 90). It returns one
@@ -69,11 +96,17 @@ example, "your strategy wallets couldn't be read, so these numbers cover only yo
 `sources_unavailable: ["strategies"]`; "read in full", not `history_read: ok`; "drawdown", not
 `dd_pct`.
 
-Four blocks, in this order. Quote `as_of`.
+Five blocks, in this order. Quote `as_of`.
 
 1. **The net and the shape** (from the closed trades). Lead with the net number after fees, show
    the gross and the fees beside it, then win rate (wins counted after fees) and how concentrated
-   the PnL is in the largest wins/losses. Say funding is not included.
+   the PnL is in the largest wins/losses. Say funding is not included. **The review is of the
+   Senpi-managed wallets**: take these numbers from `review.senpi_totals`, not from `totals`
+   (which adds every wallet together). When `review.saved_wallets` is present, give the saved
+   wallets one line of their own after it — "your saved wallet, which you trade by hand: N closes,
+   net $X; it is not part of the review above" — and never mix them into the review's counts.
+   Then a per-wallet table from `wallets`: each wallet or strategy, its closes, wins and losses,
+   fees and net after fees, largest net loss first, with closed strategies marked as closed.
 2. **The equity path** (from the PnL history), per wallet: start and end equity, return on average
    equity (`return_on_avg_equity` times 100), the max drawdown (`dd`, and `dd_pct` times 100) and whether the wallet is in drawdown
    now. Read the return from `return_on_avg_equity`, not from end minus start: deposits and
@@ -84,15 +117,29 @@ Four blocks, in this order. Quote `as_of`.
    after fees, before funding, including the full P&L of trades opened before the window. When they
    differ, say which of those explains it (open positions down or up, funding paid, trades opened
    earlier), not that the data doesn't reconcile.
-3. **What the stops did** (from the stop events): per strategy, the counts from `by_type` (stops
-   hit, tier triggers, lock moves, arms), with a few examples from the list. No events is an answer:
-   say no stop acted in the window. Name any strategy in `strategies_omitted` (and any `sources_unavailable`) as unread, not
-   as quiet.
-4. **The honest readings** this data supports, below.
+3. **How the trades ended** (from `exit` and `review.exit_mix`): how many closes the stop fired on,
+   how many went off the ladder, how many were liquidated, and how many are unknown, per strategy
+   when more than one traded; the premature locks with an example or two. Then the stop activity
+   from the stop events: per strategy, the counts from `by_type` (stops hit, tier triggers, lock
+   moves, arms). Both read Senpi's ratchet stops only. No events is "no Senpi ratchet stop acted in
+   the window", never "no stop fired"; an `UNKNOWN` exit is "how this one closed isn't on record",
+   never "it closed without a stop". A stop resting on Hyperliquid's book, a manual close on the
+   venue or the runtime's own close reason leave no record here. Name any strategy in
+   `strategies_omitted` (and any `sources_unavailable`) as unread, not as quiet.
+4. **Timing and the market** (from `review.timing` and `review.book_vs_market`): how many exits got
+   out ahead of a reversal and how many would be higher held to now, the book's hold-to-now total
+   beside its realized P&L (hindsight, not a verdict), then the board's movers the book traded, on
+   which side, and the ones it didn't.
+5. **The honest readings** this data supports, below.
 
 - The honest readings, drawn across the blocks: fee drag (fees vs net PnL), asymmetry (are losses larger
-  than wins), concentration (one trade carrying the month). Say what the data shows — and say what
-  it cannot show (entries/exits quality needs per-trade inspection that isn't in this summary).
+  than wins), concentration (one trade carrying the month), premature locks (a tier locking and
+  trailing out on a small gain, again and again, is a pattern in the stop's settings, worth naming).
+  Say what the data shows and what it can't: the close reason a strategy's runtime recorded, the
+  signals it skipped and orders that failed live in the runtime on the user's machine and aren't
+  visible here.
+- Execution (maker vs taker, fees in dollars against what the book made) is the Quant Desk's read:
+  offer to run it on their wallets (senpi-quant-desk) rather than estimating it from the trades.
 - `totals.trades: 0` with wallets read means no closed trades in the window — an answer, not an
   error. A wallet with `history_read: "unavailable"` (also named in `sources_unavailable`) is
   unknown, not $0: say its trades are missing from the totals.
