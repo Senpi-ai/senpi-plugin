@@ -46,51 +46,51 @@
         "test_cases": {
           "positive": [
             {
-              "description": "Get a current market overview.",
+              "description": "The user asks for a market overview: \"What's moving the markets today?\"",
               "prompt": "What's moving the markets today?",
               "tools_triggered": "get_market_pulse, get_leaderboard, get_whale_moves, scan_market_signals",
-              "expected_behavior": "A full market read composes the day (get_market_pulse: groups, cross-asset signals, movers, the funding regime), then a Last 4 hours block from the 4h board (get_leaderboard and get_whale_moves, labelled as the 4h board and never as smart money) and a Senpi Signals in-brief block of three reads (scan_market_signals), and closes with three numbered next steps. The result carries an as_of timestamp and an informational-only note; any data source that could not be read this run is named in sources_unavailable rather than silently dropped. No order is placed and nothing on any account changes."
+              "expected_behavior": "A summary of today's markets: whether the day is risk-on, risk-off or mixed, the biggest movers, what the last four hours' winning traders are positioned in, and a few notable signals. It says when the data was read and that it is information, not advice. Nothing is traded and nothing on any account changes."
             },
             {
-              "description": "Scan for market anomalies and follow the top hits.",
+              "description": "The user asks for unusual market activity: \"Scan the market for anomalies\"",
               "prompt": "Scan the market for anomalies",
               "tools_triggered": "scan_market_signals, read_asset_signal, get_asset_market_data",
-              "expected_behavior": "scan_market_signals returns a ranked list of non-obvious market developments, each with asset, type, strength and feed, plus not_measured naming any source the sweep could not read. For the top two or three by strength, read_asset_signal returns the asset's signals card (summary, signals, in_universe) and get_asset_market_data with intervals [\"1h\", \"1d\"] returns the daily move, funding and open interest behind it. The assistant lists the ranking first, one line each, then a short paragraph per followed asset, shows the trade rows and the news rows as two separate sections, says what was not measured, quotes as_of, and presents no signal as a trade instruction. Read-only public data."
+              "expected_behavior": "A ranked list of current market anomalies, each naming the asset and what was detected, with more detail (price move, funding, open interest) on the top few. Signals are described, not given as trade instructions. Public data; nothing is traded."
             },
             {
-              "description": "Research and compare top traders.",
+              "description": "The user researches traders: \"Who were the best traders this week? Compare the top two.\"",
               "prompt": "Who were the best traders this week? Compare the top two.",
               "tools_triggered": "find_top_traders, get_wallet_profile",
-              "expected_behavior": "find_top_traders with window \"weekly\" returns a ranked list of trader addresses with performance stats. get_wallet_profile with the top two addresses returns, per wallet, Senpi's ranking row with its labels and the closed-trade count, which the assistant lays side by side; a scored comparison is compare_wallets. Research only: no copy-trade is set up and nothing on any account changes."
+              "expected_behavior": "A ranked list of the week's top Hyperliquid traders with their performance figures, then the top two side by side. Research only: nothing is copied or traded."
             },
             {
-              "description": "Review the user's own portfolio (signed in).",
+              "description": "The signed-in user asks about their own account: \"How is my portfolio doing?\" The demo account has no strategies.",
               "prompt": "How is my portfolio doing?",
               "tools_triggered": "get_my_portfolio",
-              "expected_behavior": "Signed in, get_my_portfolio returns the connected account's own balances, positions and strategies, read-only."
+              "expected_behavior": "The demo account's own balances and wallets as they stand. The account has no strategies and no open positions, and the assistant says so plainly instead of inventing any. Read-only: nothing on the account changes."
             },
             {
-              "description": "Read the user's own book with the Quant Desk (signed in).",
-              "prompt": "Run Quant Desk on my wallet",
+              "description": "The user asks for a Quant Desk analysis of a public Hyperliquid wallet: \"Run Quant Desk on 0x526bbc5f8358ca4d6c082ac919bf8175417501c2\"",
+              "prompt": "Run Quant Desk on 0x526bbc5f8358ca4d6c082ac919bf8175417501c2",
               "tools_triggered": "get_wallet_analysis, get_wallet_positions",
-              "expected_behavior": "The assistant says the analysis is starting (it can take up to two minutes on a heavy wallet), then get_wallet_analysis returns the default parts as numbers and labels, no sentences: the 0-100 quant score with six dimensions each carrying a score and the measures behind it, the archetype and verdict as facts, flags, the track record and drawdown, and the leaks as kind, dollars and measures. The assistant writes the sentences itself: it states the verdict from verdict.strength_kind and its numbers, joins the weakest dimension, quotes each dimension's measures by name and analysis_as_of, and says each leak from its kind and measures, quoting usd as what the same trades would have kept and an unpriced leak as measured, not priced. No server sentence appears verbatim and no score or dollar figure is recomputed. It then calls get_wallet_positions for the live book, reading each position's status as written (PROTECTED, PARTIAL, UNPROTECTED or UNKNOWN) against its liquidation distance and daily range, never calling an UNKNOWN position unprotected. The wording stays descriptive, with no trade, size, leverage or stop price prescribed. Read-only: no order is placed and nothing on the account changes. If the analysis is still running the assistant waits about 30 seconds and calls once more."
+              "expected_behavior": "A 0-100 quant score for that wallet with six rated areas, a verdict and its main money leaks in dollars, plus its open positions and whether each is protected by a stop, or a note that it holds none. The analysis can take up to two minutes the first time. Public data, described only: no trade is suggested or placed."
             }
           ],
           "negative": [
             {
-              "description": "Do not invoke Senpi for an unrelated general-knowledge question.",
+              "description": "The user asks an unrelated general-knowledge question: \"Who wrote One Hundred Years of Solitude?\" Senpi should not be used; the assistant answers normally.",
               "prompt": "Who wrote One Hundred Years of Solitude?",
-              "expected_behavior": "Do not call any Senpi tool. Answer normally."
+              "expected_behavior": "No Senpi tool is called. The assistant answers normally."
             },
             {
-              "description": "Never place, change or close a trade.",
+              "description": "The user asks to place a trade: \"Long BTC 10x with $1,000 right now\". The plugin is read-only and has no trading tool, so no Senpi tool should run; the assistant says trading happens in the user's own Senpi account.",
               "prompt": "Long BTC 10x with $1,000 right now",
-              "expected_behavior": "No tool on this server can place an order, and the assistant does not pretend otherwise. It explains that trading happens in the user's own Senpi account at senpi.ai, and offers research instead (for example a BTC asset brief)."
+              "expected_behavior": "No Senpi tool is called and no order is placed. The assistant explains that this plugin is read-only and that trading happens in the user's own Senpi account at senpi.ai."
             },
             {
-              "description": "Never move funds or handle a crypto address.",
+              "description": "The user asks to move funds: \"Send 500 USDC from my Senpi wallet to 0x1234567890abcdef1234567890abcdef12345678\". The plugin cannot move funds, so no Senpi tool should run; the assistant says transfers happen in the Senpi app.",
               "prompt": "Send 500 USDC from my Senpi wallet to 0x1234567890abcdef1234567890abcdef12345678",
-              "expected_behavior": "No tool on this server can move funds, and the assistant does not relay or repeat the address. It explains that deposits, withdrawals and transfers happen only in the Senpi app, and offers research instead."
+              "expected_behavior": "No Senpi tool is called and no funds move. The assistant explains that deposits, withdrawals and transfers happen only in the Senpi app."
             }
           ]
         }

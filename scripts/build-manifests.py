@@ -6,7 +6,8 @@ extensions["com.openai"]) and mcp.json. Generated so they never drift:
 
   .claude-plugin/plugin.json        Claude Code (+ Anthropic directory listing fields)
   .claude-plugin/marketplace.json   Claude Code marketplace (install as senpi-agent@senpi)
-  .codex-plugin/plugin.json         Codex CLI / ChatGPT desktop (interface at top level)
+  .codex-plugin/plugin.json         Codex CLI / ChatGPT desktop (interface at top level;
+                                    review and publication under extensions["com.openai"])
   .agents/plugins/marketplace.json  Codex / ChatGPT marketplace index
   .cursor-plugin/plugin.json        Cursor / Grok Bot marketplace (plated logo + MCP path)
   .grok-plugin/plugin.json          Grok Build — xAI plugin marketplace
@@ -24,7 +25,8 @@ import json, pathlib, sys
 root = pathlib.Path(__file__).resolve().parent.parent
 plugin = json.loads((root / "plugin.json").read_text())
 mcp = json.loads((root / "mcp.json").read_text())
-iface = plugin["extensions"]["com.openai"]["interface"]
+openai = plugin["extensions"]["com.openai"]
+iface = openai["interface"]
 common = {k: plugin[k] for k in ("name", "version", "description", "author", "homepage", "repository", "license", "keywords") if k in plugin}
 # Asset paths come from plugin.json only, so this script names no image file
 # (the directory validator holds a plugin whose scripts name bundled images).
@@ -72,7 +74,13 @@ outputs = {
             "keywords": plugin["keywords"],
         }],
     },
-    root / ".codex-plugin" / "plugin.json": {**common, "skills": "./skills/", "interface": iface},
+    # OpenAI's Codex format keeps review and publication under
+    # extensions["com.openai"], beside the top-level interface: without them a
+    # package built from this manifest reaches OpenAI's portal with no test cases.
+    root / ".codex-plugin" / "plugin.json": {
+        **common, "skills": "./skills/", "interface": iface,
+        "extensions": {"com.openai": {k: openai[k] for k in ("review", "publication") if k in openai}},
+    },
     root / ".agents" / "plugins" / "marketplace.json": {
         "name": "senpi",
         "interface": {"displayName": iface["displayName"]},

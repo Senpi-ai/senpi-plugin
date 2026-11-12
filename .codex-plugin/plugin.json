@@ -39,5 +39,65 @@
     "logo": "./assets/senpi-logo.png",
     "logoDark": "./assets/senpi-logo-plate-dark.png",
     "composerIcon": "./assets/senpi-logo.png"
+  },
+  "extensions": {
+    "com.openai": {
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "The user asks for a market overview: \"What's moving the markets today?\"",
+              "prompt": "What's moving the markets today?",
+              "tools_triggered": "get_market_pulse, get_leaderboard, get_whale_moves, scan_market_signals",
+              "expected_behavior": "A summary of today's markets: whether the day is risk-on, risk-off or mixed, the biggest movers, what the last four hours' winning traders are positioned in, and a few notable signals. It says when the data was read and that it is information, not advice. Nothing is traded and nothing on any account changes."
+            },
+            {
+              "description": "The user asks for unusual market activity: \"Scan the market for anomalies\"",
+              "prompt": "Scan the market for anomalies",
+              "tools_triggered": "scan_market_signals, read_asset_signal, get_asset_market_data",
+              "expected_behavior": "A ranked list of current market anomalies, each naming the asset and what was detected, with more detail (price move, funding, open interest) on the top few. Signals are described, not given as trade instructions. Public data; nothing is traded."
+            },
+            {
+              "description": "The user researches traders: \"Who were the best traders this week? Compare the top two.\"",
+              "prompt": "Who were the best traders this week? Compare the top two.",
+              "tools_triggered": "find_top_traders, get_wallet_profile",
+              "expected_behavior": "A ranked list of the week's top Hyperliquid traders with their performance figures, then the top two side by side. Research only: nothing is copied or traded."
+            },
+            {
+              "description": "The signed-in user asks about their own account: \"How is my portfolio doing?\" The demo account has no strategies.",
+              "prompt": "How is my portfolio doing?",
+              "tools_triggered": "get_my_portfolio",
+              "expected_behavior": "The demo account's own balances and wallets as they stand. The account has no strategies and no open positions, and the assistant says so plainly instead of inventing any. Read-only: nothing on the account changes."
+            },
+            {
+              "description": "The user asks for a Quant Desk analysis of a public Hyperliquid wallet: \"Run Quant Desk on 0x526bbc5f8358ca4d6c082ac919bf8175417501c2\"",
+              "prompt": "Run Quant Desk on 0x526bbc5f8358ca4d6c082ac919bf8175417501c2",
+              "tools_triggered": "get_wallet_analysis, get_wallet_positions",
+              "expected_behavior": "A 0-100 quant score for that wallet with six rated areas, a verdict and its main money leaks in dollars, plus its open positions and whether each is protected by a stop, or a note that it holds none. The analysis can take up to two minutes the first time. Public data, described only: no trade is suggested or placed."
+            }
+          ],
+          "negative": [
+            {
+              "description": "The user asks an unrelated general-knowledge question: \"Who wrote One Hundred Years of Solitude?\" Senpi should not be used; the assistant answers normally.",
+              "prompt": "Who wrote One Hundred Years of Solitude?",
+              "expected_behavior": "No Senpi tool is called. The assistant answers normally."
+            },
+            {
+              "description": "The user asks to place a trade: \"Long BTC 10x with $1,000 right now\". The plugin is read-only and has no trading tool, so no Senpi tool should run; the assistant says trading happens in the user's own Senpi account.",
+              "prompt": "Long BTC 10x with $1,000 right now",
+              "expected_behavior": "No Senpi tool is called and no order is placed. The assistant explains that this plugin is read-only and that trading happens in the user's own Senpi account at senpi.ai."
+            },
+            {
+              "description": "The user asks to move funds: \"Send 500 USDC from my Senpi wallet to 0x1234567890abcdef1234567890abcdef12345678\". The plugin cannot move funds, so no Senpi tool should run; the assistant says transfers happen in the Senpi app.",
+              "prompt": "Send 500 USDC from my Senpi wallet to 0x1234567890abcdef1234567890abcdef12345678",
+              "expected_behavior": "No Senpi tool is called and no funds move. The assistant explains that deposits, withdrawals and transfers happen only in the Senpi app."
+            }
+          ]
+        }
+      },
+      "publication": {
+        "release_notes": "0.5.0 — Research connector. The plugin now points at Senpi's dedicated read-only research server: twenty-two typed tools covering market pulse, signal scans, asset signals, market data, funding, the 4h leaderboard, smart-money positioning and flow, whale moves, trader research and wallet profiles, the Quant Desk (one wallet analysis, the live book, and a side-by-side compare), wallet history and P&L, the strategy catalog, and — signed in — your own portfolio, trade review and account status. Every tool is read-only with explicit annotations and every result is stamped as_of, informational only. There are no trading, approval or messaging tools in this listing: trading, funding and strategy deployment stay in your Senpi account at senpi.ai."
+      }
+    }
   }
 }
