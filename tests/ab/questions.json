@@ -1,0 +1,152 @@
+[
+  {
+    "id": "pulse",
+    "auth": "no",
+    "skill": "senpi-market-pulse",
+    "question": "What's moving the markets today?"
+  },
+  {
+    "id": "signals",
+    "auth": "no",
+    "skill": "senpi-signals",
+    "question": "Scan the market for anomalies and unusual signals right now."
+  },
+  {
+    "id": "smart-eth",
+    "auth": "no",
+    "skill": "senpi-smart-money",
+    "question": "What is smart money doing on ETH right now — are the top traders long or short?"
+  },
+  {
+    "id": "whales",
+    "auth": "no",
+    "skill": "senpi-smart-money",
+    "question": "Any big whale moves on Hyperliquid in the last day?"
+  },
+  {
+    "id": "top-traders",
+    "auth": "no",
+    "skill": "senpi-trader-research",
+    "question": "Find the top 5 Hyperliquid traders this month."
+  },
+  {
+    "id": "compare",
+    "auth": "no",
+    "skill": "senpi-trader-research",
+    "question": "Compare these two wallets side by side: 0x029cd954c38838b2731cb5618e5c950ed4766956 and 0x526bbc5f8358ca4d6c082ac919bf8175417501c2"
+  },
+  {
+    "id": "catalog",
+    "auth": "no",
+    "skill": "senpi-strategy-discover",
+    "question": "What strategies does Senpi offer? Give me the full catalog."
+  },
+  {
+    "id": "athena",
+    "auth": "no",
+    "skill": "senpi-strategy-discover",
+    "question": "Tell me about the Athena strategy in detail."
+  },
+  {
+    "id": "plans",
+    "auth": "no",
+    "skill": "senpi-account-status",
+    "question": "What plans does Senpi offer and what does each cost?"
+  },
+  {
+    "id": "quant-desk",
+    "auth": "no",
+    "skill": "quant-desk",
+    "question": "Run quant desk on 0xf21d494bb47339f399267c5519cbe11da0753b2d — score, verdict and the protection audit."
+  },
+  {
+    "id": "portfolio",
+    "auth": "yes",
+    "skill": "senpi-portfolio",
+    "question": "Show my portfolio: balance, positions and strategies."
+  },
+  {
+    "id": "review",
+    "auth": "yes",
+    "skill": "senpi-improve-trades",
+    "question": "Review my closed trades from the last 30 days — win rate and where I'm losing money."
+  },
+  {
+    "id": "account",
+    "auth": "yes",
+    "skill": "senpi-account-status",
+    "question": "What plan am I on, how many Senpi points do I have and what is my rank and fee?"
+  },
+  {
+    "id": "qd-find",
+    "auth": "no",
+    "skill": "senpi-quant-desk",
+    "question": "Find me some whale traders to run the quant desk on — who held up over the last month?"
+  },
+  {
+    "id": "qd-compare",
+    "auth": "no",
+    "skill": "senpi-quant-desk",
+    "question": "Run the quant desk on both 0x029cd954c38838b2731cb5618e5c950ed4766956 and 0x526bbc5f8358ca4d6c082ac919bf8175417501c2 and compare them side by side."
+  },
+  {
+    "id": "flow",
+    "auth": "no",
+    "skill": "senpi-smart-money",
+    "question": "What did smart money do in the last 4 hours — what did the cohorts open, add to and close?"
+  },
+  {
+    "id": "stops",
+    "auth": "yes",
+    "skill": "senpi-portfolio",
+    "question": "Did any of my stops trigger this week? Show my ratchet-stop events."
+  },
+  {
+    "id": "signals-funding",
+    "auth": "no",
+    "skill": "senpi-market-pulse",
+    "question": "Which coins are paying the most funding right now?"
+  },
+  {
+    "id": "review-empty",
+    "auth": "yes",
+    "skill": "senpi-improve-trades",
+    "question": "Review my trades this week — did any of my stops fire?"
+  },
+  {
+    "id": "pulse-full",
+    "auth": "no",
+    "skill": "senpi-market-pulse",
+    "question": "Give me the full market pulse — what's moving, who's winning the last 4 hours, and any signals worth a look."
+  },
+  {
+    "id": "smart-full",
+    "auth": "no",
+    "skill": "senpi-smart-money",
+    "question": "What is smart money doing right now — lean, divergences, and is the last 4 hours confirming it?"
+  },
+  {
+    "id": "copy-shortlist",
+    "auth": "no",
+    "skill": "senpi-trader-research",
+    "question": "Find me traders worth copying right now — who is consistent and still copyable today?"
+  },
+  {
+    "id": "vet",
+    "auth": "no",
+    "skill": "senpi-trader-research",
+    "question": "Is 0x029cd954c38838b2731cb5618e5c950ed4766956 worth copying? What would it take to mirror them?"
+  },
+  {
+    "id": "catalog-filter",
+    "auth": "yes",
+    "skill": "senpi-strategy-discover",
+    "question": "I have about $500. Recommend a long-only BTC or ETH strategy, no copy trading, and tell me why now."
+  },
+  {
+    "id": "qd-mine",
+    "auth": "yes",
+    "skill": "senpi-quant-desk",
+    "question": "Run the quant desk on my wallets."
+  }
+]

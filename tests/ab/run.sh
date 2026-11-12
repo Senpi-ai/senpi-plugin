@@ -79,7 +79,11 @@ print(f"{qid:12s} {side}  {secs:>4}s  {len(tools):>2} tool calls  {len(answer):>
 EOF
 }
 
-tail -n +2 "$HERE/questions.tsv" | while IFS=$'\t' read -r id auth skill q; do
+# questions.json is a list of {id, auth, skill, question}; one tab-separated row each.
+python3 -c 'import json, sys
+for r in json.load(open(sys.argv[1])):
+    print("\t".join([r["id"], r["auth"], r["skill"], r["question"]]))' "$HERE/questions.json" |
+while IFS=$'\t' read -r id auth skill q; do
   [ -n "$ONLY" ] && [[ ",$ONLY," != *",$id,"* ]] && continue
   for side in $SIDES; do run_one "$id" "$side" "$q"; done
 done

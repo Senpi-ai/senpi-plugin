@@ -68,8 +68,8 @@ CONTRACTS["senpi-quant-desk"] = CONTRACTS["quant-desk"]
 
 
 def skills_by_id():
-    rows = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "questions.tsv")).read().splitlines()[1:]
-    return {r.split("\t")[0]: r.split("\t")[2] for r in rows if r.count("\t") >= 3}
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "questions.json")
+    return {r["id"]: r["skill"] for r in json.load(open(path))}
 
 
 def judge(pair, model, skill=None):
