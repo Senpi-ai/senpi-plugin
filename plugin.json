@@ -43,7 +43,6 @@
         "composerIcon": "./assets/senpi-logo.png"
       },
       "review": {
-        "demo_recording_url": "https://youtu.be/jKSXD-_mN-4",
         "test_cases": {
           "positive": [
             {
