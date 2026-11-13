@@ -1,6 +1,6 @@
 name: package
 # Builds the plugin archive that installs in both Claude and ChatGPT
-# (scripts/package-plugin.sh), for one environment per run, and keeps it as the
+# (scripts/package.py), for one environment per run, and keeps it as the
 # run's artifact. It only builds: nothing is uploaded to ChatGPT, Claude or any
 # marketplace, and no release is published.
 #   - Run workflow (Actions tab): pick prod or dev.
@@ -39,7 +39,7 @@ jobs:
           esac
           { echo "url=$url"; echo "zip=$zip"; echo "env=$ENVIRONMENT"; } >> "$GITHUB_OUTPUT"
       - name: Build (${{ steps.meta.outputs.env }})
-        run: ./scripts/package-plugin.sh --mcp-url "${{ steps.meta.outputs.url }}" "dist/${{ steps.meta.outputs.zip }}"
+        run: python3 scripts/package.py --mcp-url "${{ steps.meta.outputs.url }}" "dist/${{ steps.meta.outputs.zip }}"
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.meta.outputs.zip }}
