@@ -5,5 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Maintainer scripts from the tooling branch
+        # Not on main: the Claude plugin directory refuses .py files from
+        # organizations that aren't Verified. They live on the tooling branch.
+        run: git fetch --depth=1 origin tooling && git restore --source=FETCH_HEAD --worktree -- scripts
+      - run: python3 scripts/build-manifests.py --check
       - run: for f in plugin.json mcp.json .mcp.json .claude-plugin/plugin.json .claude-plugin/marketplace.json .codex-plugin/plugin.json .cursor-plugin/plugin.json .grok-plugin/plugin.json .agents/plugins/marketplace.json; do python3 -m json.tool "$f" >/dev/null || exit 1; done
       - run: '! find . -name .DS_Store -o -name Thumbs.db | grep .'

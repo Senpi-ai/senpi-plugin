@@ -1,0 +1,51 @@
+name: package
+# Builds the plugin archive that installs in both Claude and ChatGPT
+# (scripts/package.py, taken from the tooling branch), for one environment per run, and keeps it as the
+# run's artifact. It only builds: nothing is uploaded to ChatGPT, Claude or any
+# marketplace, and no release is published.
+#   - Run workflow (Actions tab): pick prod or dev.
+#   - Pull requests and pushes to main: prod, as a check that it still builds.
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Which Senpi server the plugin connects to
+        type: choice
+        options: [prod, dev]
+        default: prod
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Maintainer scripts from the tooling branch
+        # Not on main: the Claude plugin directory refuses .py files from
+        # organizations that aren't Verified. They live on the tooling branch.
+        run: git fetch --depth=1 origin tooling && git restore --source=FETCH_HEAD --worktree -- scripts
+      - name: Manifests are up to date
+        run: python3 scripts/build-manifests.py --check
+      - id: meta
+        env:
+          ENVIRONMENT: ${{ inputs.environment || 'prod' }}
+        run: |
+          version=$(python3 -c "import json; print(json.load(open('plugin.json'))['version'])")
+          case "$ENVIRONMENT" in
+            prod) url=https://mcp.senpi.ai/mcp; zip="senpi-agent-$version.zip" ;;
+            dev)  url=https://senpi-agent-bridge.dev.senpi.ai/connector/mcp; zip="senpi-agent-$version-dev.zip" ;;
+            *)    echo "::error::unknown environment $ENVIRONMENT"; exit 1 ;;
+          esac
+          { echo "url=$url"; echo "zip=$zip"; echo "env=$ENVIRONMENT"; } >> "$GITHUB_OUTPUT"
+      - name: Build (${{ steps.meta.outputs.env }})
+        run: python3 scripts/package.py --mcp-url "${{ steps.meta.outputs.url }}" "dist/${{ steps.meta.outputs.zip }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.meta.outputs.zip }}
+          path: dist/${{ steps.meta.outputs.zip }}
+          if-no-files-found: error
