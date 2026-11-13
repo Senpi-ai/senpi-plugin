@@ -126,7 +126,7 @@ More fixes, including for connectors in Claude and ChatGPT, are on the [support 
 | `skills/` | One skill per workflow: market pulse, signals, smart money, trader research, quant desk, strategy discovery, portfolio, trade review, account status, and "why did X move" |
 | `assets/` | Logo for directory listings |
 
-This branch holds only the plugin. The maintainer tools that regenerate the generated manifests from `plugin.json` and `mcp.json` and build the archive for Claude and ChatGPT live on the `tooling` branch, and the A/B test harness that compares these skills with the originals lives on the `ab-harness` branch.
+`main` holds only the plugin and is what the Claude plugin directory reads. The `release` branch is `main` plus the maintainer scripts (regenerate the generated manifests from `plugin.json` and `mcp.json`, build the archive) and the `package` workflow, which builds the prod and dev archives for OpenAI and ChatGPT on every push to `release`. To ship: merge `main` into `release` and take the archive from that run. The A/B test harness lives on the `ab-harness` branch.
 
 ## License
 
