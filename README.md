@@ -41,7 +41,7 @@ Every tool runs through your connected Senpi account: the connector asks you to 
 
 ## What this plugin runs, sends, and fetches
 
-- **Runs:** nothing on your machine. The plugin has no hooks and no local server, and no skill runs a script. The two files in `scripts/` are maintainer tools that regenerate the manifests and build the release archive; nothing runs them when you install or use the plugin.
+- **Runs:** nothing on your machine. The plugin has no hooks and no local server, and no skill runs a script.
 - **Sends:** tool calls to `https://mcp.senpi.ai/mcp` over HTTPS. Sign-in is OAuth 2.0 with your Senpi login and happens once, when you add the connector; every tool runs through it, and the account tools read only that account. Nothing else leaves your assistant.
 - **Fetches:** market data, trader statistics, strategy catalog entries, and — when you are signed in — your own portfolio and trade history.
 
@@ -125,9 +125,8 @@ More fixes, including for connectors in Claude and ChatGPT, are on the [support 
 | `.mcp.json` | The MCP server, for Claude Code, Cursor, Grok Build and Codex (generated) |
 | `skills/` | One skill per workflow: market pulse, signals, smart money, trader research, quant desk, strategy discovery, portfolio, trade review, account status, and "why did X move" |
 | `assets/` | Logo for directory listings |
-| `scripts/build-manifests.py`, `scripts/package.py` | Maintainer tools: regenerate the generated manifests, and build the archive for Claude and ChatGPT. The plugin never runs them. |
 
-Edit `plugin.json` or `mcp.json`, then run `python3 scripts/build-manifests.py`; CI fails if the generated copies are stale. `python3 scripts/package.py` builds the archive to upload to Claude and ChatGPT. The A/B test harness that compares these skills with the originals lives on the `ab-harness` branch.
+This branch holds only the plugin. The maintainer tools that regenerate the generated manifests from `plugin.json` and `mcp.json` and build the archive for Claude and ChatGPT live on the `tooling` branch, and the A/B test harness that compares these skills with the originals lives on the `ab-harness` branch.
 
 ## License
 
