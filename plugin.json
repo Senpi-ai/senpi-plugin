@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "senpi-agent",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Turn your AI assistant into your AI quant researcher for perpetual futures markets. Read the day's market pulse, scan for signals and anomalies, see where smart money is positioned, research and compare Hyperliquid traders, score any wallet with the Quant Desk, browse Senpi's strategy catalog, and review your own portfolio and trade history. Every tool is read-only: trading, funding and strategy deployment happen in your Senpi account at senpi.ai, never through this plugin.",
   "author": {
     "name": "Senpi",
@@ -35,7 +35,7 @@
           "Run Quant Desk on my wallet"
         ],
         "websiteURL": "https://senpi.ai/connectors",
-        "supportURL": "https://resources.senpi.ai/support",
+        "supportURL": "https://senpi.ai/resources/support",
         "privacyPolicyURL": "https://senpi.ai/privacy",
         "termsOfServiceURL": "https://senpi.ai/terms",
         "logo": "./assets/senpi-logo.png",
@@ -96,7 +96,7 @@
         }
       },
       "publication": {
-        "release_notes": "0.5.0 — Research connector. The plugin now points at Senpi's dedicated read-only research server: twenty-two typed tools covering market pulse, signal scans, asset signals, market data, funding, the 4h leaderboard, smart-money positioning and flow, whale moves, trader research and wallet profiles, the Quant Desk (one wallet analysis, the live book, and a side-by-side compare), wallet history and P&L, the strategy catalog, and — signed in — your own portfolio, trade review and account status. Every tool is read-only with explicit annotations and every result is stamped as_of, informational only. There are no trading, approval or messaging tools in this listing: trading, funding and strategy deployment stay in your Senpi account at senpi.ai."
+        "release_notes": "0.5.1 — Research connector. The plugin points at Senpi's dedicated read-only research server: twenty-two typed tools covering market pulse, signal scans, asset signals, market data, funding, the 4h leaderboard, smart-money positioning and flow, whale moves, trader research and wallet profiles, the Quant Desk (one wallet analysis, the live book, and a side-by-side compare), wallet history and P&L, the strategy catalog, and — signed in — your own portfolio, trade review and account status. Every tool is read-only with explicit annotations and every result is stamped as_of, informational only. Since 0.5.0 the skills compose the same reads as the original Senpi skills (the full market read, the staged Quant Desk, copy-trade vetting, catalog filters), the plan catalog is no longer part of the listing, and support moved to senpi.ai/resources/support. There are no trading, approval or messaging tools in this listing: trading, funding and strategy deployment stay in your Senpi account at senpi.ai."
       }
     },
     "ai.senpi": {

@@ -23,6 +23,15 @@ Every tool is read-only. Trading, funding and strategy deployment happen in your
 
 Every tool runs through your connected Senpi account: the connector asks you to sign in to Senpi when you add it. The market, research and catalog tools read public data; the portfolio, trade-review and account tools read only your own account.
 
+## Example prompts
+
+- "What's moving the markets today?"
+- "Scan the market for anomalies"
+- "What is smart money doing on ETH?"
+- "Who were the best traders this week? Compare the top two."
+- "Run Quant Desk on 0x…" with any Hyperliquid wallet address
+- "How is my portfolio doing?" once you have signed in to Senpi
+
 ## Safeguards
 
 - **Read-only by construction.** This server exposes no tool that can place, change or close a trade, deploy a strategy, or move funds. There is nothing to approve because nothing can act.
@@ -32,11 +41,11 @@ Every tool runs through your connected Senpi account: the connector asks you to 
 
 ## What this plugin runs, sends, and fetches
 
-- **Runs:** nothing on your machine. There are no scripts, hooks, or local servers.
+- **Runs:** nothing on your machine. The plugin has no hooks and no local server, and no skill runs a script. The two files in `scripts/` are maintainer tools that regenerate the manifests and build the release archive; nothing runs them when you install or use the plugin.
 - **Sends:** tool calls to `https://mcp.senpi.ai/mcp` over HTTPS. Sign-in is OAuth 2.0 with your Senpi login and happens once, when you add the connector; every tool runs through it, and the account tools read only that account. Nothing else leaves your assistant.
 - **Fetches:** market data, trader statistics, strategy catalog entries, and — when you are signed in — your own portfolio and trade history.
 
-Privacy policy: <https://senpi.ai/privacy> · Terms: <https://senpi.ai/terms> · Support: <https://resources.senpi.ai/support>
+Privacy policy: <https://senpi.ai/privacy> · Terms: <https://senpi.ai/terms> · Support: <https://senpi.ai/resources/support> · X: [@senpi_ai](https://x.com/senpi_ai)
 
 ## Install
 
@@ -95,6 +104,15 @@ Server only, without the skills: `hermes mcp install senpi-agent` once the MCP c
 
 Server URL `https://mcp.senpi.ai/mcp`, Streamable HTTP transport, OAuth 2.0 (the MCP authorization spec, with discovery documents at `/.well-known/oauth-protected-resource/mcp`).
 
+## Troubleshooting
+
+- **No sign-in prompt, or the Senpi tools are missing:** reconnect the connector. In Claude Code run `/mcp`; in Claude, open the plugin's Connectors tab; in other apps, disconnect Senpi in the connector settings and add it again.
+- **"Couldn't be read right now" in an answer:** one data source did not respond for that read. The rest of the answer stands; ask again in a minute.
+- **Signed in, but your portfolio is empty:** the account tools read only the Senpi account you signed in with. Check that it is the account that holds your strategies.
+- **To remove access:** Senpi → Connectors, then revoke the app.
+
+More fixes, including for connectors in Claude and ChatGPT, are on the [support page](https://senpi.ai/resources/support).
+
 ## What's in this repo
 
 | Path | For |
@@ -107,8 +125,9 @@ Server URL `https://mcp.senpi.ai/mcp`, Streamable HTTP transport, OAuth 2.0 (the
 | `.mcp.json` | The MCP server, for Claude Code, Cursor, Grok Build and Codex (generated) |
 | `skills/` | One skill per workflow: market pulse, signals, smart money, trader research, quant desk, strategy discovery, portfolio, trade review, account status, and "why did X move" |
 | `assets/` | Logo for directory listings |
+| `scripts/build-manifests.py`, `scripts/package.py` | Maintainer tools: regenerate the generated manifests, and build the archive for Claude and ChatGPT. The plugin never runs them. |
 
-Edit `plugin.json` or `mcp.json`, then run `python3 scripts/build-manifests.py`; CI fails if the generated copies are stale.
+Edit `plugin.json` or `mcp.json`, then run `python3 scripts/build-manifests.py`; CI fails if the generated copies are stale. `python3 scripts/package.py` builds the archive to upload to Claude and ChatGPT. The A/B test harness that compares these skills with the originals lives on the `ab-harness` branch.
 
 ## License
 
