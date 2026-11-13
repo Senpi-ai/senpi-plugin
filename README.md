@@ -127,7 +127,7 @@ More fixes, including for connectors in Claude and ChatGPT, are on the [support 
 | `assets/` | Logo for directory listings |
 | `scripts/build-manifests.py`, `scripts/package.py` | Maintainer tools: regenerate the generated manifests, and build the archive for Claude and ChatGPT. The plugin never runs them. |
 
-Edit `plugin.json` or `mcp.json`, then run `python3 scripts/build-manifests.py`; CI fails if the generated copies are stale. `python3 scripts/package.py` builds the archive to upload to Claude and ChatGPT. The A/B test harness that compares these skills with the originals lives on the `ab-harness` branch.
+This is the `release` branch: `main` plus these scripts and the `package` workflow (`main` holds only the plugin, which is what the Claude plugin directory reads). Edit `plugin.json` or `mcp.json`, then run `python3 scripts/build-manifests.py`; CI fails if the generated copies are stale. Every push to `release` builds the prod and dev archives for OpenAI and ChatGPT as run artifacts; `python3 scripts/package.py` builds one locally. The A/B test harness that compares these skills with the originals lives on the `ab-harness` branch.
 
 ## License
 
