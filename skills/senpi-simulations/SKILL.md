@@ -31,12 +31,13 @@ Two limits decide how many run, nothing else:
    user's running simulations as `from_simulation_id`: its variations join its group.
 2. **The variants.** One entry per simulation, each a `settings` map applied over the strategy's
    own, and a short `label` that says what it changes (`lev3`, `score7`). Use only setting keys you
-   have read for this strategy: a simulation's `settings` (`get_my_simulation`) or a group's
-   `settings_diff` (`list_my_simulations`). Never guess a key. When none is known, start the
-   strategy as it is (empty `settings`), read its settings once it has an id, and start the
-   variations from it with `from_simulation_id`. Vary what the user asked about; when they named
-   nothing, vary one or two settings across a small range around the strategy's own value, and
-   tell them what each variant changes.
+   have read for this strategy: the `settings` of one of the user's simulations of it
+   (`get_my_simulation`) or a group's `settings_diff` (`list_my_simulations`). The catalog does not
+   list them. Never guess a key. When the user has no simulation of the strategy yet, start one
+   as it is (empty `settings`) as the first of the count they asked for, read its settings once it
+   has an id, and start the rest as its variations with `from_simulation_id`. Vary what the user
+   asked about; when they named nothing, vary one or two settings across a small range around the
+   strategy's own value, and tell them what each variant changes.
 3. **`budget_usd`.** The simulated dollars each starts with: the user's figure, else the strategy's
    minimum budget from `get_catalog_strategy`.
 4. **`idempotency_key`.** A new key for each batch the user asks for. Reuse a key only to retry the
