@@ -42,7 +42,9 @@ Two limits decide how many run, nothing else:
    minimum budget from `get_catalog_strategy`.
 4. **`idempotency_key`.** A new key for each batch the user asks for. Reuse a key only to retry the
    same batch or to check its progress: the same key never starts a variant twice.
-5. **The cost, when asked.** `quote_simulations` answers what a batch would cost per hour and per
+5. **The group.** Leave `group_name` out unless the user names a group: the batch then joins the
+   strategy's own group (`hawk`), which is the name the user will use to find or stop it later.
+6. **The cost, when asked.** `quote_simulations` answers what a batch would cost per hour and per
    day and how long the user's credits last, without starting anything. It is optional: a batch
    never needs a quote first.
 
