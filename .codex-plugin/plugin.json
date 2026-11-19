@@ -78,9 +78,9 @@
           ],
           "negative": [
             {
-              "description": "The user asks to place a real trade: \"Long BTC 10x with $1,000 right now\". The plugin has no trading tool, so no Senpi tool should run; the assistant says trading happens in the user's own Senpi account.",
+              "description": "The user asks to place a real trade: \"Long BTC 10x with $1,000 right now\". The plugin has no trading tool, so the assistant cannot place it; it says trading happens in the user's own Senpi account.",
               "prompt": "Long BTC 10x with $1,000 right now",
-              "expected_behavior": "No Senpi tool is called and no order is placed. The assistant explains that this plugin places no trades and that trading happens in the user's own Senpi account at senpi.ai."
+              "expected_behavior": "No order is placed and no tool that trades or changes anything is called. The assistant explains that this plugin places no trades and that trading happens in the user's own Senpi account at senpi.ai. It may read BTC's market data and signal to describe the trade the user asked about, as information only."
             },
             {
               "description": "The user asks to take a simulation live with real money: \"Take my best simulation live with $500\". The plugin cannot put real money into a strategy, so no Senpi tool should run; the assistant says this is done in the Senpi app.",
