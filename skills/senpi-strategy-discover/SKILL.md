@@ -5,7 +5,8 @@ description: >-
   strategies does Senpi have?", "recommend a strategy for a choppy market", "something low-risk",
   "what's in the catalog?", "details on Athena". Calls browse_strategy_catalog and get_catalog_strategy, with get_my_portfolio
   (the user's budget and holdings, when signed in) and get_asset_market_data (why now).
-  Read-only catalog: nothing is deployed, funded, or started from here — that happens in senpi.ai.
+  Read-only catalog: nothing is deployed or funded from here — that happens in senpi.ai. Trying a
+  strategy as a simulation, on virtual money, is senpi-simulations.
 ---
 
 # Strategy Discovery
@@ -106,6 +107,6 @@ up a number. This is context for the choice, not a signal to act on.
   read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown.
 - Two or three fits beat ten: name, one-line belief, risk level, minimum budget, and why it
   matches the user's goal.
-- Always end with the honest boundary: reviewing, funding, and starting a strategy happen in the
-  user's Senpi account at senpi.ai — this conversation can inform the choice but not execute it.
-  Never imply you deployed anything.
+- Always end with the honest boundary: reviewing, funding, and starting a strategy with real money
+  happen in the user's Senpi account at senpi.ai. Here the user can only try it as a simulation, on
+  virtual money (senpi-simulations). Never imply you deployed anything.
