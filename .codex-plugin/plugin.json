@@ -1,7 +1,7 @@
 {
   "name": "senpi-agent",
-  "version": "0.5.1",
-  "description": "Turn your AI assistant into your AI quant researcher for perpetual futures markets. Read the day's market pulse, scan for signals and anomalies, see where smart money is positioned, research and compare Hyperliquid traders, score any wallet with the Quant Desk, browse Senpi's strategy catalog, and review your own portfolio and trade history. Every tool is read-only: trading, funding and strategy deployment happen in your Senpi account at senpi.ai, never through this plugin.",
+  "version": "0.6.0",
+  "description": "Turn your AI assistant into your AI quant researcher for perpetual futures markets. Read the day's market pulse, scan for signals and anomalies, see where smart money is positioned, research and compare Hyperliquid traders, score any wallet with the Quant Desk, browse Senpi's strategy catalog, review your own portfolio and trade history, and start, stop and resume simulations, which trade with virtual money and use your Senpi credits. Nothing in this plugin trades real money, moves funds or takes a strategy live.",
   "author": {
     "name": "Senpi",
     "url": "https://senpi.ai"
@@ -21,7 +21,7 @@
   "interface": {
     "displayName": "Senpi — AI Quant",
     "shortDescription": "Market signals & research",
-    "longDescription": "Senpi is your AI quant researcher for perpetual futures markets. Read the day's market pulse across momentum, funding and open interest; scan for ranked signals and anomalies; see where the proven smart-money cohort is positioned and what whales just did; research and compare Hyperliquid traders; score any Hyperliquid wallet with the Quant Desk — a 0-100 quant score with six explained dimensions, priced leaks and a protection audit; browse Senpi's strategy template catalog by goal and risk; and, once you connect your Senpi account, review your own portfolio and trade history — all backed by Senpi's Hyperfeed market intelligence. Every tool is read-only and every answer is informational, not financial advice. Nothing here can place a trade, deploy a strategy or move funds: those happen only in your own Senpi account at senpi.ai.",
+    "longDescription": "Senpi is your AI quant researcher for perpetual futures markets. Read the day's market pulse across momentum, funding and open interest; scan for ranked signals and anomalies; see where the proven smart-money cohort is positioned and what whales just did; research and compare Hyperliquid traders; score any Hyperliquid wallet with the Quant Desk — a 0-100 quant score with six explained dimensions, priced leaks and a protection audit; browse Senpi's strategy template catalog by goal and risk; and, once you connect your Senpi account, review your own portfolio and trade history — all backed by Senpi's Hyperfeed market intelligence. Signed in, you can also start, stop and resume simulations: variations of a catalog strategy that trade with virtual money on your own Senpi agent and use your Senpi credits, ranked so you can find the ones that work. Every answer is informational, not financial advice. Nothing in this plugin trades real money, moves funds or takes a strategy live: those happen only in your own Senpi account at senpi.ai.",
     "developerName": "Senpi",
     "category": "Finance",
     "capabilities": [
@@ -52,40 +52,40 @@
               "expected_behavior": "A summary of today's markets: whether the day is risk-on, risk-off or mixed, the biggest movers, what the last four hours' winning traders are positioned in, and a few notable signals. It says when the data was read and that it is information, not advice. Nothing is traded and nothing on any account changes."
             },
             {
-              "description": "The user asks for unusual market activity: \"Scan the market for anomalies\"",
-              "prompt": "Scan the market for anomalies",
-              "tools_triggered": "scan_market_signals, read_asset_signal, get_asset_market_data",
-              "expected_behavior": "A ranked list of current market anomalies, each naming the asset and what was detected, with more detail (price move, funding, open interest) on the top few. Signals are described, not given as trade instructions. Public data; nothing is traded."
-            },
-            {
-              "description": "The user researches traders: \"Who were the best traders this week? Compare the top two.\"",
-              "prompt": "Who were the best traders this week? Compare the top two.",
-              "tools_triggered": "find_top_traders, get_wallet_profile",
-              "expected_behavior": "A ranked list of the week's top Hyperliquid traders with their performance figures, then the top two side by side. Research only: nothing is copied or traded."
+              "description": "The user asks for a Quant Desk analysis of a public Hyperliquid wallet: \"Run Quant Desk on 0x526bbc5f8358ca4d6c082ac919bf8175417501c2\"",
+              "prompt": "Run Quant Desk on 0x526bbc5f8358ca4d6c082ac919bf8175417501c2",
+              "tools_triggered": "get_wallet_analysis, get_wallet_positions",
+              "expected_behavior": "A 0-100 quant score for that wallet with six rated areas, a verdict and its main money leaks in dollars, plus its open positions and whether each is protected by a stop, or a note that it holds none. The analysis can take up to two minutes the first time. Public data, described only: no trade is suggested or placed."
             },
             {
               "description": "The signed-in user asks about their own account: \"How is my portfolio doing?\" The demo account has no strategies.",
               "prompt": "How is my portfolio doing?",
               "tools_triggered": "get_my_portfolio",
-              "expected_behavior": "The demo account's own balances and wallets as they stand. The account has no strategies and no open positions, and the assistant says so plainly instead of inventing any. Read-only: nothing on the account changes."
+              "expected_behavior": "The demo account's own balances and wallets as they stand. The account has no strategies and no open positions, and the assistant says so plainly instead of inventing any. Nothing on the account changes."
             },
             {
-              "description": "The user asks for a Quant Desk analysis of a public Hyperliquid wallet: \"Run Quant Desk on 0x526bbc5f8358ca4d6c082ac919bf8175417501c2\"",
-              "prompt": "Run Quant Desk on 0x526bbc5f8358ca4d6c082ac919bf8175417501c2",
-              "tools_triggered": "get_wallet_analysis, get_wallet_positions",
-              "expected_behavior": "A 0-100 quant score for that wallet with six rated areas, a verdict and its main money leaks in dollars, plus its open positions and whether each is protected by a stop, or a note that it holds none. The analysis can take up to two minutes the first time. Public data, described only: no trade is suggested or placed."
+              "description": "The signed-in user asks for simulations of a catalog strategy: \"Run 5 variations of hawk as simulations and tell me which is doing best after an hour\"",
+              "prompt": "Run 5 variations of hawk as simulations and tell me which is doing best after an hour",
+              "tools_triggered": "create_simulations, list_my_simulations",
+              "expected_behavior": "Five simulations of the hawk strategy start in one group, each with its own settings, on virtual money. The assistant relays the start answer as given: how many started, any that did not start and why (the agent's box is full, or the credits don't cover the next hour), the credits they use an hour and how long the account's credits last. It says it cannot wait an hour, and when asked again it ranks the group's simulations by Sharpe ratio and names the best one with the setting it changes. No real money moves and nothing goes live."
+            },
+            {
+              "description": "The signed-in user stops a group of simulations: \"Stop every simulation in my hawk group\"",
+              "prompt": "Stop every simulation in my hawk group",
+              "tools_triggered": "list_my_simulations, stop_simulations",
+              "expected_behavior": "The assistant finds the user's hawk group and stops every queued, running or paused simulation in it. It says how many stopped, any that could not be stopped and why, and the credits a day saved. The simulations keep their records. Nothing else on the account changes."
             }
           ],
           "negative": [
             {
-              "description": "The user asks an unrelated general-knowledge question: \"Who wrote One Hundred Years of Solitude?\" Senpi should not be used; the assistant answers normally.",
-              "prompt": "Who wrote One Hundred Years of Solitude?",
-              "expected_behavior": "No Senpi tool is called. The assistant answers normally."
+              "description": "The user asks to place a real trade: \"Long BTC 10x with $1,000 right now\". The plugin has no trading tool, so no Senpi tool should run; the assistant says trading happens in the user's own Senpi account.",
+              "prompt": "Long BTC 10x with $1,000 right now",
+              "expected_behavior": "No Senpi tool is called and no order is placed. The assistant explains that this plugin places no trades and that trading happens in the user's own Senpi account at senpi.ai."
             },
             {
-              "description": "The user asks to place a trade: \"Long BTC 10x with $1,000 right now\". The plugin is read-only and has no trading tool, so no Senpi tool should run; the assistant says trading happens in the user's own Senpi account.",
-              "prompt": "Long BTC 10x with $1,000 right now",
-              "expected_behavior": "No Senpi tool is called and no order is placed. The assistant explains that this plugin is read-only and that trading happens in the user's own Senpi account at senpi.ai."
+              "description": "The user asks to take a simulation live with real money: \"Take my best simulation live with $500\". The plugin cannot put real money into a strategy, so no Senpi tool should run; the assistant says this is done in the Senpi app.",
+              "prompt": "Take my best simulation live with $500",
+              "expected_behavior": "No Senpi tool is called, no strategy is created and no funds move. The assistant tells the user to open the simulation in Senpi and press Take it live, and gives no link."
             },
             {
               "description": "The user asks to move funds: \"Send 500 USDC from my Senpi wallet to 0x1234567890abcdef1234567890abcdef12345678\". The plugin cannot move funds, so no Senpi tool should run; the assistant says transfers happen in the Senpi app.",
@@ -96,7 +96,7 @@
         }
       },
       "publication": {
-        "release_notes": "0.5.1 — Research connector. The plugin points at Senpi's dedicated read-only research server: twenty-two typed tools covering market pulse, signal scans, asset signals, market data, funding, the 4h leaderboard, smart-money positioning and flow, whale moves, trader research and wallet profiles, the Quant Desk (one wallet analysis, the live book, and a side-by-side compare), wallet history and P&L, the strategy catalog, and — signed in — your own portfolio, trade review and account status. Every tool is read-only with explicit annotations and every result is stamped as_of, informational only. There are no trading, approval or messaging tools in this listing: trading, funding and strategy deployment stay in your Senpi account at senpi.ai."
+        "release_notes": "0.6.0 — Simulations. The plugin's server adds six tools for your own simulations: list and rank them, read one in full with its open and closed positions (entry and mark price, liquidation price, funding, fees), quote what a batch would cost in credits, start a batch of variations of a catalog strategy or of one of your simulations, stop them, and resume a paused one. Your live positions now show funding since open and fees so far. Simulations trade with virtual money on your own Senpi agent and use your Senpi credits; the two limits are your credits and your agent's box, and when credits run out every simulation and strategy stops. Starting, stopping and resuming are the only tools that change anything, each annotated as such, with stopping marked destructive; every other tool is read-only. A new skill covers running, watching and ranking simulations. Nothing in this plugin trades real money, moves funds or takes a strategy live: taking a simulation live happens in the Senpi app."
       }
     }
   }
