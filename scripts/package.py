@@ -11,7 +11,7 @@ ChatGPT, a single senpi-agent/ folder holding
   skills/ assets/ README.md LICENSE
 
 .mcp.json keeps Claude's transport spelling ("http", which OpenAI's plugin docs
-use too) and adds OpenAI's sign-in hint from mcp.json
+use too) and adds OpenAI's sign-in hint, OPENAI_SERVER_EXTENSIONS below
 (extensions["com.openai"].auth: CIMD, since the auth service has registration
 off). Claude ignores the hint. The repo's own .mcp.json is not changed: Cursor
 and Grok Build read it as it is. This is the archive to upload to OpenAI's
@@ -19,8 +19,7 @@ portal and to ChatGPT desktop.
 
 --layout portable: the Agent Plugins package (plugin.json, mcp.json, skills/,
 assets/, README.md, LICENSE at the archive root, exactly one manifest). Do not
-install this one in ChatGPT desktop: its loader rejects the sign-in block in the
-portable mcp.json ("unknown field extensions") and drops the server.
+install this one in ChatGPT desktop: it carries no OpenAI sign-in hint.
 
 Usage: python3 scripts/package.py [--mcp-url URL] [--layout codex|portable] [output.zip]
   --mcp-url  point the archive at another server (the dev connector); codex layout only
@@ -46,15 +45,19 @@ def write(z, name, data):
     z.writestr(info, data)
 
 
+# OpenAI's sign-in hint, added to every server in the codex archive. It lives here and
+# not in mcp.json: the Agent Plugins schema allows only type, url and headers on a
+# remote server, and Hermes drops a server that carries anything else.
+OPENAI_SERVER_EXTENSIONS = {"com.openai": {"auth": {"type": "oauth", "client": {"mode": "cimd"}}}}
+
+
 def codex_members(mcp_url):
     codex = json.loads((ROOT / ".codex-plugin/plugin.json").read_text())
     codex["mcpServers"] = "./.mcp.json"  # as OpenAI's plugin docs declare it
-    portable = json.loads((ROOT / "mcp.json").read_text())["mcpServers"]
     servers = {}
     for name, s in json.loads((ROOT / ".mcp.json").read_text())["mcpServers"].items():
         s = dict(s)
-        if "extensions" in portable.get(name, {}):
-            s["extensions"] = portable[name]["extensions"]
+        s["extensions"] = OPENAI_SERVER_EXTENSIONS
         if mcp_url:
             s["url"] = mcp_url
         servers[name] = s
