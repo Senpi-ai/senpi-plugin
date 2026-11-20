@@ -101,6 +101,13 @@
     },
     "ai.senpi": {
       "platedLogo": "assets/senpi-logo-plate.png"
+    },
+    "com.nousresearch.hermes": {
+      "servers": {
+        "senpi-agent": {
+          "trust": "untrusted"
+        }
+      }
     }
   }
 }
