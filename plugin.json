@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "senpi-agent",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Turn your AI assistant into your AI quant researcher for perpetual futures markets. Read the day's market pulse, scan for signals and anomalies, see where smart money is positioned, research and compare Hyperliquid traders, score any wallet with the Quant Desk, browse Senpi's strategy catalog, review your own portfolio and trade history, and start, stop and resume simulations, which trade with virtual money and use your Senpi credits. Nothing in this plugin trades real money, moves funds or takes a strategy live.",
   "author": {
     "name": "Senpi",
@@ -96,7 +96,7 @@
         }
       },
       "publication": {
-        "release_notes": "0.6.0 — Simulations. The plugin's server adds six tools for your own simulations: list and rank them, read one in full with its open and closed positions (entry and mark price, liquidation price, funding, fees), quote what a batch would cost in credits, start a batch of variations of a catalog strategy or of one of your simulations, stop them, and resume a paused one. Your live positions now show funding since open and fees so far. Simulations trade with virtual money on your own Senpi agent and use your Senpi credits; the two limits are your credits and your agent's box, and when credits run out every simulation and strategy stops. Starting, stopping and resuming are the only tools that change anything, each annotated as such, with stopping marked destructive; every other tool is read-only. A new skill covers running, watching and ranking simulations. Nothing in this plugin trades real money, moves funds or takes a strategy live: taking a simulation live happens in the Senpi app."
+        "release_notes": "0.7.0 — Strategy authoring. The senpi-strategy-author skill writes your own strategy package, uploads it to your Senpi agent, tests it live and runs it as simulations on virtual money (upload_strategy_package, validate_strategy_package, get_strategy_package, list_my_strategy_packages, and create_simulations with package_id). Uploaded strategies run only as simulations; taking one live happens in your Senpi account at senpi.ai. Previous: 0.6.0 — Simulations. The plugin's server adds six tools for your own simulations: list and rank them, read one in full with its open and closed positions (entry and mark price, liquidation price, funding, fees), quote what a batch would cost in credits, start a batch of variations of a catalog strategy or of one of your simulations, stop them, and resume a paused one. Your live positions now show funding since open and fees so far. Simulations trade with virtual money on your own Senpi agent and use your Senpi credits; the two limits are your credits and your agent's box, and when credits run out every simulation and strategy stops. Starting, stopping and resuming are the only tools that change anything, each annotated as such, with stopping marked destructive; every other tool is read-only. A new skill covers running, watching and ranking simulations. Nothing in this plugin trades real money, moves funds or takes a strategy live: taking a simulation live happens in the Senpi app."
       }
     },
     "ai.senpi": {
