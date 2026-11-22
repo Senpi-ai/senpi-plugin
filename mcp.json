@@ -3,17 +3,7 @@
   "mcpServers": {
     "senpi-agent": {
       "type": "streamable-http",
-      "url": "https://mcp.senpi.ai/mcp",
-      "extensions": {
-        "com.openai": {
-          "auth": {
-            "type": "oauth",
-            "client": {
-              "mode": "cimd"
-            }
-          }
-        }
-      }
+      "url": "https://mcp.senpi.ai/mcp"
     }
   }
 }
