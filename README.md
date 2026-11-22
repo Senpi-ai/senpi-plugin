@@ -23,6 +23,8 @@ Every tool is read-only. Trading, funding and strategy deployment happen in your
 
 Every tool runs through your connected Senpi account: the connector asks you to sign in to Senpi when you add it. The market, research and catalog tools read public data; the portfolio, trade-review and account tools read only your own account.
 
+The full reference — every tool's inputs and read classification, sign-in setup, response format, errors and limits — is in [docs/MCP.md](docs/MCP.md).
+
 ## Example prompts
 
 - "What's moving the markets today?"
