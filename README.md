@@ -41,7 +41,7 @@ Every tool runs through your connected Senpi account: the connector asks you to 
 - **No real money.** This server exposes no tool that can place, change or close a real trade, take a strategy live, or move funds. Simulations trade with virtual money.
 - **Two limits on simulations: your credits and your agent's box.** A simulation starts only while your credits cover the next hour of everything running. Simulations run on your Senpi agent's box, which grows from 4 to 8 to 16 GB to fit them; past that, the rest don't start. Nothing else caps how many you run.
 - **No grace period.** When your credits run out, every simulation and strategy stops and your agent pauses.
-- **Taking a simulation live happens in the Senpi app only:** open the simulation in Senpi and press Take it live. The assistant can't do it for you.
+- **Taking a simulation live happens in the Senpi app only:** open the simulation in Senpi and press Take it live. The assistant can't do it for you. A strategy you upload runs only as simulations and never goes live.
 - **Every tool says what it does.** Each carries `readOnlyHint`, `destructiveHint` and `openWorldHint`. The three simulation writes are marked not read-only, and `stop_simulations` is marked destructive, so your assistant can ask before it runs them.
 - Every result carries an `as_of` timestamp and is informational — not financial advice.
 - Portfolio tools return data only for the account that signed in via OAuth.
