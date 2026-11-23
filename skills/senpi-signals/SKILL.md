@@ -103,8 +103,8 @@ catalog (see senpi-strategy-discover; `get_catalog_strategy` for details):
   live Hyperfeed rotations, a different source from the smart-money reads above, so say so; they do
   not trade what was just read.
 
-List all four every time (OG's rule); the cost and default notes above govern how each is described. These are strategies to explore, not something this connector places or
-starts: the catalog is read-only and deploying happens in senpi.ai. A single trade on a read takes the
+List all four every time (OG's rule); the cost and default notes above govern how each is described. These are strategies to explore, not something this connector deploys with
+real money: the catalog is read-only and deploying happens in senpi.ai. A single trade on a read takes the
 side the read names (a funding extreme names no side, so it is never a one-trade setup). Never promise
 results or call a strategy proven. If the user says no or doesn't answer, stop; don't repeat the offer.
 Keep the question out of anything written for public posting, which stays observation-only.
