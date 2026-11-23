@@ -21,6 +21,7 @@ Simulations use your Senpi credits. Nothing in this plugin trades real money, mo
 | **Portfolio & Trade Review** — your own book, your closed trades reviewed whole with your equity path and your stop events; the wallet-history tools read your own wallets when given no address | `get_my_portfolio`, `get_wallet_closed_trades`, `get_wallet_pnl_history`, `get_my_stop_events` |
 | **Account Status** — your plan, remaining credits, points and rank, fee, referral earnings | `get_account_status` |
 | **Simulations** — start variations of a strategy on virtual money, watch them, rank them to find the winners, stop the losers | `create_simulations`, `list_my_simulations`, `get_my_simulation`, `quote_simulations`, `stop_simulations`, `resume_simulation` |
+| **Strategy Author** — write your own strategy package, put it on your Senpi agent, fix what the checks report, prove it runs, then start it as simulations (`create_simulations` with a `package_id`). Uploaded strategies run only as simulations | `upload_strategy_package`, `validate_strategy_package`, `get_strategy_package`, `list_my_strategy_packages` |
 
 Every tool runs through your connected Senpi account: the connector asks you to sign in to Senpi when you add it. The market, research and catalog tools read public data; the portfolio, trade-review, account and simulation tools read only your own account. Three tools change something: `create_simulations` and `resume_simulation` start simulations, and `stop_simulations` stops them. Every other tool is read-only.
 
@@ -134,7 +135,7 @@ More fixes, including for connectors in Claude and ChatGPT, are on the [support 
 | `.cursor-plugin/plugin.json` | Cursor / Grok Bot marketplace listing (generated) |
 | `.grok-plugin/plugin.json` | Grok Build — xAI plugin marketplace (generated) |
 | `.mcp.json` | The MCP server, for Claude Code, Cursor, Grok Build and Codex (generated) |
-| `skills/` | One skill per workflow: market pulse, signals, smart money, trader research, quant desk, strategy discovery, portfolio, trade review, account status, simulations, and "why did X move" |
+| `skills/` | One skill per workflow: market pulse, signals, smart money, trader research, quant desk, strategy discovery, portfolio, trade review, account status, simulations, strategy authoring, and "why did X move" |
 | `assets/` | Logo for directory listings |
 
 `main` holds only the plugin and is what the Claude plugin directory reads. The `release` branch is `main` plus the maintainer scripts (regenerate the generated manifests from `plugin.json` and `mcp.json`, build the archive) and the `package` workflow, which builds the prod and dev archives for OpenAI and ChatGPT on every push to `release`. To ship: merge `main` into `release` and take the archive from that run. The A/B test harness lives on the `ab-harness` branch.

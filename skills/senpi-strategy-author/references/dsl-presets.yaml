@@ -1,0 +1,150 @@
+# Senpi DSL exit presets
+# Copyright 2026 Senpi (https://senpi.ai) - MIT
+#
+# Copy ONE preset's dsl_preset block into runtime.yaml under exit: and change at most
+# one field. Pick it by how long a trade should last (exits-and-risk.md). default: balanced.
+#
+# max_loss_pct, retrace_threshold, trigger_pct and lock_hw_pct are ROE % (percent of
+# margin), not percent of price. At 5x leverage, max_loss_pct 8 is a 1.6% price move.
+#
+# Every preset ships phase1.enabled: false. That turns off only the phase-1 trailing
+# floor, which can close a trade that was in profit at a loss. max_loss_pct still
+# applies as the stop from entry: a disabled phase1 is never "no stop".
+# retrace_threshold is kept but has no effect while phase1 is disabled.
+#
+# Never add a tier with lock_hw_pct: 0. It exits flat and still pays fees.
+
+default: balanced
+
+presets:
+
+  let_winners_run:
+    use_for: Trend / breakout / momentum / trader-follower (most directional strategies)
+    character: >-
+      Widest. No profit lock until +20% ROE, lock ramps slowly to a +100%
+      tier, time-cuts off. Captures fat-tail trends; gives back more on a
+      reversal.
+    dsl_preset:
+      phase1:
+        enabled: false          # trailing OFF — see header
+        max_loss_pct: 8.0
+        retrace_threshold: 8             # INERT while phase1.enabled is false
+        consecutive_breaches_required: 1
+      phase2:
+        enabled: true
+        tiers:
+          - { trigger_pct: 20,  lock_hw_pct: 25 }
+          - { trigger_pct: 30,  lock_hw_pct: 40 }
+          - { trigger_pct: 50,  lock_hw_pct: 60 }
+          - { trigger_pct: 75,  lock_hw_pct: 75 }
+          - { trigger_pct: 100, lock_hw_pct: 85 }
+
+  balanced:
+    use_for: General-purpose / unsure (the default)
+    character: >-
+      Breathes early (no lock until +10%), locks gradually, runner tier to
+      +100%, 8% margin floor. Smart auto-close: weak_peak_cut frees a
+      position that is BOTH flat (never reached +3% ROE in 6h) AND fading — it
+      never touches a winner or a position still near its high — and a 72h
+      hard_timeout is a true outer bound that won't cap a multi-day trend.
+    dsl_preset:
+      hard_timeout:
+        enabled: true
+        interval_in_minutes: 4320       # 72h — outer bound only; long enough not to cut a multi-day winner
+      weak_peak_cut:
+        enabled: true
+        interval_in_minutes: 360        # 6h — gives a slow developer real room; only fires if peak ROE never cleared +3% AND price is declining (Phase 1 only; never cuts a position past T0)
+        min_value: 3.0
+      phase1:
+        enabled: false          # trailing OFF — see header
+        max_loss_pct: 8.0
+        retrace_threshold: 8             # INERT while phase1.enabled is false
+        consecutive_breaches_required: 1
+      phase2:
+        enabled: true
+        tiers:
+          - { trigger_pct: 10,  lock_hw_pct: 30 }   # floors the common +10-20% winner
+          - { trigger_pct: 20,  lock_hw_pct: 30 }
+          - { trigger_pct: 35,  lock_hw_pct: 50 }
+          - { trigger_pct: 60,  lock_hw_pct: 70 }
+          - { trigger_pct: 100, lock_hw_pct: 85 }
+
+  mean_reversion:
+    use_for: Faders / contrarian / range unwinds
+    character: >-
+      Tight. Banks the bounded snapback fast (lock 30% at +5%), time-cuts ON
+      (48h hard_timeout + weak_peak_cut) — a fade resolves quickly or the
+      thesis failed.
+    dsl_preset:
+      hard_timeout:
+        enabled: true
+        interval_in_minutes: 2880
+      weak_peak_cut:
+        enabled: true
+        interval_in_minutes: 120
+        min_value: 2.0
+      phase1:
+        enabled: false          # trailing OFF — see header
+        max_loss_pct: 6.0
+        retrace_threshold: 6             # INERT while phase1.enabled is false
+        consecutive_breaches_required: 1
+      phase2:
+        enabled: true
+        tiers:
+          - { trigger_pct: 5,  lock_hw_pct: 30 }
+          - { trigger_pct: 10, lock_hw_pct: 50 }
+          - { trigger_pct: 15, lock_hw_pct: 65 }
+          - { trigger_pct: 25, lock_hw_pct: 80 }
+          - { trigger_pct: 40, lock_hw_pct: 90 }
+
+  scalp:
+    use_for: High-frequency, fee-sensitive, fast in/out
+    character: >-
+      Tightest. Fast profit locks, tight max-loss, short hard_timeout +
+      dead_weight_cut to recycle stagnant capital.
+    dsl_preset:
+      hard_timeout:
+        enabled: true
+        interval_in_minutes: 90
+      dead_weight_cut:
+        enabled: true
+        interval_in_minutes: 45
+      phase1:
+        enabled: false          # trailing OFF — see header
+        max_loss_pct: 5.0
+        retrace_threshold: 5             # INERT while phase1.enabled is false
+        consecutive_breaches_required: 1
+      phase2:
+        enabled: true
+        tiers:
+          - { trigger_pct: 5,  lock_hw_pct: 50 }
+          - { trigger_pct: 10, lock_hw_pct: 70 }
+          - { trigger_pct: 15, lock_hw_pct: 85 }
+
+  parabolic_runner:
+    use_for: Single regime-selective parabolic-runner setups
+    character: >-
+      Widest in the catalog. Built for asymmetric parabolic moves where standard trails would chop
+      out on 5-8% intraday swings. Late first lock (+30%, no early tier),
+      lighter early ratchet, wide retrace_threshold (18), requires 2
+      consecutive breaches so a single volatile bar doesn't trip Phase 1, and
+      a 14d hard_timeout outer bound to accommodate multi-week runs.
+      **Trade-off: bleeds in chop.** Deploy only when you've already
+      identified the parabolic setup — not as a default trend preset.
+    dsl_preset:
+      hard_timeout:
+        enabled: true
+        interval_in_minutes: 20160        # 14d — parabolic runs can extend 2-3 weeks
+      # weak_peak_cut + dead_weight_cut deliberately OFF — consolidations are NORMAL here
+      phase1:
+        enabled: false          # trailing OFF — see header
+        max_loss_pct: 18.0
+        retrace_threshold: 18             # INERT while phase1.enabled is false
+        consecutive_breaches_required: 2  # one bad bar doesn't trip
+      phase2:
+        enabled: true
+        tiers:
+          - { trigger_pct: 30,  lock_hw_pct: 30 }   # light early lock
+          - { trigger_pct: 60,  lock_hw_pct: 55 }
+          - { trigger_pct: 120, lock_hw_pct: 72 }
+          - { trigger_pct: 250, lock_hw_pct: 85 }   # apex — only late lock takes most off the table

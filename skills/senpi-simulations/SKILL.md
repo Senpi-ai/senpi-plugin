@@ -6,8 +6,10 @@ description: >-
   simulations doing?", "which simulation is winning?", "find the winners", "stop the losers",
   "stop every simulation in this group", "resume my paused simulation", "what would 20 simulations
   cost?". Calls create_simulations, list_my_simulations, get_my_simulation, quote_simulations,
-  stop_simulations and resume_simulation. Simulations trade virtual money and use the user's Senpi
-  credits. Nothing here trades real money, moves funds or takes a strategy live.
+  stop_simulations and resume_simulation. A strategy package the user or you wrote goes through
+  senpi-strategy-author first (write, upload, validate), then runs here by its package_id.
+  Simulations trade virtual money and use the user's Senpi credits. Nothing here trades real money,
+  moves funds or takes a strategy live.
 ---
 
 # Simulations
