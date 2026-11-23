@@ -51,12 +51,11 @@ Two limits decide how many run, nothing else:
    start the rest with `from_simulation_id`. If a change you showed has no key, say so instead of
    picking another.
 5. **`budget_usd`.** One budget for the whole batch, so the variants compare: the user's figure,
-   else a budget every variant can trade at. Hyperliquid refuses an order under $10, and a
-   strategy's order shrinks with its leverage: a variant at lower leverage on the catalog's
-   `min_budget` can order under $10 and never trade. When no variant lowers the leverage, use
-   `min_budget`. Otherwise use `min_budget` × `leverage_max` ÷ the lowest leverage in the batch,
-   rounded up to a whole dollar (hawk: $15 × 5 ÷ 3 = $25 for a 3x variant). When the user's own
-   figure is lower than that, say which variants may never trade and the budget they need.
+   else $1,000 (leave `budget_usd` out). At most $500,000. Hyperliquid refuses an order under $10,
+   and a strategy's order shrinks with its leverage, so a variant at lower leverage can order under
+   $10 and never trade. Each variant needs `min_budget` × `leverage_max` ÷ its leverage, rounded up
+   to a whole dollar (hawk: $15 × 5 ÷ 3 = $25 for a 3x variant). When the budget is lower than
+   that, say which variants may never trade and the budget they need.
 6. **`idempotency_key`.** A new key for each batch the user asks for. Reuse a key only to retry the
    same batch or to check its progress: the same key never starts a variant twice.
 7. **The group.** Leave `group_name` out unless the user names a group: the batch then joins the
