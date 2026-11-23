@@ -29,24 +29,46 @@ Two limits decide how many run, nothing else:
 
 1. **The strategy.** A catalog id from `browse_strategy_catalog` (for example `hawk`), or one of the
    user's running simulations as `from_simulation_id`: its variations join its group.
-2. **The variants.** One entry per simulation, each a `settings` map applied over the strategy's
-   own, and a short `label` that says what it changes (`lev3`, `score7`). Use only setting keys you
-   have read for this strategy: the `settings` of one of the user's simulations of it
-   (`get_my_simulation`) or a group's `settings_diff` (`list_my_simulations`). The catalog does not
-   list them. Never guess a key. When the user has no simulation of the strategy yet, start one
-   as it is (empty `settings`) as the first of the count they asked for, read its settings once it
-   has an id, and start the rest as its variations with `from_simulation_id`. Vary what the user
-   asked about; when they named nothing, vary one or two settings across a small range around the
-   strategy's own value, and tell them what each variant changes.
-3. **`budget_usd`.** The simulated dollars each starts with: the user's figure, else the strategy's
-   minimum budget from `get_catalog_strategy`.
-4. **`idempotency_key`.** A new key for each batch the user asks for. Reuse a key only to retry the
+2. **How many.** Exactly the number the user asked for, and one when they named no number. Never
+   add a variant they did not ask for, a base included: when they ask for 3, the batch has 3.
+3. **The variants.** Vary what the user asked about. When they asked for several and named no
+   setting, vary one or two settings across a small range around the strategy's own value (its
+   leverage, never above the catalog's `leverage_max`, or its entry score). When they asked for one
+   and named nothing, run the strategy as it is. Each variant is a `settings` map applied over the
+   strategy's own, with a short `label` that says what it changes (`lev3`, `score7`).
+4. **Setting keys.** Use only keys you have read for this strategy: the `settings` of one of the
+   user's simulations of it (`get_my_simulation`) or a group's `settings_diff`
+   (`list_my_simulations`). The catalog does not list them. Never guess a key. When the user has no
+   simulation of the strategy yet, make the first of the count the strategy as it is (empty
+   `settings`). Show the whole batch in plain words first (below); after the yes, start that one
+   alone, read its settings once it has an id, then start the rest with `from_simulation_id`. If a
+   change you showed has no key there, say so instead of picking another.
+5. **`budget_usd`.** One budget for the whole batch, so the variants compare: the user's figure,
+   else a budget every variant can trade at. Hyperliquid refuses an order under $10, and a
+   strategy's order shrinks with its leverage: a variant at lower leverage on the catalog's
+   `min_budget` can order under $10 and never trade. When no variant lowers the leverage, use
+   `min_budget`. Otherwise use `min_budget` × `leverage_max` ÷ the lowest leverage in the batch,
+   rounded up to a whole dollar (hawk: $15 × 5 ÷ 3 = $25 for a 3x variant). When the user's own
+   figure is lower than that, say which variants may never trade and the budget they need.
+6. **`idempotency_key`.** A new key for each batch the user asks for. Reuse a key only to retry the
    same batch or to check its progress: the same key never starts a variant twice.
-5. **The group.** Leave `group_name` out unless the user names a group: the batch then joins the
+7. **The group.** Leave `group_name` out unless the user names a group: the batch then joins the
    strategy's own group (`hawk`), which is the name the user will use to find or stop it later.
-6. **The cost, when asked.** `quote_simulations` answers what a batch would cost per hour and per
-   day and how long the user's credits last, without starting anything. It is optional: a batch
-   never needs a quote first.
+
+### Show the batch, then start it on a yes
+
+Before any `create_simulations`, call `quote_simulations` for the batch and show the user every
+variant of the count, in one message:
+
+- each variant: its label and what it changes from the strategy as it is (or "the strategy as it
+  is"), and the budget each starts with;
+- the cost an hour and a day, and how long their credits last;
+- that a strategy which waits for a breakout, like hawk, can go hours without a trade.
+
+Then ask whether to start them, and start nothing until the user says yes. Start exactly what you
+showed. When they change anything, show the new batch and its quote and ask again. The yes covers
+this batch only: the next batch is shown again, while calling again with the same key to check
+progress or retry needs no new yes.
 
 ### Relay the answer as given
 
