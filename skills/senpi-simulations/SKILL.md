@@ -5,7 +5,7 @@ description: >-
   "run 5 variations of hawk as simulations", "test 10 versions of this strategy", "how are my
   simulations doing?", "which simulation is winning?", "find the winners", "stop the losers",
   "stop every simulation in this group", "resume my paused simulation", "what would 20 simulations
-  cost?", "take my simulation live". Calls create_simulations, list_my_simulations, get_my_simulation, quote_simulations,
+  cost?", "take my simulation live". Calls get_catalog_strategy, create_simulations, list_my_simulations, get_my_simulation, quote_simulations,
   stop_simulations and resume_simulation. A strategy package the user or you wrote goes through
   senpi-strategy-author first (write, upload, validate), then runs here by its package_id.
   Simulations trade virtual money and use the user's Senpi credits. Nothing here trades real money,
@@ -40,13 +40,16 @@ Two limits decide how many run, nothing else:
    leverage, never above the catalog's `leverage_max`, or its entry score). When they asked for one
    and named nothing, run the strategy as it is. Each variant is a `settings` map applied over the
    strategy's own, with a short `label` that says what it changes (`lev3`, `score7`).
-4. **Setting keys.** Use only keys you have read for this strategy: the `settings` of one of the
-   user's simulations of it (`get_my_simulation`) or a group's `settings_diff`
-   (`list_my_simulations`). The catalog does not list them. Never guess a key. When the user has no
-   simulation of the strategy yet, make the first of the count the strategy as it is (empty
-   `settings`). Show the whole batch in plain words first (below); after the yes, start that one
-   alone, read its settings once it has an id, then start the rest with `from_simulation_id`. If a
-   change you showed has no key there, say so instead of picking another.
+4. **Setting keys.** Use only keys you have read for this strategy. For a catalog strategy, read
+   `get_catalog_strategy` before you show the batch: its `settings` lists every key a variant can
+   change, with the strategy's own value. Show each variant's exact values, and after the yes start
+   the whole batch in one `create_simulations`. A running simulation's `settings`
+   (`get_my_simulation`) or a group's `settings_diff` (`list_my_simulations`) work too. Never guess
+   a key. Only when `get_catalog_strategy` answers `settings_unavailable` and the user has no
+   simulation of the strategy: make the first of the count the strategy as it is (empty
+   `settings`), start that one alone after the yes, read its settings once it has an id, then
+   start the rest with `from_simulation_id`. If a change you showed has no key, say so instead of
+   picking another.
 5. **`budget_usd`.** One budget for the whole batch, so the variants compare: the user's figure,
    else a budget every variant can trade at. Hyperliquid refuses an order under $10, and a
    strategy's order shrinks with its leverage: a variant at lower leverage on the catalog's
