@@ -9,8 +9,9 @@ description: >-
   stop_simulations and resume_simulation. A strategy package the user or you wrote goes through
   senpi-strategy-author first (write, upload, validate), then runs here by its package_id.
   Simulations trade virtual money and use the user's Senpi credits. Nothing here trades real money,
-  moves funds or takes a strategy live, and a simulation of an uploaded strategy never goes live
-  anywhere, the Senpi app included.
+  moves funds or takes a strategy live. Before answering "take my simulation live", call
+  get_strategy_package with its simulation_id: one that runs an uploaded package never goes live,
+  in the Senpi app either, so say it stays a simulation.
 ---
 
 # Simulations
