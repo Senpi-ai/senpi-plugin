@@ -113,11 +113,13 @@ Not here. When the user wants to run a simulation with real money ("take my best
 with $500"), first find out whether it runs a strategy the user uploaded:
 1. Find the simulation's id with `list_my_simulations` if you don't have it.
 2. Call `get_strategy_package {simulation_id}`. An answer with a package id means uploaded code.
-   A not-found answer means a catalog strategy.
 
 - **Uploaded:** it never goes live, here or in the Senpi app, and its page has no Take it live.
   Say the strategy stays a simulation. Don't send the user to the app to take it live.
-- **Anything else:** say to open the simulation in Senpi and press Take it live.
+- **No package id:** say to open the simulation in Senpi and press Take it live.
+- **Not found** (a stopped simulation no longer runs on the agent): say that a strategy the user
+  uploaded stays a simulation, and any other is taken live from its page in Senpi, which shows
+  Take it live only where it applies.
 
 Give no link and call no other tool. Placing trades, funding a strategy and moving money also
 happen only in the user's Senpi account.
