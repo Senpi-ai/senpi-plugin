@@ -5,11 +5,12 @@ description: >-
   "run 5 variations of hawk as simulations", "test 10 versions of this strategy", "how are my
   simulations doing?", "which simulation is winning?", "find the winners", "stop the losers",
   "stop every simulation in this group", "resume my paused simulation", "what would 20 simulations
-  cost?". Calls create_simulations, list_my_simulations, get_my_simulation, quote_simulations,
+  cost?", "take my simulation live". Calls create_simulations, list_my_simulations, get_my_simulation, quote_simulations,
   stop_simulations and resume_simulation. A strategy package the user or you wrote goes through
   senpi-strategy-author first (write, upload, validate), then runs here by its package_id.
   Simulations trade virtual money and use the user's Senpi credits. Nothing here trades real money,
-  moves funds or takes a strategy live.
+  moves funds or takes a strategy live, and a simulation of an uploaded strategy never goes live
+  anywhere, the Senpi app included.
 ---
 
 # Simulations
@@ -109,13 +110,17 @@ an hour, and how long the credits last.
 ## Taking a simulation live
 
 Not here. When the user wants to run a simulation with real money ("take my best simulation live
-with $500"), say: open the simulation in Senpi and press Take it live. Give no link and call no
-tool. Placing trades, funding a strategy and moving money also happen only in the user's Senpi
-account.
+with $500"), first find out whether it runs a strategy the user uploaded:
+1. Find the simulation's id with `list_my_simulations` if you don't have it.
+2. Call `get_strategy_package {simulation_id}`. An answer with a package id means uploaded code.
+   A not-found answer means a catalog strategy.
 
-A simulation of a strategy the user uploaded (`create_simulations` with a `package_id`) is the
-exception: it never goes live, here or in the app, and it has no Take it live. Say it stays a
-simulation.
+- **Uploaded:** it never goes live, here or in the Senpi app, and its page has no Take it live.
+  Say the strategy stays a simulation. Don't send the user to the app to take it live.
+- **Anything else:** say to open the simulation in Senpi and press Take it live.
+
+Give no link and call no other tool. Placing trades, funding a strategy and moving money also
+happen only in the user's Senpi account.
 
 ## Presenting the result
 
