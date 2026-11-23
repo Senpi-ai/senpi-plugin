@@ -6,8 +6,8 @@ description: >-
   "turn this idea into a strategy and test 3 versions", "fix my strategy, it failed", "show me
   the strategy I uploaded yesterday". Calls upload_strategy_package, validate_strategy_package,
   get_strategy_package, list_my_strategy_packages and create_simulations with a package_id.
-  Simulations trade virtual money and use the user's Senpi credits. Nothing here trades real
-  money or takes a strategy live: that happens in the Senpi app.
+  Simulations trade virtual money and use the user's Senpi credits. An uploaded strategy runs only
+  as simulations: it never trades real money, here or in the Senpi app.
 ---
 
 # Write a strategy package
@@ -153,9 +153,11 @@ Read every file before you change any of them.
 
 ## Going live
 
-Not here. Uploaded strategies run only as simulations from this conversation. When the user wants
-real money on one, say: open the simulation in the Senpi app and take it live there. Give no link
-and call no tool.
+An uploaded strategy never goes live, from this conversation or from the Senpi app. Senpi runs
+code written outside Senpi only as simulations, and its simulations have no Take it live. When the
+user wants real money on one, say exactly that: this strategy stays a simulation. Do not send them
+to the app to take it live, give no link and call no tool. A strategy from Senpi's catalog can be
+taken live in the Senpi app.
 
 ## Presenting the result
 

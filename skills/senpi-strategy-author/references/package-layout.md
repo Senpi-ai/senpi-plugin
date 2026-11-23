@@ -47,7 +47,7 @@ requires:
 - `id` is lowercase letters, digits and hyphens. A capital letter is refused at validation.
 - Keep `id` at most 24 characters. A simulation runs as `<id>-main-simulation`, and that must fit
   in 40 characters.
-- Never add a `simulation:` key. The same package runs as a simulation or live; the package does
+- Never add a `simulation:` key. An uploaded package runs only as simulations; the package does
   not choose.
 - Never add `instances:` for a flat package.
 
