@@ -106,7 +106,9 @@ hermes plugins enable senpi-agent
 
 Until the catalog entry is live, install from this repository instead: `hermes plugins install Senpi-ai/senpi-plugin --no-enable`, then `hermes plugins enable senpi-agent`. The first call of any tool opens the Senpi sign-in in your browser — approve it, then run `/reload-mcp` or start a new session so the tools load.
 
-Server only, without the skills: `hermes mcp install senpi-agent` once the MCP catalog entry is live, or add `https://mcp.senpi.ai/mcp` under `mcp_servers` in `~/.hermes/config.yaml` with OAuth. Three tools on this server start or stop simulations; every other tool is read-only.
+The plugin declares its server `trust: untrusted`, so Hermes itself asks before any tool call that can change something, such as starting or stopping a simulation.
+
+Server only, without the skills: `hermes mcp install senpi` once the MCP catalog entry is live, or add `https://mcp.senpi.ai/mcp` under `mcp_servers` in `~/.hermes/config.yaml` with OAuth. Three tools on this server start or stop simulations; every other tool is read-only.
 
 ### Anything else that speaks MCP
 
