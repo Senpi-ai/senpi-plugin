@@ -7,10 +7,34 @@ description: >-
   the strategy I uploaded yesterday". Calls upload_strategy_package, validate_strategy_package,
   get_strategy_package, list_my_strategy_packages and create_simulations with a package_id.
   Simulations trade virtual money and use the user's Senpi credits. An uploaded strategy runs only
-  as simulations: it never trades real money, here or in the Senpi app.
+  as simulations: it never trades real money, here or in the Senpi app. It takes minutes, so it
+  first sends the user a five-step plan and then one line as each step ends.
 ---
 
 # Write a strategy package
+
+## Keep the user posted
+
+Building a strategy takes minutes, and the user sees nothing while you read, write and wait. Text
+you send is the only sign of progress.
+
+- First, before any reference file or tool call, send the plan in a few short lines (a task
+  list where the client shows one):
+  1. Check the markets it trades.
+  2. Write the strategy.
+  3. Put it on your Senpi agent.
+  4. Test it on live data (about a minute).
+  5. Start the simulation.
+- Then, as each step ends, send its line before your next tool call. Never start a step while the
+  last one has no line. One plain line each, for example:
+  1. "HYPE trades on Hyperliquid; funding is -8.8% a year right now."
+  2. "Wrote the strategy: long HYPE when funding turns negative above its 4-hour average."
+  3. "It's on your agent. Testing it on live data now, about a minute."
+  4. "It passed the live test."
+  5. "The simulation is starting."
+  Mark the task done where the client shows a list.
+- Say nothing while you wait on the live test; step 3's line already said it is running.
+- If a step fails and you fix it, say so in one line: what failed and what you changed.
 
 A strategy is a small package of files: a manifest, one runtime file and a Python scanner. You
 write the files, upload them to the user's own Senpi agent, fix what the upload reports, prove
@@ -30,28 +54,6 @@ live.
 
 Ask what the strategy should trade, what signal it acts on, long, short or both, and how risky it
 may be, when the user has not said. Ask only what is missing. Then build.
-
-## Keep the user posted
-
-Building a strategy takes several minutes, and the user sees nothing while you read and write.
-
-- Before you read any reference file or call any tool, send the plan in a few short lines. Where
-  the client shows a task list, use it. The plan names these steps in the user's words:
-  1. Check the markets it trades.
-  2. Write the strategy.
-  3. Put it on your Senpi agent.
-  4. Test it on live data (about a minute).
-  5. Start the simulation.
-- When a step finishes, send one plain line that says what happened, before your next tool call.
-  Every step gets its own line, even when the next step starts at once. For example:
-  1. "HYPE trades on Hyperliquid; funding is -8.8% a year right now."
-  2. "Wrote the strategy: long HYPE when funding turns negative above its 4-hour average."
-  3. "It's on your agent."
-  4. "It passed the live test."
-  5. "The simulation is starting."
-  Mark the task done where the client shows a list.
-- While the live test runs, say once that it is running. Do not send a line for each check.
-- If a step fails and you fix it, say so in one line: what failed and what you changed.
 
 ## Read only what the step needs
 
