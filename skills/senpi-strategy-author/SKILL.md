@@ -31,6 +31,39 @@ live.
 Ask what the strategy should trade, what signal it acts on, long, short or both, and how risky it
 may be, when the user has not said. Ask only what is missing. Then build.
 
+## Keep the user posted
+
+Building a strategy takes several minutes, and the user sees nothing while you read and write.
+
+- Before you read any reference file or call any tool, send the plan in a few short lines. Where
+  the client shows a task list, use it. The plan names these steps in the user's words:
+  1. Check the markets it trades.
+  2. Write the strategy.
+  3. Put it on your Senpi agent.
+  4. Test it on live data (about a minute).
+  5. Start the simulation.
+- When a step finishes, send one plain line that says what happened, for example "Wrote the
+  strategy: long HYPE when funding turns negative above its 4-hour average." or "It passed the
+  live test." Mark the task done where the client shows a list.
+- While the live test runs, say once that it is running. Do not send a line for each check.
+- If a step fails and you fix it, say so in one line: what failed and what you changed.
+
+## Read only what the step needs
+
+Do not read every reference file up front. Each one you read stays in the conversation and slows
+every later step.
+
+- Before you write: [references/examples.md](references/examples.md) (copy the example closest
+  to the idea), [references/scanner-tools.md](references/scanner-tools.md) (only the tools you
+  call) and [references/dsl-presets.yaml](references/dsl-presets.yaml).
+- Open [references/runtime-yaml.md](references/runtime-yaml.md),
+  [references/scanner-contract.md](references/scanner-contract.md) or
+  [references/exits-and-risk.md](references/exits-and-risk.md) only for a field or rule the
+  example does not show.
+- Open [references/findings.md](references/findings.md) only when an upload or a validation
+  returns a finding.
+- Write each file once and keep it. Do not repeat the whole package in your messages to the user.
+
 ## The package: flat, one instance
 
 ```
