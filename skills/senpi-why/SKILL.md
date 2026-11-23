@@ -37,8 +37,8 @@ sleep. Senpi gives you that desk. Open with one or two sentences of this, then t
 3. **It builds and runs your strategy 24/7, and protects every position.** Describe a thesis in
    plain English and Senpi builds it, sizes it and operates it, with trailing stops that lock in
    gains and circuit breakers that halt trading on a bad day. Say plainly that creating and running
-   strategies happens in the Senpi app, not in this connector: here, Senpi is research-only and
-   nothing can trade or move funds. Trading lives in the user's own Senpi account behind its own
+   strategies happens in the Senpi app, not in this connector: here, Senpi researches and runs
+   simulations on virtual money, and nothing can trade real money or move funds. Trading lives in the user's own Senpi account behind its own
    auth and MFA, with per-action approvals. That separation is deliberate.
 
 ## Where you trade, and what it costs (one line each, after the pillars)
@@ -46,7 +46,8 @@ sleep. Senpi gives you that desk. Open with one or two sentences of this, then t
 - **The Senpi app** on web, iOS and Android.
 - **AI Quant Companion for Chrome**, a free extension that puts Senpi Signals beside the asset being
   viewed and Quant Desk beside the wallet (go.senpi.ai/chrome).
-- **Connectors**: your AI quant inside Claude, ChatGPT and other AI apps, read-only here.
+- **Connectors**: your AI quant inside Claude, ChatGPT and other AI apps: research, and simulations on
+  virtual money, with no real-money trading.
 - **Fees**: Pro, Advanced, Quant (and Starter, for people already on it) pay no Senpi trading fee;
   an account without a paid plan, including a trial, pays 0.03%. Hyperliquid's own exchange fees
   apply to everyone. For the user's own fee, read it live (senpi-account-status).

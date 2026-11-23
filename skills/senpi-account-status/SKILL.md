@@ -81,4 +81,4 @@ that people already on it keep).
   payment or checkout page: senpi.ai/pricing, which only describes the plans, is the one link to
   give.
 - Changing, upgrading or cancelling a plan, and claiming referral rewards, happen in the user's
-  own Senpi account — never through this connector, which is read-only.
+  own Senpi account — never through this connector.
