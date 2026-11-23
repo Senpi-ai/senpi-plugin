@@ -42,9 +42,14 @@ Building a strategy takes several minutes, and the user sees nothing while you r
   3. Put it on your Senpi agent.
   4. Test it on live data (about a minute).
   5. Start the simulation.
-- When a step finishes, send one plain line that says what happened, for example "Wrote the
-  strategy: long HYPE when funding turns negative above its 4-hour average." or "It passed the
-  live test." Mark the task done where the client shows a list.
+- When a step finishes, send one plain line that says what happened, before your next tool call.
+  Every step gets its own line, even when the next step starts at once. For example:
+  1. "HYPE trades on Hyperliquid; funding is -8.8% a year right now."
+  2. "Wrote the strategy: long HYPE when funding turns negative above its 4-hour average."
+  3. "It's on your agent."
+  4. "It passed the live test."
+  5. "The simulation is starting."
+  Mark the task done where the client shows a list.
 - While the live test runs, say once that it is running. Do not send a line for each check.
 - If a step fails and you fix it, say so in one line: what failed and what you changed.
 
