@@ -53,6 +53,7 @@ the box: upload the files again and use the new id.
 | `E_VALIDATE_NO_RECIPE`, `E_VALIDATE_AMBIGUOUS_RECIPE` | no runtime file, or more than one | one `runtime.yaml` at the root |
 | `E_VALIDATE_UNREADABLE_MANIFEST` | `strategy.yaml` does not load | `id` and `version` present, no `simulation` key, valid YAML |
 | `E_VALIDATE_INSTANCE_DIR_COLLISION` | two instances in one folder | flat package, no `instances:` |
+| `E_PACKAGE_NETWORK_HOST` | a `network.hosts` entry in `strategy.yaml` is not one exact hostname: it has a scheme, port, path or `*`, is an IP address or `localhost`, or has no dot | write the bare hostname, `api.example.com` |
 
 ## The code (import)
 
@@ -66,7 +67,7 @@ the box: upload the files again and use the new id.
 | `E_VALIDATE_IMPORT_TIMEOUT` | importing never finished | remove work at module level |
 | `W_VALIDATE_SCANNERS_IS_PACKAGE` | an `__init__.py` in the scanner folder | delete it; import siblings by name |
 | `W_VALIDATE_SHADOWS_STDLIB` | a file named like a standard module | rename it |
-| `W_VALIDATE_NON_MCP_SOURCE` | data fetched outside `ctx.senpi_mcp` | read only through `ctx.senpi_mcp.call_tool` |
+| `W_VALIDATE_NON_MCP_SOURCE` | a scanner file imports `urllib`, `http`, `socket` or `subprocess`: data fetched outside `ctx.senpi_mcp` | expected for an outside API whose host is in `network.hosts`; otherwise read through `ctx.senpi_mcp.call_tool` |
 
 ## The live tick
 

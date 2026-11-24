@@ -6,9 +6,10 @@ description: >-
   "turn this idea into a strategy and test 3 versions", "fix my strategy, it failed", "show me
   the strategy I uploaded yesterday". Calls upload_strategy_package, validate_strategy_package,
   get_strategy_package, list_my_strategy_packages and create_simulations with a package_id.
-  Simulations trade virtual money and use the user's Senpi credits. An uploaded strategy runs only
-  as simulations: it never trades real money, here or in the Senpi app. It takes minutes, so it
-  first sends the user a five-step plan and then one line as each step ends.
+  Simulations trade virtual money and use the user's Senpi credits. An uploaded strategy goes live
+  only after the user approves it in the Senpi app or their Senpi agent chat; Claude and ChatGPT
+  can't take it live. It takes minutes, so it first sends the user a five-step plan and then one
+  line as each step ends.
 ---
 
 # Write a strategy package
@@ -44,7 +45,7 @@ Your code only reads data and says what it would trade.
 
 This skill does not pick a catalog strategy for the user (senpi-strategy-discover does) and does
 not run simulations of catalog strategies (senpi-simulations does). It never takes a strategy
-live.
+live: the user does that in Senpi.
 
 ## When to use it
 
@@ -74,7 +75,7 @@ every later step.
 ## The package: flat, one instance
 
 ```
-strategy.yaml          # id, version, a short catalog block
+strategy.yaml          # id, version, a short catalog block, network.hosts if it calls an API
 runtime.yaml           # the runtime file: scanners, entry action, exit, risk
 scanners/scan.py       # def scan(inputs, ctx) -> list[dict]
 scanners/scoring.py    # optional: pure math, no reads
@@ -86,6 +87,8 @@ scanners/scoring.py    # optional: pure math, no reads
 - `runtime.yaml`: `name: <id>-main`, `group: <id>`, and `strategy.wallet: "${<ID>_WALLET}"`: the
   id in capitals, hyphens as underscores, as the whole value. A lowercase or partial
   placeholder is refused.
+- A strategy that calls an outside API lists every host it calls in `strategy.yaml`, under
+  `network: {hosts: [api.example.com]}`. See "Outside APIs" below.
 - Write a plain-words `description` in `runtime.yaml`: what it trades, the signal, when it enters
   and how it exits. The user sees it later.
 - Paths are relative, no folder or file name starts with a dot, and only `.py`, `.yaml`, `.yml`,
@@ -101,9 +104,10 @@ Two whole packages to copy from: [references/examples.md](references/examples.md
 `scan(inputs, ctx)` runs on the user's agent, not in this conversation.
 
 - It is called once per tick. It reads, scores and returns a list of signals. No loops, no
-  sleep, no threads, no file writes, no network calls of its own.
+  sleep, no threads, no file writes.
 - `inputs` is the scanner's `inputs:` map from `runtime.yaml`. Put every tunable there.
-- Read data only with `ctx.senpi_mcp.call_tool(name, args)`. There is no `ctx.call_tool`.
+- Read Senpi data with `ctx.senpi_mcp.call_tool(name, args)`. There is no `ctx.call_tool`. An
+  outside API is read only as "Outside APIs" below says.
 - Remember things between ticks with `ctx.state` (`last()`, `recent(n)`, `append(dict)`). Set
   `state_history_max_count` above 0 or `append` raises.
 - A gate that returns early (outside a session, during warm-up) must still read when
@@ -118,6 +122,29 @@ Two whole packages to copy from: [references/examples.md](references/examples.md
 - On any error, return `[]`. Guard every response with `isinstance(resp, dict)` before `.get`.
 
 Full contract and a skeleton: [references/scanner-contract.md](references/scanner-contract.md).
+
+## Outside APIs
+
+When the idea needs data Senpi does not have (a price index, a sentiment feed), the scanner may
+read an outside API over HTTPS with `urllib.request`.
+
+- Declare every host it calls in `strategy.yaml`:
+  ```yaml
+  network:
+    hosts:
+      - api.coingecko.com
+  ```
+- Each entry is one exact hostname in lower case: no `https://`, port, path, `*` or IP address.
+  Validation fails on any other entry and names it.
+- Live, the strategy reaches only the hosts it declares, over HTTPS on port 443. Every other host
+  is blocked. Simulations are not limited, so an undeclared host works in a simulation and fails
+  once the strategy is live: declare every host before it goes live.
+- Only read from it. Pass a `timeout` of a few seconds: the call counts against the tick's
+  `timeout_seconds`. On any error, carry on without it or return `[]`.
+- Still read market data through `ctx.senpi_mcp`: a tick that reads nothing through it cannot
+  be proven. The import of `urllib` gives a `W_VALIDATE_NON_MCP_SOURCE` warning; with the host
+  declared, it is expected.
+- Never put an API key or other secret in the package.
 
 ## Scanner tools are the agent's tools, not yours
 
@@ -193,11 +220,15 @@ Read every file before you change any of them.
 
 ## Going live
 
-An uploaded strategy never goes live, from this conversation or from the Senpi app. Senpi runs
-code written outside Senpi only as simulations, and its simulations have no Take it live. When the
-user wants real money on one, say exactly that: this strategy stays a simulation. Do not send them
-to the app to take it live, give no link and call no tool. A strategy from Senpi's catalog can be
-taken live in the Senpi app.
+An uploaded strategy can go live after the user approves it in the Senpi app or their Senpi agent
+chat. Claude and ChatGPT can't take it live, and nothing in this conversation can approve it.
+
+When the user asks whether it can go live, or asks you to take it live, say so and call no tool:
+- Tell them to ask their Senpi agent, in the Senpi app or Senpi agent chat, to take it live, and
+  to approve it there. The approval says the code came from their outside AI and lists the hosts it declared.
+- Live, it runs the exact code they approved, and it can reach only those hosts.
+- Any change to the code or its hosts runs as a simulation until they approve it again.
+- Funding it and moving money also happen only in Senpi. Give no link.
 
 ## Presenting the result
 
