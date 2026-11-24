@@ -9,7 +9,7 @@ description: >-
   stop_simulations and resume_simulation. A strategy package the user or you wrote goes through
   senpi-strategy-author first (write, upload, validate), then runs here by its package_id.
   "Best" means the highest return unless the user names another measure: call list_my_simulations
-  without a sort. Running simulations are "running", never "live" (real money).
+  with sort "return" (the connector's default sort is Sharpe). Running simulations are "running", never "live" (real money).
   Simulations trade virtual money and use the user's Senpi credits. Nothing here trades real money,
   moves funds or takes a strategy live. Before answering "take my simulation live", call
   get_strategy_package with its simulation_id: one that runs an uploaded package never goes live,
@@ -115,10 +115,11 @@ an hour, and how long the credits last.
 ## Find the winners
 
 - "Best", "winning" and "the winners" mean the highest return, unless the user names another
-  measure, such as Sharpe, drawdown or win rate: then sort by that one.
-- Across strategies: `list_my_simulations {group_by: strategy}` returns one row per group with its
-  best variant by return and how many variants matched.
-- Inside one group: `list_my_simulations {group_id}` ranks by return. Other sorts: `sharpe`,
+  measure, such as Sharpe, drawdown or win rate: then sort by that one. Always pass the sort: with
+  none, the connector ranks by Sharpe.
+- Across strategies: `list_my_simulations {group_by: strategy, sort: return}` returns one row per
+  group with its best variant by return and how many variants matched.
+- Inside one group: `list_my_simulations {group_id, sort: return}`. Other sorts: `sharpe`,
   `max_drawdown` (smallest first), `win_rate`, `profit_factor`, `trades`, `credits_per_day`.
 - Say what the winner changes from the group's base (`settings_diff`), with its return, Sharpe,
   drawdown and trade count. Simulations with too few trades to rank come last; `min_trades` leaves
