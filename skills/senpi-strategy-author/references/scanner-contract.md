@@ -8,10 +8,13 @@ runtime sizes, places and exits every trade.
 
 - **Exactly two arguments:** `def scan(inputs, ctx):`.
 - **One pass.** No `while True`, no `sleep`, no threads, no background work.
-- **Read only.** Data comes only from `ctx.senpi_mcp.call_tool(name, args)`. Every tool that
+- **Read only.** Senpi data comes from `ctx.senpi_mcp.call_tool(name, args)`. Every tool that
   changes anything (opening, closing or editing a position, cancelling an order, creating or
-  updating a strategy, moving funds, stop edits) raises `PermissionError`. Do not open files, call
-  web addresses or import a network library: validation refuses it.
+  updating a strategy, moving funds, stop edits) raises `PermissionError`. Do not open files.
+- **Outside APIs.** The scanner may read an outside API over HTTPS with `urllib.request`, with a
+  `timeout`, when every host it calls is listed in `strategy.yaml` under `network.hosts`. Live,
+  every other host is blocked. Only read: never send the strategy's signals or the user's data
+  out. Do not shell out (`subprocess`) or use `socket` directly.
 - **Return a list.** On any error, return `[]` or the signals you already have. Returning anything
   else, or raising, throws the whole tick away.
 - **Pure math in `scoring.py`.** No reads and no clock there; `scan.py` passes values in.

@@ -41,14 +41,22 @@ catalog:                       # optional; short and honest
   belief_plain: "Shorts coins whose longs are paying extreme funding, and covers on the unwind."
 requires:
   runtime: ">=3.0.0"
+network:                       # optional; only for a scanner that calls an outside API
+  hosts:
+    - api.coingecko.com
 ```
 
 - `id` and `version` are required.
 - `id` is lowercase letters, digits and hyphens. A capital letter is refused at validation.
 - Keep `id` at most 24 characters. A simulation runs as `<id>-main-simulation`, and that must fit
   in 40 characters.
-- Never add a `simulation:` key. An uploaded package runs only as simulations; the package does
-  not choose.
+- `network.hosts` lists every host the scanner calls, each one exact hostname in lower case: no
+  scheme, port, path, wildcard or IP address. Validation fails on any other entry
+  (`E_PACKAGE_NETWORK_HOST`). Live, every host not on the list is blocked; simulations are not
+  limited. The list is part of the package: changing it is a code change, and a live strategy
+  needs the user's approval again.
+- Never add a `simulation:` key. The package does not choose whether it runs as a simulation or
+  live: the user does, in Senpi.
 - Never add `instances:` for a flat package.
 
 ## Linkage in `runtime.yaml`
