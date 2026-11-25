@@ -66,7 +66,7 @@ Add the plugin from **Customize → Plugins**, or add the connector directly wit
 
 ### ChatGPT
 
-Senpi is listed as **Senpi — AI Quant**. Or, in Developer Mode: Plugins → **+** → **Create MCP app**, server URL `https://mcp.senpi.ai/mcp`, authentication OAuth.
+**Senpi — AI Quant** is submitted to the ChatGPT app directory. Until it is listed, add it in Developer Mode: Plugins → **+** → **Create MCP app**, server URL `https://mcp.senpi.ai/mcp`, authentication OAuth.
 
 ### Codex CLI
 
@@ -96,7 +96,7 @@ hermes plugins install senpi
 hermes plugins enable senpi-agent
 ```
 
-Until the catalog entry is live, install from this repository instead: `hermes plugins install Senpi-ai/senpi-plugin --no-enable`, then `hermes plugins enable senpi-agent`. The first call of any tool opens the Senpi sign-in in your browser — approve it, then run `/reload-mcp` or start a new session so the tools load.
+The first call of any tool opens the Senpi sign-in in your browser. Approve it, then run `/reload-mcp` or start a new session so the tools load.
 
 The plugin declares its server `trust: untrusted`, so Hermes itself asks before any tool call that can change something; every tool on the server is read-only today.
 
@@ -129,6 +129,8 @@ More fixes, including for connectors in Claude and ChatGPT, are on the [support 
 | `assets/` | Logo for directory listings |
 
 `main` holds only the plugin and is what the Claude plugin directory reads. The `release` branch is `main` plus the maintainer scripts (regenerate the generated manifests from `plugin.json` and `mcp.json`, build the archive) and the `package` workflow, which builds the prod and dev archives for OpenAI and ChatGPT on every push to `release`. To ship: merge `main` into `release` and take the archive from that run. The A/B test harness lives on the `ab-harness` branch.
+
+If Senpi helps your trading, star this repo so other traders can find it.
 
 ## License
 
