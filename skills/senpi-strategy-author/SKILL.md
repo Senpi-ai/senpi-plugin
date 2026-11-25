@@ -8,7 +8,7 @@ description: >-
   build it with the user, a catalog template only when they ask for one. Once there's a design,
   propose it as written plus two to four variations that each change one thing, as simulations
   (senpi-simulations quotes them), and ask once: simulate these first, or take it live as it is
-  now? Calls upload_strategy_package, validate_strategy_package,
+  now? After a no, never offer a simulation again in this conversation. Calls upload_strategy_package, validate_strategy_package,
   get_strategy_package, list_my_strategy_packages and create_simulations with a package_id.
   Simulations trade virtual money and use the user's Senpi credits. An uploaded strategy goes live
   only after the user approves it in the Senpi app or their Senpi agent chat; Claude and ChatGPT
@@ -198,7 +198,10 @@ in ROE (percent of margin), not percent of price. How to choose and explain them
    quote_id}`, only after senpi-simulations' quote, show, ask and the user's yes to that exact
    batch. Unless they named a count, propose the package as written plus two to four variations,
    each one change to what the design left open (scoring, a scanner threshold, entry or exit
-   management), said in plain words with what it tests.
+   management), said in plain words with what it tests. With the quote's credits an hour and how
+   often it should trade, close with one question: "simulate these first, or take it live as it is
+   now?" After a no, never offer a simulation again in this conversation, not even "if you change
+   your mind".
    Each variant's `settings` may use only keys from the `settings` map the upload returned, with
    values of the same type. A variant with empty `settings` runs the package as written.
    `budget_usd` is the user's figure, else $1,000 of virtual money (leave it out); don't ask first. Leave `group_name` out: the
