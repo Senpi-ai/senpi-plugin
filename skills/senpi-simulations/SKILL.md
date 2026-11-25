@@ -19,8 +19,8 @@ description: >-
   a yes to the latest quote, with the same arguments and its quote_id.
   Simulations trade virtual money and use the user's Senpi credits. Nothing here trades real money,
   moves funds or takes a strategy live. Before answering "take my simulation live", call
-  get_strategy_package with its simulation_id: an uploaded package goes live only after the user
-  approves it in the Senpi app or their Senpi agent chat.
+  get_strategy_package with its simulation_id: one that runs an uploaded package never goes live,
+  in the Senpi app either, so say it stays a simulation.
 ---
 
 # Simulations
@@ -159,13 +159,12 @@ with $500"), first find out whether it runs a strategy the user uploaded:
 1. Find the simulation's id with `list_my_simulations` if you don't have it.
 2. Call `get_strategy_package {simulation_id}`. An answer with a package id means uploaded code.
 
-- **Uploaded:** it can go live after the user approves it in the Senpi app or their Senpi agent
-  chat. Say to ask their Senpi agent there to take it live and approve it; the approval lists the
-  hosts the strategy declared. Claude and ChatGPT can't take it live or approve it.
+- **Uploaded:** it runs as simulations only and can't go live yet, here or in the Senpi app.
+  Say the strategy stays a simulation. Don't send the user to the app or their Senpi agent to take
+  it live.
 - **No package id:** say to open the simulation in Senpi and press Take it live.
 - **Not found** (a stopped simulation no longer runs on the agent): say that a strategy the user
-  uploaded goes live after they approve it in Senpi, and any other is taken live from its page in
-  Senpi.
+  uploaded stays a simulation, and any other is taken live from its page in Senpi.
 
 Give no link and call no other tool. Placing trades, funding a strategy and moving money also
 happen only in the user's Senpi account.

@@ -52,11 +52,10 @@ network:                       # optional; only for a scanner that calls an outs
   in 40 characters.
 - `network.hosts` lists every host the scanner calls, each one exact hostname in lower case: no
   scheme, port, path, wildcard or IP address. Validation fails on any other entry
-  (`E_PACKAGE_NETWORK_HOST`). Live, every host not on the list is blocked; simulations are not
-  limited. The list is part of the package: changing it is a code change, and a live strategy
-  needs the user's approval again.
-- Never add a `simulation:` key. The package does not choose whether it runs as a simulation or
-  live: the user does, in Senpi.
+  (`E_PACKAGE_NETWORK_HOST`). Simulations do not block other hosts yet. The list is part of the
+  package: changing it is a code change.
+- Never add a `simulation:` key. An uploaded package runs only as simulations; the package does
+  not choose.
 - Never add `instances:` for a flat package.
 
 ## Linkage in `runtime.yaml`

@@ -6,9 +6,8 @@ description: >-
   "turn this idea into a strategy and test 3 versions", "fix my strategy, it failed", "show me
   the strategy I uploaded yesterday". Calls upload_strategy_package, validate_strategy_package,
   get_strategy_package, list_my_strategy_packages and create_simulations with a package_id.
-  Simulations trade virtual money and use the user's Senpi credits. An uploaded strategy goes live
-  only after the user approves it in the Senpi app or their Senpi agent chat; Claude and ChatGPT
-  can't take it live. It takes minutes, so it first sends the user a five-step plan and then one
+  Simulations trade virtual money and use the user's Senpi credits. An uploaded strategy runs only
+  as simulations and can't go live yet, here or in the Senpi app. It takes minutes, so it first sends the user a five-step plan and then one
   line as each step ends.
 ---
 
@@ -45,7 +44,7 @@ Your code only reads data and says what it would trade.
 
 This skill does not pick a catalog strategy for the user (senpi-strategy-discover does) and does
 not run simulations of catalog strategies (senpi-simulations does). It never takes a strategy
-live: the user does that in Senpi.
+live, and an uploaded strategy can't go live yet.
 
 ## When to use it
 
@@ -136,9 +135,8 @@ read an outside API over HTTPS with `urllib.request`.
   ```
 - Each entry is one exact hostname in lower case: no `https://`, port, path, `*` or IP address.
   Validation fails on any other entry and names it.
-- Live, the strategy reaches only the hosts it declares, over HTTPS on port 443. Every other host
-  is blocked. Simulations are not limited, so an undeclared host works in a simulation and fails
-  once the strategy is live: declare every host before it goes live.
+- Declare every host the scanner calls, over HTTPS on port 443. Simulations do not block an
+  undeclared host yet, so a missing entry won't show as an error.
 - Only read from it. Pass a `timeout` of a few seconds: the call counts against the tick's
   `timeout_seconds`. On any error, carry on without it or return `[]`.
 - Still read market data through `ctx.senpi_mcp`: a tick that reads nothing through it cannot
@@ -222,15 +220,12 @@ Read every file before you change any of them.
 
 ## Going live
 
-An uploaded strategy can go live after the user approves it in the Senpi app or their Senpi agent
-chat. Claude and ChatGPT can't take it live, and nothing in this conversation can approve it.
+An uploaded strategy runs as simulations only and can't go live yet, from this conversation, the
+Senpi app or the user's Senpi agent. Senpi runs code written outside Senpi only as simulations.
 
-When the user asks whether it can go live, or asks you to take it live, say so and call no tool:
-- Tell them to ask their Senpi agent, in the Senpi app or Senpi agent chat, to take it live, and
-  to approve it there. The approval says the code came from their outside AI and lists the hosts it declared.
-- Live, it runs the exact code they approved, and it can reach only those hosts.
-- Any change to the code or its hosts runs as a simulation until they approve it again.
-- Funding it and moving money also happen only in Senpi. Give no link.
+When the user asks whether it can go live, or asks you to take it live, say exactly that: the
+strategy stays a simulation. Don't send them to the app or their Senpi agent to take it live, give
+no link and call no tool. A strategy from Senpi's catalog can be taken live in the Senpi app.
 
 ## Presenting the result
 
