@@ -4,7 +4,11 @@ description: >-
   Write the user's own Senpi strategy as a package, put it on their Senpi agent and run it as
   simulations, with the Senpi connector. Use for "write me a strategy that fades funding spikes",
   "turn this idea into a strategy and test 3 versions", "fix my strategy, it failed", "show me
-  the strategy I uploaded yesterday". Calls upload_strategy_package, validate_strategy_package,
+  the strategy I uploaded yesterday", "help me create a strategy", an X take or an idea to trade:
+  build it with the user, a catalog template only when they ask for one. Once there's a design,
+  propose it as written plus two to four variations that each change one thing, as simulations
+  (senpi-simulations quotes them), and ask once: simulate these first, or take it live as it is
+  now? Calls upload_strategy_package, validate_strategy_package,
   get_strategy_package, list_my_strategy_packages and create_simulations with a package_id.
   Simulations trade virtual money and use the user's Senpi credits. An uploaded strategy goes live
   only after the user approves it in the Senpi app or their Senpi agent chat; Claude and ChatGPT

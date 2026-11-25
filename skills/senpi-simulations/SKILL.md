@@ -7,13 +7,18 @@ description: >-
   winners", "stop the losers", "stop every simulation in this group", "resume my paused
   simulation", "what would 20 simulations cost?", "take my simulation live". Calls get_catalog_strategy, create_simulations, list_my_simulations, get_my_simulation, quote_simulations,
   stop_simulations and resume_simulation. A strategy package the user or you wrote goes through
-  senpi-strategy-author first (write, upload, validate), then runs here by its package_id.
+  senpi-strategy-author first (write, upload, validate), then runs here by its package_id. An idea,
+  a take to trade or "help me create a strategy" is senpi-strategy-author, not the catalog.
   "Best" means the highest return unless the user names another measure: call list_my_simulations
   with sort "return" (the connector's default sort is Sharpe). Running simulations are "running", never "live" (real money).
   Never start a simulation without the user's yes to that exact batch: call quote_simulations
   with the exact strategy or from_simulation_id or package_id, variants, budget_usd and group_name
   you will start, show every variant and the credits an hour and a day, ask whether to start
-  exactly this, and end your turn. A message that changes the batch ("deploy them with $500
+  exactly this, and end your turn. When you proposed the test (they didn't ask to simulate), ask
+  one question instead: simulate these first, or take it live as it is now? A "simulate" answer is
+  the yes. "Deploy X live", "launch X live with $Y" or "take my simulation live": say how to go
+  live, never offer a simulation. After they turn simulating down, don't offer it again in this
+  conversation. A message that changes the batch ("deploy them with $500
   each", "swap it in", "replace X with the improved one", "drop its leverage and start it") is a
   change, not a yes: quote the new batch, show it, ask again. Call create_simulations only after
   a yes to the latest quote, with the same arguments and its quote_id.
@@ -84,7 +89,10 @@ answers a `quote_id`. Show the user every variant of the count, in one message:
 - the cost an hour and a day, and how long their credits last;
 - that a strategy which waits for a breakout, like hawk, can go hours without a trade.
 
-Then ask whether to start exactly this, and end your turn. Start nothing until the user says yes. On
+Then ask whether to start exactly this, and end your turn. When you proposed these as a test of a
+new strategy (the user didn't ask to simulate), ask one question instead: "simulate these first, or
+take it live as it is now?" Live is in the Senpi app or their Senpi agent chat; a "simulate" answer
+is the yes. Start nothing until the user says yes. On
 the yes, call `create_simulations` with the same arguments and that `quote_id`.
 
 A message that changes the batch is a change, not a yes, even when it reads as an order: "deploy
