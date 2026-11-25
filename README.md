@@ -96,7 +96,7 @@ hermes plugins install senpi
 hermes plugins enable senpi-agent
 ```
 
-Until the catalog entry is live, install from this repository instead: `hermes plugins install Senpi-ai/senpi-plugin --no-enable`, then `hermes plugins enable senpi-agent`. The first call of any tool opens the Senpi sign-in in your browser — approve it, then run `/reload-mcp` or start a new session so the tools load.
+The first call of any tool opens the Senpi sign-in in your browser. Approve it, then run `/reload-mcp` or start a new session so the tools load.
 
 The plugin declares its server `trust: untrusted`, so Hermes itself asks before any tool call that can change something; every tool on the server is read-only today.
 
