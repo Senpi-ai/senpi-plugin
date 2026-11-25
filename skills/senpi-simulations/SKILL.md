@@ -1,6 +1,8 @@
 ---
 name: senpi-simulations
 description: >-
+  Not for a live ask ("deploy spider live", "launch X live with $50", "put $300 in X"): say how to
+  go live in the Senpi app and stop, with no simulation offer and no simulate-or-live question.
   Run, watch and rank the signed-in user's Senpi simulations with the Senpi connector. Use for
   "run 5 variations of hawk as simulations", "test 10 versions of this strategy", "how are my
   simulations doing?", "which simulation is winning?", "show my best simulations", "find the
@@ -14,11 +16,9 @@ description: >-
   Never start a simulation without the user's yes to that exact batch: call quote_simulations
   with the exact strategy or from_simulation_id or package_id, variants, budget_usd and group_name
   you will start, show every variant and the credits an hour and a day, ask whether to start
-  exactly this, and end your turn. When you proposed the test (they didn't ask to simulate), ask
-  one question instead: simulate these first, or take it live as it is now? A "simulate" answer is
-  the yes. "Deploy X live", "launch X live with $Y" or "take my simulation live": say how to go
-  live, never offer a simulation. After they turn simulating down, don't offer it again in this
-  conversation. A message that changes the batch ("deploy them with $500
+  exactly this, and end your turn. For a new strategy's test plan (they didn't ask to simulate),
+  that question is: simulate these first, or take it live as it is now? A "simulate" answer is the
+  yes. After they turn simulating down, don't offer it again in this conversation. A message that changes the batch ("deploy them with $500
   each", "swap it in", "replace X with the improved one", "drop its leverage and start it") is a
   change, not a yes: quote the new batch, show it, ask again. Call create_simulations only after
   a yes to the latest quote, with the same arguments and its quote_id.

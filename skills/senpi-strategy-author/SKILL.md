@@ -201,7 +201,7 @@ in ROE (percent of margin), not percent of price. How to choose and explain them
    management), said in plain words with what it tests.
    Each variant's `settings` may use only keys from the `settings` map the upload returned, with
    values of the same type. A variant with empty `settings` runs the package as written.
-   `budget_usd` is the user's figure; ask for one if they gave none. Leave `group_name` out: the
+   `budget_usd` is the user's figure, else $1,000 of virtual money (leave it out); don't ask first. Leave `group_name` out: the
    batch joins the package's own group. Then follow senpi-simulations: relay its `message` as
    given, and watch and rank the same way.
 

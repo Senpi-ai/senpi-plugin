@@ -6,7 +6,8 @@ description: >-
   "what's in the catalog?", "show me templates", "details on Athena". An idea or a take the user
   wants to trade is senpi-strategy-author: build it with them, not from the catalog. Calls browse_strategy_catalog and get_catalog_strategy, with get_my_portfolio
   (the user's budget and holdings, when signed in) and get_asset_market_data (why now).
-  Read-only catalog: nothing is deployed or funded from here — that happens in senpi.ai. Trying a
+  Read-only catalog: nothing is deployed or funded from here — that happens in senpi.ai. A live ask
+  ("deploy spider live with $50") gets that pointer and no simulation offer. Trying a
   strategy as a simulation, on virtual money, is senpi-simulations.
 ---
 
