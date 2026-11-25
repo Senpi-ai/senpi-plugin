@@ -10,6 +10,13 @@ description: >-
   senpi-strategy-author first (write, upload, validate), then runs here by its package_id.
   "Best" means the highest return unless the user names another measure: call list_my_simulations
   with sort "return" (the connector's default sort is Sharpe). Running simulations are "running", never "live" (real money).
+  Never start a simulation without the user's yes to that exact batch: call quote_simulations
+  with the exact strategy or from_simulation_id or package_id, variants, budget_usd and group_name
+  you will start, show every variant and the credits an hour and a day, ask whether to start
+  exactly this, and end your turn. A message that changes the batch ("deploy them with $500
+  each", "swap it in", "replace X with the improved one", "drop its leverage and start it") is a
+  change, not a yes: quote the new batch, show it, ask again. Call create_simulations only after
+  a yes to the latest quote, with the same arguments and its quote_id.
   Simulations trade virtual money and use the user's Senpi credits. Nothing here trades real money,
   moves funds or takes a strategy live. Before answering "take my simulation live", call
   get_strategy_package with its simulation_id: an uploaded package goes live only after the user
@@ -65,18 +72,26 @@ Two limits decide how many run, nothing else:
 
 ### Show the batch, then start it on a yes
 
-Before any `create_simulations`, call `quote_simulations` for the batch and show the user every
-variant of the count, in one message:
+Before any `create_simulations`, call `quote_simulations` with the exact `strategy` (or
+`from_simulation_id` or `package_id`), `variants`, `budget_usd` and `group_name` you will start. It
+answers a `quote_id`. Show the user every variant of the count, in one message:
 
 - each variant: its label and what it changes from the strategy as it is (or "the strategy as it
   is"), and the budget each starts with;
 - the cost an hour and a day, and how long their credits last;
 - that a strategy which waits for a breakout, like hawk, can go hours without a trade.
 
-Then ask whether to start them, and start nothing until the user says yes. Start exactly what you
-showed. When they change anything, show the new batch and its quote and ask again. The yes covers
-this batch only: the next batch is shown again, while calling again with the same key to check
-progress or retry needs no new yes.
+Then ask whether to start exactly this, and end your turn. Start nothing until the user says yes. On
+the yes, call `create_simulations` with the same arguments and that `quote_id`.
+
+A message that changes the batch is a change, not a yes, even when it reads as an order: "deploy
+them with $500 each", "swap it in for the current one", "replace the old one with the improved
+one", "drop its leverage and start it". Quote the new batch, show it, ask, and end your turn. Only
+a yes after the new quote starts it. The yes covers this batch only: the next batch is quoted and
+shown again, while calling again with the same key to check progress or retry needs no new yes.
+
+When `create_simulations` refuses for a missing or changed quote, do what the refusal says: quote
+again, show, ask. Never start the batch another way.
 
 ### Relay the answer as given
 
