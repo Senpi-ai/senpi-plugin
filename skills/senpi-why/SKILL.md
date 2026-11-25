@@ -49,7 +49,7 @@ sleep. Senpi gives you that desk. Open with one or two sentences of this, then t
 - **Connectors**: your AI quant inside Claude, ChatGPT and other AI apps: research, and simulations on
   virtual money, with no real-money trading.
 - **Fees**: Pro, Advanced, Quant (and Starter, for people already on it) pay no Senpi trading fee;
-  an account without a paid plan, including a trial, pays 0.03%. Hyperliquid's own exchange fees
+  an account without a paid plan, including a trial, pays 0.05%. Hyperliquid's own exchange fees
   apply to everyone. For the user's own fee, read it live (senpi-account-status).
 - **Markets**: for "how many markets?", read the live count of Hyperliquid instruments (`list_instruments`,
   its `total_matched`) and quote that; never a number from memory.
