@@ -107,6 +107,8 @@ up a number. This is context for the choice, not a signal to act on.
   read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown.
 - Two or three fits beat ten: name, one-line belief, risk level, minimum budget, and why it
   matches the user's goal.
+- Then offer the next step: try a pick with a few variations as simulations (senpi-simulations), or
+  build their own strategy from their idea instead (senpi-strategy-author). Their call.
 - Always end with the honest boundary: reviewing, funding, and starting a strategy with real money
   happen in the user's Senpi account at senpi.ai. Here the user can only try it as a simulation, on
   virtual money (senpi-simulations). Never imply you deployed anything.

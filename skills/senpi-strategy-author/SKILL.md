@@ -192,7 +192,9 @@ in ROE (percent of margin), not percent of price. How to choose and explain them
    The same stop rule applies.
 5. **Simulate** with `create_simulations {package_id, variants, budget_usd, idempotency_key,
    quote_id}`, only after senpi-simulations' quote, show, ask and the user's yes to that exact
-   batch.
+   batch. Unless they named a count, propose the package as written plus two to four variations,
+   each one change to what the design left open (scoring, a scanner threshold, entry or exit
+   management), said in plain words with what it tests.
    Each variant's `settings` may use only keys from the `settings` map the upload returned, with
    values of the same type. A variant with empty `settings` runs the package as written.
    `budget_usd` is the user's figure; ask for one if they gave none. Leave `group_name` out: the

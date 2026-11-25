@@ -42,13 +42,16 @@ Two limits decide how many run, nothing else:
 
 1. **The strategy.** A catalog id from `browse_strategy_catalog` (for example `hawk`), or one of the
    user's running simulations as `from_simulation_id`: its variations join its group.
-2. **How many.** Exactly the number the user asked for, and one when they named no number. Never
-   add a variant they did not ask for, a base included: when they ask for 3, the batch has 3.
-3. **The variants.** Vary what the user asked about. When they asked for several and named no
-   setting, vary one or two settings across a small range around the strategy's own value (its
-   leverage, never above the catalog's `leverage_max`, or its entry score). When they asked for one
-   and named nothing, run the strategy as it is. Each variant is a `settings` map applied over the
-   strategy's own, with a short `label` that says what it changes (`lev3`, `score7`).
+2. **How many.** Exactly the number the user asked for. When they named no number, propose the
+   strategy as it is plus two to four variations, and start only the ones they say yes to. Never
+   add a variant they did not say yes to, a base included: when they ask for 3, the batch has 3.
+3. **The variants.** Vary what the user asked about. When they named no setting, pick what tests
+   the strategy, one change per variant: its scoring (the entry score), a scanner threshold, its
+   entry management (cooldown, size, leverage, never above the catalog's `leverage_max`) or its exit
+   management (stop, trailing, profit lock). Keep each far enough from the strategy's own value to
+   show a difference, and say in plain words what it tests ("pickier entries: score 7 instead of
+   5"). Each variant is a `settings` map applied over the strategy's own, with a short `label` that
+   says what it changes (`lev3`, `score7`).
 4. **Setting keys.** Use only keys you have read for this strategy. For a catalog strategy, read
    `get_catalog_strategy` before you show the batch: its `settings` lists every key a variant can
    change, with the strategy's own value. Show each variant's exact values, and after the yes start
