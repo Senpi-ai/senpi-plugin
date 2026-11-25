@@ -12,8 +12,7 @@ runtime sizes, places and exits every trade.
   changes anything (opening, closing or editing a position, cancelling an order, creating or
   updating a strategy, moving funds, stop edits) raises `PermissionError`. Do not open files.
 - **Outside APIs.** The scanner may read an outside API over HTTPS with `urllib.request`, with a
-  `timeout`, when every host it calls is listed in `strategy.yaml` under `network.hosts`. Live,
-  every other host is blocked. Only read: never send the strategy's signals or the user's data
+  `timeout`, when every host it calls is listed in `strategy.yaml` under `network.hosts`. Only read: never send the strategy's signals or the user's data
   out. Do not shell out (`subprocess`) or use `socket` directly.
 - **Return a list.** On any error, return `[]` or the signals you already have. Returning anything
   else, or raising, throws the whole tick away.
