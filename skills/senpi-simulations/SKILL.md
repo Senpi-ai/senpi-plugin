@@ -1,19 +1,24 @@
 ---
 name: senpi-simulations
 description: >-
+  Not for a live ask ("deploy spider live", "launch X live with $50", "put $300 in X"): say how to
+  go live in the Senpi app and stop, with no simulation offer and no simulate-or-live question.
   Run, watch and rank the signed-in user's Senpi simulations with the Senpi connector. Use for
   "run 5 variations of hawk as simulations", "test 10 versions of this strategy", "how are my
   simulations doing?", "which simulation is winning?", "show my best simulations", "find the
   winners", "stop the losers", "stop every simulation in this group", "resume my paused
   simulation", "what would 20 simulations cost?", "take my simulation live". Calls get_catalog_strategy, create_simulations, list_my_simulations, get_my_simulation, quote_simulations,
   stop_simulations and resume_simulation. A strategy package the user or you wrote goes through
-  senpi-strategy-author first (write, upload, validate), then runs here by its package_id.
+  senpi-strategy-author first (write, upload, validate), then runs here by its package_id. An idea,
+  a take to trade or "help me create a strategy" is senpi-strategy-author, not the catalog.
   "Best" means the highest return unless the user names another measure: call list_my_simulations
   with sort "return" (the connector's default sort is Sharpe). Running simulations are "running", never "live" (real money).
   Never start a simulation without the user's yes to that exact batch: call quote_simulations
   with the exact strategy or from_simulation_id or package_id, variants, budget_usd and group_name
   you will start, show every variant and the credits an hour and a day, ask whether to start
-  exactly this, and end your turn. A message that changes the batch ("deploy them with $500
+  exactly this, and end your turn. For a new strategy's test plan (they didn't ask to simulate),
+  that question is: simulate these first, or take it live as it is now? A "simulate" answer is the
+  yes. After they turn simulating down, don't offer it again in this conversation. A message that changes the batch ("deploy them with $500
   each", "swap it in", "replace X with the improved one", "drop its leverage and start it") is a
   change, not a yes: quote the new batch, show it, ask again. Call create_simulations only after
   a yes to the latest quote, with the same arguments and its quote_id.
@@ -42,13 +47,16 @@ Two limits decide how many run, nothing else:
 
 1. **The strategy.** A catalog id from `browse_strategy_catalog` (for example `hawk`), or one of the
    user's running simulations as `from_simulation_id`: its variations join its group.
-2. **How many.** Exactly the number the user asked for, and one when they named no number. Never
-   add a variant they did not ask for, a base included: when they ask for 3, the batch has 3.
-3. **The variants.** Vary what the user asked about. When they asked for several and named no
-   setting, vary one or two settings across a small range around the strategy's own value (its
-   leverage, never above the catalog's `leverage_max`, or its entry score). When they asked for one
-   and named nothing, run the strategy as it is. Each variant is a `settings` map applied over the
-   strategy's own, with a short `label` that says what it changes (`lev3`, `score7`).
+2. **How many.** Exactly the number the user asked for. When they named no number, propose the
+   strategy as it is plus two to four variations, and start only the ones they say yes to. Never
+   add a variant they did not say yes to, a base included: when they ask for 3, the batch has 3.
+3. **The variants.** Vary what the user asked about. When they named no setting, pick what tests
+   the strategy, one change per variant: its scoring (the entry score), a scanner threshold, its
+   entry management (cooldown, size, leverage, never above the catalog's `leverage_max`) or its exit
+   management (stop, trailing, profit lock). Keep each far enough from the strategy's own value to
+   show a difference, and say in plain words what it tests ("pickier entries: score 7 instead of
+   5"). Each variant is a `settings` map applied over the strategy's own, with a short `label` that
+   says what it changes (`lev3`, `score7`).
 4. **Setting keys.** Use only keys you have read for this strategy. For a catalog strategy, read
    `get_catalog_strategy` before you show the batch: its `settings` lists every key a variant can
    change, with the strategy's own value. Show each variant's exact values, and after the yes start
@@ -81,7 +89,10 @@ answers a `quote_id`. Show the user every variant of the count, in one message:
 - the cost an hour and a day, and how long their credits last;
 - that a strategy which waits for a breakout, like hawk, can go hours without a trade.
 
-Then ask whether to start exactly this, and end your turn. Start nothing until the user says yes. On
+Then ask whether to start exactly this, and end your turn. When you proposed these as a test of a
+new strategy (the user didn't ask to simulate), ask one question instead: "simulate these first, or
+take it live as it is now?" Live is in the Senpi app or their Senpi agent chat; a "simulate" answer
+is the yes. Start nothing until the user says yes. On
 the yes, call `create_simulations` with the same arguments and that `quote_id`.
 
 A message that changes the batch is a change, not a yes, even when it reads as an order: "deploy
