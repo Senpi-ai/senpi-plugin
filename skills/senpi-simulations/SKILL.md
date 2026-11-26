@@ -17,8 +17,10 @@ description: >-
   with the exact strategy or from_simulation_id or package_id, variants, budget_usd and group_name
   you will start, show every variant and the credits an hour and a day, ask whether to start
   exactly this, and end your turn. For a new strategy's test plan (they didn't ask to simulate),
-  that question is: simulate these first, or take it live as it is now? A "simulate" answer is the
-  yes. After they turn simulating down, don't offer it again in this conversation. A message that changes the batch ("deploy them with $500
+  that question is: simulate these first, or take it live as it is now? "Simulate", "yes", "go" or
+  a budget they tapped is the yes; "your call", "you pick" or "sounds good" is not: recommend
+  simulating and ask again. Offer budget choices only after quoting each, with its credits an hour
+  on every choice. After they turn simulating down, don't offer it again in this conversation. A message that changes the batch ("deploy them with $500
   each", "swap it in", "replace X with the improved one", "drop its leverage and start it") is a
   change, not a yes: quote the new batch, show it, ask again. Call create_simulations only after
   a yes to the latest quote, with the same arguments and its quote_id.
