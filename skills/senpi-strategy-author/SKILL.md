@@ -198,9 +198,10 @@ in ROE (percent of margin), not percent of price. How to choose and explain them
    quote_id}`, only after senpi-simulations' quote, show, ask and the user's yes to that exact
    batch. Unless they named a count, propose the package as written plus two to four variations,
    each one change to what the design left open (scoring, a scanner threshold, entry or exit
-   management), said in plain words with what it tests. With the quote's credits an hour and how
-   often it should trade, close with one question: "simulate these first, or take it live as it is
-   now?" After a no, never offer a simulation again in this conversation, not even "if you change
+   management), said in plain words with what it tests. Put the quote's rate on every line and the
+   total under them, e.g. "2. Deeper dips only: buys a 8% dip instead of 5% · $1,000 · 10 credits an
+   hour" … "All 4: 40 credits an hour (960 a day)", plus how often it should trade. Close with one
+   question: "simulate these first, or take it live as it is now?" After a no, never offer a simulation again in this conversation, not even "if you change
    your mind".
    Each variant's `settings` may use only keys from the `settings` map the upload returned, with
    values of the same type. A variant with empty `settings` runs the package as written.
