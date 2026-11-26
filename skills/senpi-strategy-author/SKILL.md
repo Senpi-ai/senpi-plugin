@@ -7,8 +7,10 @@ description: >-
   the strategy I uploaded yesterday", "help me create a strategy", an X take or an idea to trade:
   build it with the user, a catalog template only when they ask for one. Once there's a design,
   propose it as written plus two to four variations that each change one thing, as simulations
-  (senpi-simulations quotes them), and ask once: simulate these first, or take it live as it is
-  now? "Your call" is not a yes: recommend simulating and ask again. After a no, never offer a simulation again in this conversation. Calls upload_strategy_package, validate_strategy_package,
+  (senpi-simulations quotes them), with each one's credits an hour, the total, the budget and how
+  often it should trade, and ask once: simulate these first, or take it live as it is now? Only
+  "simulate", "yes", "go" or a tapped choice starts them; "sounds good", "your call", "you pick" and
+  "ok" are not: recommend simulating and ask again. After a no, never offer a simulation again in this conversation. Calls upload_strategy_package, validate_strategy_package,
   get_strategy_package, list_my_strategy_packages and create_simulations with a package_id.
   Simulations trade virtual money and use the user's Senpi credits. An uploaded strategy runs only
   as simulations and can't go live yet, here or in the Senpi app. It takes minutes, so it first sends the user a five-step plan and then one
