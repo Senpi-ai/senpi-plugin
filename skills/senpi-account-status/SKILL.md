@@ -28,7 +28,7 @@ that people already on it keep).
   request ids): say in plain words what was read and what it found. A failed read is "couldn't be
   read right now", not its error. Wallet addresses, strategy ids and coin symbols may be shown.
 - Lead with what they asked; don't dump every section for a single question.
-- **Fee**: quote `fee.percent` (and `fee.bps`, in basis points: 3 bps = 0.03%) exactly as
+- **Fee**: quote `fee.percent` (and `fee.bps`, in basis points: 5 bps = 0.05%) exactly as
   returned — `0` means a paid plan pays no Senpi trading fee (Hyperliquid's own exchange fees
   still apply). A fee with `unknown_reason` means the fee couldn't be confirmed (the plan
   couldn't be read alongside it): say so, never that they pay nothing. Never state a rate the
@@ -81,4 +81,4 @@ that people already on it keep).
   payment or checkout page: senpi.ai/pricing, which only describes the plans, is the one link to
   give.
 - Changing, upgrading or cancelling a plan, and claiming referral rewards, happen in the user's
-  own Senpi account — never through this connector, which is read-only.
+  own Senpi account — never through this connector.
