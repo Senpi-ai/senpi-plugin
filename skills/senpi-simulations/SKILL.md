@@ -91,6 +91,10 @@ answers a `quote_id`. Show the user every variant of the count, in one message:
 - the cost an hour and a day, and how long their credits last;
 - that a strategy which waits for a breakout, like hawk, can go hours without a trade.
 
+For one simulation the cost quote reads: "${Name} ${what it does}. $50 of virtual money, ${n}
+credits an hour. Start it?" For a batch, list each variant with its budget, then the total and the
+credits an hour and a day, and end with "Start it?".
+
 Then ask whether to start exactly this, and end your turn. When you proposed these as a test of a
 new strategy (the user didn't ask to simulate), ask one question instead: "simulate these first, or
 take it live as it is now?" Live is in the Senpi app or their Senpi agent chat; a "simulate" answer
@@ -184,6 +188,8 @@ happen only in the user's Senpi account.
 
 ## Presenting the result
 
+- In your own words to the user, the product is a "Hypersim" (plural "Hypersims"). Tool names,
+  arguments, ids and a connector `message` relayed as given keep their words.
 - Write for the user, not about the tools. Never name a tool, argument or response field, and never
   quote a raw code or enum value: say "your agent's box is full", not `BOX_FULL`. The one exception
   is the `message` of a create, which is already written for the user. Simulation ids, group names,
